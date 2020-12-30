@@ -1,6 +1,3 @@
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_pkg_workflow/model/assignment_model.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_entity.dart';
@@ -14,9 +11,8 @@ import 'membership_task_entity.dart';
 
 abstract class MembershipTaskModel extends TaskModel {
   MembershipTaskModel({
-    String taskString,
     String description,
-  }) : super(taskString: taskString, description: description);
+  }) : super(description: description);
 }
 
 // ***** RequestMembershipTaskModel *****
@@ -26,14 +22,12 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
 
   RequestMembershipTaskModel({String description})
       : super(
-          taskString: label,
           description: description,
         );
 
   @override
   Future<void> startTask(
       BuildContext context, AssignmentModel assignmentModel) {
-    var accessState = AccessBloc.getState(context);
     DialogStatefulWidgetHelper.openIt(
         context,
         YesNoDialog(
@@ -44,6 +38,7 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
                   assignmentModel,
                 ),
             noFunction: () => Navigator.pop(context)));
+    return null;
   }
 
   void confirmMembershipRequest(
@@ -94,7 +89,6 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
 
   ApproveMembershipTaskModel({String description})
       : super(
-    taskString: label,
     description: description,
   );
 
@@ -106,7 +100,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
     // Allow Feedback parameter
   }
 
-  void approveMembershipRequest(
+  void _approveMembershipRequest(
       BuildContext context, AssignmentModel assignmentModel) {
     // todo: send message "membership requested approved". Use feedback parameter
     finishTask(
@@ -117,7 +111,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         ));
   }
 
-  void disapproveMembershipRequest(
+  void _disapproveMembershipRequest(
       BuildContext context, AssignmentModel assignmentModel) {
     // todo: send message "membership requested disapproved". Use feedback parameter
     finishTask(

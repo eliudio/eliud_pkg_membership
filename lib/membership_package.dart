@@ -34,5 +34,6 @@ abstract class MembershipPackage extends Package {
   void init() {
     ComponentRegistry().init();
     TaskModelRegistry.registry().addMapper(RequestMembershipTaskEntity.label, RequestMembershipTaskModelMapper());
+    TaskModelRegistry.registry().addMapper(ApproveMembershipTaskEntity.label, ApproveMembershipTaskModelMapper());
   }
 }
