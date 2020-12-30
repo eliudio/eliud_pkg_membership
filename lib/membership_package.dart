@@ -5,8 +5,10 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/component_registry.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/tools/common_tools.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:eliud_pkg_membership/tools/task/membership_task_entity.dart';
+import 'package:eliud_pkg_membership/tools/task/membership_task_model.dart';
 import 'package:flutter_bloc/src/bloc_provider.dart';
+import 'package:eliud_pkg_workflow/tools/task/task_model.dart';
 
 abstract class MembershipPackage extends Package {
   static final String MEMBER_HAS_NO_MEMBERSHIP_YET = 'MemberHasNoMembershipYet';
@@ -31,5 +33,6 @@ abstract class MembershipPackage extends Package {
   @override
   void init() {
     ComponentRegistry().init();
+    TaskModelRegistry.registry().addMapper(RequestMembershipTaskEntity.label, RequestMembershipTaskModelMapper());
   }
 }

@@ -21,5 +21,8 @@ dev_dependencies:
   eliud_generator:
     path: ../eliud_generator
 
+  eliud_pkg_workflow:
+    path: ../eliud_pkg_workflow
+
 flutter:
   uses-material-design: true
