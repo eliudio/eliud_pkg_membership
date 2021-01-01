@@ -2,6 +2,7 @@ import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_pkg_workflow/model/assignment_model.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_entity.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_model.dart';
+import 'package:eliud_pkg_notifications/platform/platform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,8 @@ import 'membership_task_entity.dart';
 abstract class MembershipTaskModel extends TaskModel {
   MembershipTaskModel({
     String description,
-  }) : super(description: description);
+    bool executeInstantly,
+  }) : super(description: description, executeInstantly: executeInstantly);
 }
 
 // ***** RequestMembershipTaskModel *****
@@ -20,9 +22,10 @@ abstract class MembershipTaskModel extends TaskModel {
 class RequestMembershipTaskModel extends MembershipTaskModel {
   static String label = 'MEMBERSHIP_TASK_REQUEST_MEMBERSHIP';
 
-  RequestMembershipTaskModel({String description})
+  RequestMembershipTaskModel({String description, bool executeInstantly})
       : super(
           description: description,
+      executeInstantly: executeInstantly
         );
 
   @override
@@ -43,7 +46,8 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
 
   void confirmMembershipRequest(
       BuildContext context, AssignmentModel assignmentModel) {
-    // first: send message "membership requested"
+    AbstractNotificationPlatform.platform
+        .sendMessage(context, assignmentModel.assigneeId, "You have requested membership for app " + assignmentModel.appId);
     Navigator.pop(context);
     finishTask(
         context,
@@ -56,17 +60,20 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
   @override
   TaskEntity toEntity({String appId}) => RequestMembershipTaskEntity(
         description: description,
+      executeInstantly: executeInstantly,
       );
 
   static RequestMembershipTaskModel fromEntity(
           RequestMembershipTaskEntity entity) =>
       RequestMembershipTaskModel(
         description: entity.description,
+          executeInstantly: entity.executeInstantly
       );
 
   static RequestMembershipTaskEntity fromMap(Map snap) =>
       RequestMembershipTaskEntity(
         description: snap['description'],
+          executeInstantly: snap['executeInstantly'],
       );
 }
 
@@ -87,9 +94,10 @@ class RequestMembershipTaskModelMapper implements TaskModelMapper {
 class ApproveMembershipTaskModel extends MembershipTaskModel {
   static String label = 'MEMBERSHIP_TASK_APPROVE_MEMBERSHIP';
 
-  ApproveMembershipTaskModel({String description})
+  ApproveMembershipTaskModel({String description, bool executeInstantly})
       : super(
     description: description,
+      executeInstantly: executeInstantly,
   );
 
   @override
@@ -97,12 +105,12 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
       BuildContext context, AssignmentModel assignmentModel) {
     // Present the details from the previous task
     // Then ask if it's ok to approve, if yes >> approveMembershipRequest, if no >> disapproveMembershipRequest
-    // Allow Feedback parameter
+    // Allow Feedback message
   }
 
   void _approveMembershipRequest(
-      BuildContext context, AssignmentModel assignmentModel) {
-    // todo: send message "membership requested approved". Use feedback parameter
+      BuildContext context, AssignmentModel assignmentModel, String comment) {
+    _sendMessage(context, assignmentModel, "Your membership request has been approved", comment);
     finishTask(
         context,
         assignmentModel,
@@ -112,8 +120,8 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
   }
 
   void _disapproveMembershipRequest(
-      BuildContext context, AssignmentModel assignmentModel) {
-    // todo: send message "membership requested disapproved". Use feedback parameter
+      BuildContext context, AssignmentModel assignmentModel, String comment) {
+    _sendMessage(context, assignmentModel, "Your membership request has been disapproved", comment);
     finishTask(
         context,
         assignmentModel,
@@ -122,20 +130,30 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         ));
   }
 
+  void _sendMessage(BuildContext context, AssignmentModel assignmentModel, String message, String comment) {
+    if (!((comment == null) || (comment.length == 0))) {
+      message = message + " with these comments: " + comment;
+    }
+    AbstractNotificationPlatform.platform.sendMessage(context, assignmentModel.assigneeId, message);
+  }
+
   @override
   TaskEntity toEntity({String appId}) => ApproveMembershipTaskEntity(
     description: description,
+      executeInstantly: executeInstantly,
   );
 
   static ApproveMembershipTaskModel fromEntity(
       ApproveMembershipTaskEntity entity) =>
       ApproveMembershipTaskModel(
         description: entity.description,
+          executeInstantly: entity.executeInstantly,
       );
 
   static ApproveMembershipTaskEntity fromMap(Map snap) =>
       ApproveMembershipTaskEntity(
         description: snap['description'],
+          executeInstantly: snap['executeInstantly'],
       );
 }
 

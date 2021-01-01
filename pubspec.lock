@@ -274,6 +274,13 @@ packages:
       relative: true
     source: path
     version: "1.0.0+1"
+  eliud_pkg_notifications:
+    dependency: "direct dev"
+    description:
+      path: "../eliud_pkg_notifications"
+      relative: true
+    source: path
+    version: "0.0.1"
   eliud_pkg_workflow:
     dependency: "direct dev"
     description:

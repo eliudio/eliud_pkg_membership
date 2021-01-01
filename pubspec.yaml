@@ -24,5 +24,8 @@ dev_dependencies:
   eliud_pkg_workflow:
     path: ../eliud_pkg_workflow
 
+  eliud_pkg_notifications:
+    path: ../eliud_pkg_notifications
+
 flutter:
   uses-material-design: true
