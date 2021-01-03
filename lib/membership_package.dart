@@ -9,6 +9,7 @@ import 'package:eliud_pkg_membership/tools/task/membership_task_entity.dart';
 import 'package:eliud_pkg_membership/tools/task/membership_task_model.dart';
 import 'package:flutter_bloc/src/bloc_provider.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_model.dart';
+import 'package:eliud_core/package/package.dart';
 
 abstract class MembershipPackage extends Package {
   static final String MEMBER_HAS_NO_MEMBERSHIP_YET = 'MemberHasNoMembershipYet';
