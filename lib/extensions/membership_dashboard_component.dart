@@ -3,18 +3,20 @@ import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/background_model.dart';
+import 'package:eliud_core/model/member_list_bloc.dart';
+import 'package:eliud_core/model/member_list_event.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_membership/extensions/widgets/membership_dashboard_item.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/member_public_info_list.dart';
+import 'package:eliud_pkg_membership/model/member_public_info_list_bloc.dart';
+import 'package:eliud_pkg_membership/model/member_public_info_list_event.dart';
 import 'package:eliud_pkg_membership/model/member_public_info_model.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_component.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_repository.dart';
-import 'package:eliud_pkg_notifications/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_notifications/model/notification_list_bloc.dart';
-import 'package:eliud_pkg_notifications/model/notification_list_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,10 +35,10 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
     return AlertWidget(title: title, content: content);
   }
 
-  static EliudQuery getSubscribedMembers(String appId) {
+  static EliudQuery getSubscribedMembers(String ownerId) {
     return EliudQuery(
         theConditions: [
-          EliudQueryCondition('subscriptions', arrayContains: { appIdX: appId }),
+          EliudQueryCondition('readAccess', arrayContains: ownerId),
         ]
     );
   }
@@ -46,13 +48,13 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
       BuildContext context, MembershipDashboardModel dashboardModel) {
     var state = AccessBloc.getState(context);
     if (state is AppLoaded) {
-      return BlocProvider<NotificationListBloc>(
-        create: (context) => NotificationListBloc(
+      return BlocProvider<MemberPublicInfoListBloc>(
+        create: (context) => MemberPublicInfoListBloc(
           AccessBloc.getBloc(context),
-          eliudQuery: getSubscribedMembers(state.app.documentID),
-          notificationRepository:
-              notificationRepository(appId: AccessBloc.appId(context)),
-        )..add(LoadNotificationList()),
+          eliudQuery: getSubscribedMembers(state.app.ownerID),
+          memberPublicInfoRepository:
+          memberPublicInfoRepository(appId: AccessBloc.appId(context)),
+        )..add(LoadMemberPublicInfoList()),
         child: MemberPublicInfoListWidget(
             readOnly: true,
             widgetProvider: widgetProvider,

@@ -2,9 +2,9 @@ import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/navigate/navigate_bloc.dart';
 import 'package:eliud_core/eliud.dart';
 import 'package:eliud_core/model/app_model.dart';
-import 'package:eliud_core/model/component_registry.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_pkg_membership/model/component_registry.dart';
 import 'package:eliud_pkg_membership/tools/task/membership_task_entity.dart';
 import 'package:eliud_pkg_membership/tools/task/membership_task_model.dart';
 import 'package:flutter_bloc/src/bloc_provider.dart';
@@ -34,6 +34,8 @@ abstract class MembershipPackage extends Package {
   @override
   void init() {
     ComponentRegistry().init();
+
+    // Register mappers for extra tasks
     TaskModelRegistry.registry().addMapper(RequestMembershipTaskEntity.label, RequestMembershipTaskModelMapper());
     TaskModelRegistry.registry().addMapper(ApproveMembershipTaskEntity.label, ApproveMembershipTaskModelMapper());
   }
