@@ -19,14 +19,21 @@ import 'dart:collection';
 import '../model/membership_dashboard_firestore.dart';
 import '../model/membership_dashboard_repository.dart';
 import '../model/membership_dashboard_cache.dart';
+import '../model/member_public_info_firestore.dart';
+import '../model/member_public_info_repository.dart';
+import '../model/member_public_info_cache.dart';
 
 
 class RepositorySingleton extends AbstractRepositorySingleton {
     var _membershipDashboardRepository = HashMap<String, MembershipDashboardRepository>();
+    var _memberPublicInfoRepository = MemberPublicInfoCache(MemberPublicInfoFirestore());
 
     MembershipDashboardRepository membershipDashboardRepository(String appId) {
       if (_membershipDashboardRepository[appId] == null) _membershipDashboardRepository[appId] = MembershipDashboardCache(MembershipDashboardFirestore(appRepository().getSubCollection(appId, 'membershipdashboard'), appId));
       return _membershipDashboardRepository[appId];
+    }
+    MemberPublicInfoRepository memberPublicInfoRepository() {
+      return _memberPublicInfoRepository;
     }
 
 }

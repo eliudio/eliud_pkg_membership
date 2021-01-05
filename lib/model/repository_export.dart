@@ -14,3 +14,4 @@
 */
 
 export '../model/membership_dashboard_repository.dart';
+export '../model/member_public_info_repository.dart';
