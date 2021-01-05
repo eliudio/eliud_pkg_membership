@@ -36,11 +36,9 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
   }
 
   static EliudQuery getSubscribedMembers(String ownerId) {
-    return EliudQuery(
-        theConditions: [
-          EliudQueryCondition('readAccess', arrayContains: ownerId),
-        ]
-    );
+    return EliudQuery(theConditions: [
+      EliudQueryCondition('readAccess', arrayContains: ownerId),
+    ]);
   }
 
   @override
@@ -48,16 +46,17 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
       BuildContext context, MembershipDashboardModel dashboardModel) {
     var state = AccessBloc.getState(context);
     if (state is AppLoaded) {
+      var appId = state.app.documentID;
       return BlocProvider<MemberPublicInfoListBloc>(
         create: (context) => MemberPublicInfoListBloc(
           AccessBloc.getBloc(context),
           eliudQuery: getSubscribedMembers(state.app.ownerID),
           memberPublicInfoRepository:
-          memberPublicInfoRepository(appId: AccessBloc.appId(context)),
+              memberPublicInfoRepository(appId: AccessBloc.appId(context)),
         )..add(LoadMemberPublicInfoList()),
         child: MemberPublicInfoListWidget(
             readOnly: true,
-            widgetProvider: widgetProvider,
+            widgetProvider: (value) => widgetProvider(appId, value),
             listBackground: BackgroundModel(documentID: "`transparent")),
       );
     } else {
@@ -65,8 +64,8 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
     }
   }
 
-  Widget widgetProvider(MemberPublicInfoModel value) {
-    return MyMemberPublicInfoListItem(value: value);
+  Widget widgetProvider(String appId, MemberPublicInfoModel value) {
+    return MyMemberPublicInfoListItem(appId: appId, value: value);
   }
 
   @override
