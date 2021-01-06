@@ -35,9 +35,9 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
     return AlertWidget(title: title, content: content);
   }
 
-  static EliudQuery getSubscribedMembers(String ownerId) {
+  static EliudQuery getSubscribedMembers(String appId) {
     return EliudQuery(theConditions: [
-      EliudQueryCondition('readAccess', arrayContains: ownerId),
+      EliudQueryCondition('subscriptionsAsString', arrayContains: appId),
     ]);
   }
 
@@ -50,7 +50,7 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
       return BlocProvider<MemberPublicInfoListBloc>(
         create: (context) => MemberPublicInfoListBloc(
           AccessBloc.getBloc(context),
-          eliudQuery: getSubscribedMembers(state.app.ownerID),
+          eliudQuery: getSubscribedMembers(state.app.documentID),
           memberPublicInfoRepository:
               memberPublicInfoRepository(appId: AccessBloc.appId(context)),
         )..add(LoadMemberPublicInfoList()),
@@ -65,7 +65,7 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
   }
 
   Widget widgetProvider(String appId, MemberPublicInfoModel value) {
-    return MyMemberPublicInfoListItem(appId: appId, value: value);
+    return MembershipDashboardItem(appId: appId, value: value);
   }
 
   @override
