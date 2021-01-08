@@ -57,8 +57,10 @@ class AdminApp extends AdminAppInstallerBase {
     components.add(BodyComponentModel(
       documentID: "internalWidget-membershipDashboards", componentName: "eliud_pkg_membership_internalWidgets", componentId: "membershipDashboards"));
     PageModel page = PageModel(
-        readCondition: ReadCondition.MemberOrPrivilegedMemberOnly,
-        privilegeLevelRequired: OWNER_PRIVILEGES,
+        conditions: ConditionsModel(
+          readCondition: ReadCondition.MemberOrPrivilegedMemberOnly,
+          privilegeLevelRequired: OWNER_PRIVILEGES
+        ),
         appId: appId,
         documentID: "eliud_pkg_membership_membershipdashboards_page",
         title: "MembershipDashboards",
@@ -78,8 +80,10 @@ class AdminApp extends AdminAppInstallerBase {
     components.add(BodyComponentModel(
       documentID: "internalWidget-memberPublicInfos", componentName: "eliud_pkg_membership_internalWidgets", componentId: "memberPublicInfos"));
     PageModel page = PageModel(
-        readCondition: ReadCondition.MemberOrPrivilegedMemberOnly,
-        privilegeLevelRequired: OWNER_PRIVILEGES,
+        conditions: ConditionsModel(
+          readCondition: ReadCondition.MemberOrPrivilegedMemberOnly,
+          privilegeLevelRequired: OWNER_PRIVILEGES
+        ),
         appId: appId,
         documentID: "eliud_pkg_membership_memberpublicinfos_page",
         title: "MemberPublicInfos",
