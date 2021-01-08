@@ -1,8 +1,11 @@
+import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_pkg_workflow/model/assignment_model.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_entity.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_model.dart';
 import 'package:eliud_pkg_notifications/platform/platform.dart';
+import 'package:eliud_pkg_workflow/tools/widgets/workflow_dialog_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -46,8 +49,11 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
 
   void confirmMembershipRequest(
       BuildContext context, AssignmentModel assignmentModel) {
+/*
+This is the wrong place to send this message
     AbstractNotificationPlatform.platform
         .sendMessage(context, assignmentModel.assigneeId, "You have requested membership for app " + assignmentModel.appId);
+*/
     Navigator.pop(context);
     finishTask(
         context,
@@ -103,14 +109,44 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
   @override
   Future<void> startTask(
       BuildContext context, AssignmentModel assignmentModel) {
-    // Present the details from the previous task
-    // Then ask if it's ok to approve, if yes >> approveMembershipRequest, if no >> disapproveMembershipRequest
-    // Allow Feedback message
+    String feedback = null;
+    DialogStatefulWidgetHelper.openIt(
+      context,
+      YesNoIgnoreDialogWithAssignmentResults(
+          title: 'Membership request',
+          message:
+          'Below the payment details. Please review and confirm or decline and provide feedback.',
+          yesLabel: 'Confirm membership',
+          noLabel: 'Decline membership',
+          resultsPrevious: assignmentModel.resultsPrevious,
+          yesFunction: () => _approveMembershipRequest(context, assignmentModel,
+              feedback),
+          noFunction: () => _disapproveMembershipRequest(context, assignmentModel,
+              feedback),
+          extraFields: [
+            DialogStateHelper().getListTile(
+                leading: Icon(Icons.payment),
+                title: DialogField(
+                  valueChanged: (value) => feedback = value,
+                  decoration: const InputDecoration(
+                    hintText: 'Feedback to the member',
+                    labelText: 'Feedback to the member',
+                  ),
+                ))
+          ]),
+    );
+    return null;
   }
 
-  void _approveMembershipRequest(
-      BuildContext context, AssignmentModel assignmentModel, String comment) {
+  Future<void> _approveMembershipRequest(
+      BuildContext context, AssignmentModel assignmentModel, String comment) async {
     _sendMessage(context, assignmentModel, "Your membership request has been approved", comment);
+    Navigator.pop(context);
+    var accessModel = await accessRepository(appId: assignmentModel.appId).get(assignmentModel.reporter.documentID);
+    if (accessModel != null) {
+      accessModel.privilegeLevel = PrivilegeLevel.Level1Privilege;
+      await accessRepository(appId: assignmentModel.appId).update(accessModel);
+    }
     finishTask(
         context,
         assignmentModel,
@@ -122,6 +158,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
   void _disapproveMembershipRequest(
       BuildContext context, AssignmentModel assignmentModel, String comment) {
     _sendMessage(context, assignmentModel, "Your membership request has been disapproved", comment);
+    Navigator.pop(context);
     finishTask(
         context,
         assignmentModel,

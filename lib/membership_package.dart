@@ -1,9 +1,8 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/navigate/navigate_bloc.dart';
-import 'package:eliud_core/eliud.dart';
+import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_pkg_membership/model/component_registry.dart';
 import 'package:eliud_pkg_membership/tools/task/membership_task_entity.dart';
 import 'package:eliud_pkg_membership/tools/task/membership_task_model.dart';
@@ -18,10 +17,10 @@ abstract class MembershipPackage extends Package {
   BlocProvider createMainBloc(NavigatorBloc navigatorBloc, AccessBloc accessBloc) => null;
 
   @override
-  Future<bool> isConditionOk(String packageCondition, AppModel app, MemberModel member, bool isOwner, int privilegeLevel) async {
+  Future<bool> isConditionOk(String packageCondition, AppModel app, MemberModel member, bool isOwner, bool isBlocked, PrivilegeLevel privilegeLevel) async {
     if (member == null) return false;
     if (packageCondition == MEMBER_HAS_NO_MEMBERSHIP_YET) {
-      return (privilegeLevel == NO_PRIVILEGE);
+      return (privilegeLevel == PrivilegeLevel.NoPrivilege);
     }
     return null;
   }
