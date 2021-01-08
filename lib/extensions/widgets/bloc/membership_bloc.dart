@@ -56,6 +56,7 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
       if (event is BlockMember) {
         yield await _update(theState.appId, theState.accessModel, AccessModel(
           documentID: theState.member.documentID,
+          privilegeLevel: PrivilegeLevel.NoPrivilege,
           privilegeLevelBeforeBlocked: PLToPLBL(theState.accessModel.privilegeLevel),
           blocked: true,
         ), theState.member);
@@ -63,6 +64,8 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
           yield await _update(theState.appId, theState.accessModel, AccessModel(
             documentID: theState.member.documentID,
             privilegeLevel: PLBLToPL(theState.accessModel.privilegeLevelBeforeBlocked),
+            privilegeLevelBeforeBlocked: null,
+            blocked: false,
           ), theState.member);
       } else if (event is PromoteMember) {
         if (theState.accessModel.privilegeLevel.index <= PrivilegeLevel.OwnerPrivilege.index) {

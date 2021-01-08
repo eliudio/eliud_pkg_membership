@@ -2,13 +2,11 @@ import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/tools/tool_set.dart';
 import 'package:eliud_pkg_notifications/platform/platform.dart';
 import 'package:eliud_core/model/access_model.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_pkg_membership/model/member_public_info_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flushbar/flushbar.dart';
 import 'bloc/membership_bloc.dart';
 import 'bloc/membership_event.dart';
 import 'bloc/membership_state.dart';
@@ -46,29 +44,31 @@ class _MembershipDialogState extends State<MembershipDialog> {
           onPressed: () =>
               _askUnblock(appId, oldAccessModel, member, privilegeLevel),
           child: Text('Unblock member')));
-    } else if (privilegeLevel != PrivilegeLevel.OwnerPrivilege) {
+    } else {
+      if (privilegeLevel != PrivilegeLevel.OwnerPrivilege) {
+        _buttons.add(RaisedButton(
+            onPressed: () => _askBlock(appId, oldAccessModel, member),
+            child: Text('Block member')));
+      }
+      if ((privilegeLevel.index >= PrivilegeLevel.NoPrivilege.index) &&
+          (privilegeLevel.index < PrivilegeLevel.Level2Privilege.index)) {
+        _buttons.add(RaisedButton(
+            onPressed: () =>
+                _askPromote(appId, oldAccessModel, member, privilegeLevel),
+            child: Text('Promote member')));
+      }
+      if ((privilegeLevel.index > PrivilegeLevel.NoPrivilege.index) &&
+          (privilegeLevel.index <= PrivilegeLevel.Level2Privilege.index)) {
+        _buttons.add(RaisedButton(
+            onPressed: () =>
+                _askDemote(appId, oldAccessModel, member, privilegeLevel),
+            child: Text('Demote member')));
+      }
       _buttons.add(RaisedButton(
-          onPressed: () => _askBlock(appId, oldAccessModel, member),
-          child: Text('Block member')));
+          onPressed: () => _askSendMessage(member), child: Text('Send message')));
+      return ListView(
+          shrinkWrap: true, physics: ScrollPhysics(), children: _buttons);
     }
-    if ((privilegeLevel.index >= PrivilegeLevel.NoPrivilege.index) &&
-        (privilegeLevel.index < PrivilegeLevel.Level2Privilege.index)) {
-      _buttons.add(RaisedButton(
-          onPressed: () =>
-              _askPromote(appId, oldAccessModel, member, privilegeLevel),
-          child: Text('Promote member')));
-    }
-    if ((privilegeLevel.index > PrivilegeLevel.NoPrivilege.index) &&
-        (privilegeLevel.index <= PrivilegeLevel.Level2Privilege.index)) {
-      _buttons.add(RaisedButton(
-          onPressed: () =>
-              _askDemote(appId, oldAccessModel, member, privilegeLevel),
-          child: Text('Demote member')));
-    }
-    _buttons.add(RaisedButton(
-        onPressed: () => _askSendMessage(member), child: Text('Send message')));
-    return ListView(
-        shrinkWrap: true, physics: ScrollPhysics(), children: _buttons);
   }
 
   void _askBlock(
@@ -172,11 +172,13 @@ class _MembershipDialogState extends State<MembershipDialog> {
     AbstractNotificationPlatform.platform.sendMessage(
         context, member.documentID, message,
         postSendAction: (value) {
+/*
           Flushbar(
             title:  "Message",
             message:  "Yay! Message sent!",
             duration:  Duration(seconds: 3),
           )..show(context);
+*/
         });
   }
 
