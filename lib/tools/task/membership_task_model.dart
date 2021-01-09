@@ -60,7 +60,7 @@ This is the wrong place to send this message
         assignmentModel,
         ExecutionResults(
           ExecutionStatus.success,
-        ));
+        ), null);
   }
 
   @override
@@ -152,7 +152,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         assignmentModel,
         ExecutionResults(
           ExecutionStatus.success,
-        ));
+        ), null);
   }
 
   void _disapproveMembershipRequest(
@@ -164,7 +164,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         assignmentModel,
         ExecutionResults(
           ExecutionStatus.success,  // declining the membership request is also a successful end of the task, from a task perspective
-        ));
+        ), null);
   }
 
   void _sendMessage(BuildContext context, AssignmentModel assignmentModel, String message, String comment) {
