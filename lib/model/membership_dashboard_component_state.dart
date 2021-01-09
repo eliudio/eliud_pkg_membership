@@ -30,6 +30,10 @@ class MembershipDashboardComponentError extends MembershipDashboardComponentStat
   MembershipDashboardComponentError({ this.message });
 }
 
+class MembershipDashboardComponentPermissionDenied extends MembershipDashboardComponentState {
+  MembershipDashboardComponentPermissionDenied();
+}
+
 class MembershipDashboardComponentLoaded extends MembershipDashboardComponentState {
   final MembershipDashboardModel value;
 
@@ -45,5 +49,4 @@ class MembershipDashboardComponentLoaded extends MembershipDashboardComponentSta
   @override
   String toString() => 'MembershipDashboardComponentLoaded { value: $value }';
 }
-
 

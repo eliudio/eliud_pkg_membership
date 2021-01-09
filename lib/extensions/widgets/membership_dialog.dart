@@ -43,7 +43,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
       blocked = false;
     }
     List<Widget> _buttons = [];
-    if (oldAccessModel.blocked) {
+    if ((oldAccessModel.blocked != null) && (oldAccessModel.blocked)) {
       _buttons.add(RaisedButton(
           onPressed: () =>
               _askUnblock(),

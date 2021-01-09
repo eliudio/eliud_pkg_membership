@@ -20,6 +20,8 @@ import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_component_event.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_component_state.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_repository.dart';
+import 'package:flutter/services.dart';
+
 class MembershipDashboardComponentBloc extends Bloc<MembershipDashboardComponentEvent, MembershipDashboardComponentState> {
   final MembershipDashboardRepository membershipDashboardRepository;
 
@@ -30,13 +32,23 @@ class MembershipDashboardComponentBloc extends Bloc<MembershipDashboardComponent
     if (event is FetchMembershipDashboardComponent) {
       try {
         if (currentState is MembershipDashboardComponentUninitialized) {
-          final MembershipDashboardModel model = await _fetchMembershipDashboard(event.id);
-
-          if (model != null) {
-            yield MembershipDashboardComponentLoaded(value: model);
+          bool permissionDenied = false;
+          final model = await membershipDashboardRepository.get(event.id, onError: (error) {
+            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
+            if ((error is PlatformException) &&  (error.message.startsWith("PERMISSION_DENIED"))) {
+              permissionDenied = true;
+            }
+          });
+          if (permissionDenied) {
+            yield MembershipDashboardComponentPermissionDenied();
           } else {
-            String id = event.id;
-            yield MembershipDashboardComponentError(message: "MembershipDashboard with id = '$id' not found");
+            if (model != null) {
+              yield MembershipDashboardComponentLoaded(value: model);
+            } else {
+              String id = event.id;
+              yield MembershipDashboardComponentError(
+                  message: "MembershipDashboard with id = '$id' not found");
+            }
           }
           return;
         }
@@ -46,15 +58,10 @@ class MembershipDashboardComponentBloc extends Bloc<MembershipDashboardComponent
     }
   }
 
-  Future<MembershipDashboardModel> _fetchMembershipDashboard(String id) async {
-    return membershipDashboardRepository.get(id);
-  }
-
   @override
   Future<void> close() {
     return super.close();
   }
 
 }
-
 

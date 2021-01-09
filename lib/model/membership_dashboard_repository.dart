@@ -39,7 +39,7 @@ typedef MembershipDashboardChanged(MembershipDashboardModel value);
 abstract class MembershipDashboardRepository {
   Future<MembershipDashboardModel> add(MembershipDashboardModel value);
   Future<void> delete(MembershipDashboardModel value);
-  Future<MembershipDashboardModel> get(String id);
+  Future<MembershipDashboardModel> get(String id, { Function(Exception) onError });
   Future<MembershipDashboardModel> update(MembershipDashboardModel value);
 
   Stream<List<MembershipDashboardModel>> values({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });

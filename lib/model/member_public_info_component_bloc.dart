@@ -20,6 +20,8 @@ import 'package:eliud_pkg_membership/model/member_public_info_model.dart';
 import 'package:eliud_pkg_membership/model/member_public_info_component_event.dart';
 import 'package:eliud_pkg_membership/model/member_public_info_component_state.dart';
 import 'package:eliud_pkg_membership/model/member_public_info_repository.dart';
+import 'package:flutter/services.dart';
+
 class MemberPublicInfoComponentBloc extends Bloc<MemberPublicInfoComponentEvent, MemberPublicInfoComponentState> {
   final MemberPublicInfoRepository memberPublicInfoRepository;
 
@@ -30,13 +32,23 @@ class MemberPublicInfoComponentBloc extends Bloc<MemberPublicInfoComponentEvent,
     if (event is FetchMemberPublicInfoComponent) {
       try {
         if (currentState is MemberPublicInfoComponentUninitialized) {
-          final MemberPublicInfoModel model = await _fetchMemberPublicInfo(event.id);
-
-          if (model != null) {
-            yield MemberPublicInfoComponentLoaded(value: model);
+          bool permissionDenied = false;
+          final model = await memberPublicInfoRepository.get(event.id, onError: (error) {
+            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
+            if ((error is PlatformException) &&  (error.message.startsWith("PERMISSION_DENIED"))) {
+              permissionDenied = true;
+            }
+          });
+          if (permissionDenied) {
+            yield MemberPublicInfoComponentPermissionDenied();
           } else {
-            String id = event.id;
-            yield MemberPublicInfoComponentError(message: "MemberPublicInfo with id = '$id' not found");
+            if (model != null) {
+              yield MemberPublicInfoComponentLoaded(value: model);
+            } else {
+              String id = event.id;
+              yield MemberPublicInfoComponentError(
+                  message: "MemberPublicInfo with id = '$id' not found");
+            }
           }
           return;
         }
@@ -46,15 +58,10 @@ class MemberPublicInfoComponentBloc extends Bloc<MemberPublicInfoComponentEvent,
     }
   }
 
-  Future<MemberPublicInfoModel> _fetchMemberPublicInfo(String id) async {
-    return memberPublicInfoRepository.get(id);
-  }
-
   @override
   Future<void> close() {
     return super.close();
   }
 
 }
-
 

@@ -97,6 +97,12 @@ class MembershipDashboardFormBloc extends Bloc<MembershipDashboardFormEvent, Mem
 
         return;
       }
+      if (event is ChangedMembershipDashboardConditions) {
+        newValue = currentState.value.copyWith(conditions: event.value);
+        yield SubmittableMembershipDashboardForm(value: newValue);
+
+        return;
+      }
     }
   }
 

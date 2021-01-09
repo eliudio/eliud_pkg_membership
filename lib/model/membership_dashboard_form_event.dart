@@ -95,3 +95,15 @@ class ChangedMembershipDashboardDescription extends MembershipDashboardFormEvent
   String toString() => 'ChangedMembershipDashboardDescription{ value: $value }';
 }
 
+class ChangedMembershipDashboardConditions extends MembershipDashboardFormEvent {
+  final ConditionsSimpleModel value;
+
+  ChangedMembershipDashboardConditions({this.value});
+
+  @override
+  List<Object> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedMembershipDashboardConditions{ value: $value }';
+}
+

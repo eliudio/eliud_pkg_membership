@@ -30,6 +30,10 @@ class MemberPublicInfoComponentError extends MemberPublicInfoComponentState {
   MemberPublicInfoComponentError({ this.message });
 }
 
+class MemberPublicInfoComponentPermissionDenied extends MemberPublicInfoComponentState {
+  MemberPublicInfoComponentPermissionDenied();
+}
+
 class MemberPublicInfoComponentLoaded extends MemberPublicInfoComponentState {
   final MemberPublicInfoModel value;
 
@@ -45,5 +49,4 @@ class MemberPublicInfoComponentLoaded extends MemberPublicInfoComponentState {
   @override
   String toString() => 'MemberPublicInfoComponentLoaded { value: $value }';
 }
-
 

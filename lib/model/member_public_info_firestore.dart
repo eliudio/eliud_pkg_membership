@@ -55,12 +55,16 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
   Future<MemberPublicInfoModel> _populateDocPlus(DocumentSnapshot value) async {
     return MemberPublicInfoModel.fromEntityPlus(value.documentID, MemberPublicInfoEntity.fromMap(value.data), );  }
 
-  Future<MemberPublicInfoModel> get(String id) {
+  Future<MemberPublicInfoModel> get(String id, {Function(Exception) onError}) {
     return MemberPublicInfoCollection.document(id).get().then((doc) {
       if (doc.data != null)
         return _populateDocPlus(doc);
       else
         return null;
+    }).catchError((Object e) {
+      if (onError != null) {
+        onError(e);
+      }
     });
   }
 

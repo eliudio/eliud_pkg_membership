@@ -43,10 +43,16 @@ abstract class AbstractMembershipDashboardComponent extends StatelessWidget {
     return BlocBuilder<MembershipDashboardComponentBloc, MembershipDashboardComponentState>(builder: (context, state) {
       if (state is MembershipDashboardComponentLoaded) {
         if (state.value == null) {
-          return alertWidget(title: 'Error', content: 'No membershipDashboard defined');
+          return alertWidget(title: 'Error', content: 'No MembershipDashboard defined');
         } else {
           return yourWidget(context, state.value);
         }
+      } else if (state is MembershipDashboardComponentPermissionDenied) {
+        return Icon(
+          Icons.highlight_off,
+          color: Colors.red,
+          size: 30.0,
+        );
       } else if (state is MembershipDashboardComponentError) {
         return alertWidget(title: 'Error', content: state.message);
       } else {
@@ -61,5 +67,4 @@ abstract class AbstractMembershipDashboardComponent extends StatelessWidget {
   Widget alertWidget({ title: String, content: String});
   MembershipDashboardRepository getMembershipDashboardRepository(BuildContext context);
 }
-
 

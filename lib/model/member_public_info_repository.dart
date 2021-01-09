@@ -39,7 +39,7 @@ typedef MemberPublicInfoChanged(MemberPublicInfoModel value);
 abstract class MemberPublicInfoRepository {
   Future<MemberPublicInfoModel> add(MemberPublicInfoModel value);
   Future<void> delete(MemberPublicInfoModel value);
-  Future<MemberPublicInfoModel> get(String id);
+  Future<MemberPublicInfoModel> get(String id, { Function(Exception) onError });
   Future<MemberPublicInfoModel> update(MemberPublicInfoModel value);
 
   Stream<List<MemberPublicInfoModel>> values({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });

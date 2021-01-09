@@ -55,12 +55,16 @@ class MembershipDashboardFirestore implements MembershipDashboardRepository {
   Future<MembershipDashboardModel> _populateDocPlus(DocumentSnapshot value) async {
     return MembershipDashboardModel.fromEntityPlus(value.documentID, MembershipDashboardEntity.fromMap(value.data), appId: appId);  }
 
-  Future<MembershipDashboardModel> get(String id) {
+  Future<MembershipDashboardModel> get(String id, {Function(Exception) onError}) {
     return MembershipDashboardCollection.document(id).get().then((doc) {
       if (doc.data != null)
         return _populateDocPlus(doc);
       else
         return null;
+    }).catchError((Object e) {
+      if (onError != null) {
+        onError(e);
+      }
     });
   }
 

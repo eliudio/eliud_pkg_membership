@@ -239,6 +239,20 @@ class _MyMembershipDashboardFormState extends State<MyMembershipDashboardForm> {
         children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
 
 
+         children.add(Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: Text('Conditions',
+                      style: TextStyle(
+                          color: RgbHelper.color(rgbo: app.formGroupTitleColor), fontWeight: FontWeight.bold)),
+                ));
+
+
+
+        children.add(Container(height: 20.0));
+        children.add(Divider(height: 1.0, thickness: 1.0, color: RgbHelper.color(rgbo: app.dividerColor)));
+
+
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
           children.add(RaisedButton(
                   color: RgbHelper.color(rgbo: app.formSubmitButtonColor),
@@ -252,6 +266,7 @@ class _MyMembershipDashboardFormState extends State<MyMembershipDashboardForm> {
                               documentID: state.value.documentID, 
                               appId: state.value.appId, 
                               description: state.value.description, 
+                              conditions: state.value.conditions, 
                         )));
                       } else {
                         BlocProvider.of<MembershipDashboardListBloc>(context).add(
@@ -259,6 +274,7 @@ class _MyMembershipDashboardFormState extends State<MyMembershipDashboardForm> {
                               documentID: state.value.documentID, 
                               appId: state.value.appId, 
                               description: state.value.description, 
+                              conditions: state.value.conditions, 
                           )));
                       }
                       if (widget.submitAction != null) {
