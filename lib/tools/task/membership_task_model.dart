@@ -23,8 +23,6 @@ abstract class MembershipTaskModel extends TaskModel {
 // ***** RequestMembershipTaskModel *****
 
 class RequestMembershipTaskModel extends MembershipTaskModel {
-  static String label = 'MEMBERSHIP_TASK_REQUEST_MEMBERSHIP';
-
   RequestMembershipTaskModel({String description, bool executeInstantly})
       : super(
           description: description,
