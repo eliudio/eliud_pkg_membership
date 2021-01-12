@@ -37,27 +37,27 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
   Future<MemberPublicInfoModel> add(MemberPublicInfoModel value) {
-    return MemberPublicInfoCollection.document(value.documentID).setData(value.toEntity().toDocument()).then((_) => value);
+    return MemberPublicInfoCollection.doc(value.documentID).set(value.toEntity().toDocument()).then((_) => value);
   }
 
   Future<void> delete(MemberPublicInfoModel value) {
-    return MemberPublicInfoCollection.document(value.documentID).delete();
+    return MemberPublicInfoCollection.doc(value.documentID).delete();
   }
 
   Future<MemberPublicInfoModel> update(MemberPublicInfoModel value) {
-    return MemberPublicInfoCollection.document(value.documentID).updateData(value.toEntity().toDocument()).then((_) => value);
+    return MemberPublicInfoCollection.doc(value.documentID).update(value.toEntity().toDocument()).then((_) => value);
   }
 
   MemberPublicInfoModel _populateDoc(DocumentSnapshot value) {
-    return MemberPublicInfoModel.fromEntity(value.documentID, MemberPublicInfoEntity.fromMap(value.data));
+    return MemberPublicInfoModel.fromEntity(value.id, MemberPublicInfoEntity.fromMap(value.data()));
   }
 
   Future<MemberPublicInfoModel> _populateDocPlus(DocumentSnapshot value) async {
-    return MemberPublicInfoModel.fromEntityPlus(value.documentID, MemberPublicInfoEntity.fromMap(value.data), );  }
+    return MemberPublicInfoModel.fromEntityPlus(value.id, MemberPublicInfoEntity.fromMap(value.data()), );  }
 
   Future<MemberPublicInfoModel> get(String id, {Function(Exception) onError}) {
-    return MemberPublicInfoCollection.document(id).get().then((doc) {
-      if (doc.data != null)
+    return MemberPublicInfoCollection.doc(id).get().then((doc) {
+      if (doc.data() != null)
         return _populateDocPlus(doc);
       else
         return null;
@@ -71,7 +71,7 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
   StreamSubscription<List<MemberPublicInfoModel>> listen(MemberPublicInfoModelTrigger trigger, {String currentMember, String orderBy, bool descending, Object startAfter, int limit, int privilegeLevel, EliudQuery eliudQuery}) {
     Stream<List<MemberPublicInfoModel>> stream;
     stream = getQuery(MemberPublicInfoCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).snapshots().map((data) {
-      Iterable<MemberPublicInfoModel> memberPublicInfos  = data.documents.map((doc) {
+      Iterable<MemberPublicInfoModel> memberPublicInfos  = data.docs.map((doc) {
         MemberPublicInfoModel value = _populateDoc(doc);
         return value;
       }).toList();
@@ -86,7 +86,7 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
     Stream<List<MemberPublicInfoModel>> stream;
     stream = getQuery(MemberPublicInfoCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).snapshots()
         .asyncMap((data) async {
-      return await Future.wait(data.documents.map((doc) =>  _populateDocPlus(doc)).toList());
+      return await Future.wait(data.docs.map((doc) =>  _populateDocPlus(doc)).toList());
     });
 
     return stream.listen((listOfMemberPublicInfoModels) {
@@ -96,7 +96,7 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
 
   @override
   StreamSubscription<MemberPublicInfoModel> listenTo(String documentId, MemberPublicInfoChanged changed) {
-    var stream = MemberPublicInfoCollection.document(documentId)
+    var stream = MemberPublicInfoCollection.doc(documentId)
         .snapshots()
         .asyncMap((data) {
       return _populateDocPlus(data);
@@ -109,7 +109,7 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
   Stream<List<MemberPublicInfoModel>> values({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) {
     DocumentSnapshot lastDoc;
     Stream<List<MemberPublicInfoModel>> _values = getQuery(MemberPublicInfoCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).snapshots().map((snapshot) {
-      return snapshot.documents.map((doc) {
+      return snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDoc(doc);
       }).toList();});
@@ -120,7 +120,7 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
   Stream<List<MemberPublicInfoModel>> valuesWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) {
     DocumentSnapshot lastDoc;
     Stream<List<MemberPublicInfoModel>> _values = getQuery(MemberPublicInfoCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).snapshots().asyncMap((snapshot) {
-      return Future.wait(snapshot.documents.map((doc) {
+      return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDocPlus(doc);
       }).toList());
@@ -131,8 +131,8 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
 
   Future<List<MemberPublicInfoModel>> valuesList({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) async {
     DocumentSnapshot lastDoc;
-    List<MemberPublicInfoModel> _values = await getQuery(MemberPublicInfoCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).getDocuments().then((value) {
-      var list = value.documents;
+    List<MemberPublicInfoModel> _values = await getQuery(MemberPublicInfoCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).get().then((value) {
+      var list = value.docs;
       return list.map((doc) { 
         lastDoc = doc;
         return _populateDoc(doc);
@@ -144,8 +144,8 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
 
   Future<List<MemberPublicInfoModel>> valuesListWithDetails({String currentMember, String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery }) async {
     DocumentSnapshot lastDoc;
-    List<MemberPublicInfoModel> _values = await getQuery(MemberPublicInfoCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).getDocuments().then((value) {
-      var list = value.documents;
+    List<MemberPublicInfoModel> _values = await getQuery(MemberPublicInfoCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).get().then((value) {
+      var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
         return _populateDocPlus(doc);
@@ -158,15 +158,15 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
   void flush() {}
 
   Future<void> deleteAll() {
-    return MemberPublicInfoCollection.getDocuments().then((snapshot) {
-      for (DocumentSnapshot ds in snapshot.documents){
+    return MemberPublicInfoCollection.get().then((snapshot) {
+      for (DocumentSnapshot ds in snapshot.docs){
         ds.reference.delete();
       }
     });
   }
 
   dynamic getSubCollection(String documentId, String name) {
-    return MemberPublicInfoCollection.document(documentId).collection(name);
+    return MemberPublicInfoCollection.doc(documentId).collection(name);
   }
 
   String timeStampToString(dynamic timeStamp) {
@@ -175,7 +175,7 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
 
   MemberPublicInfoFirestore();
 
-  final CollectionReference MemberPublicInfoCollection = Firestore.instance.collection('memberpublicinfo');
+  final CollectionReference MemberPublicInfoCollection = FirebaseFirestore.instance.collection('memberpublicinfo');
 
 }
 
