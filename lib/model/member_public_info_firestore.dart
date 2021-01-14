@@ -75,7 +75,7 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
 //    The reason we're subscribing twice to the same list, is because the close on bloc isn't called. This needs to be fixed.
 //    See https://github.com/felangel/bloc/issues/2073.
 //    In the meantime:
-      stream = getQuery(memberPublicInfoRepository(), currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).snapshots().map((data) {
+      stream = getQuery(FirebaseFirestore.instance.collection('memberpublicinfo'), currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).snapshots().map((data) {
       Iterable<MemberPublicInfoModel> memberPublicInfos  = data.docs.map((doc) {
         MemberPublicInfoModel value = _populateDoc(doc);
         return value;
@@ -91,7 +91,7 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
     Stream<List<MemberPublicInfoModel>> stream;
 //  stream = getQuery(MemberPublicInfoCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).snapshots()
 //  see comment listen(...) above
-    stream = getQuery(memberPublicInfoRepository(), currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).snapshots()
+    stream = getQuery(FirebaseFirestore.instance.collection('memberpublicinfo'), currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, ).snapshots()
         .asyncMap((data) async {
       return await Future.wait(data.docs.map((doc) =>  _populateDocPlus(doc)).toList());
     });

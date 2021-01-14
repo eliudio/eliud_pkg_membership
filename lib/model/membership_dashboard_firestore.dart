@@ -75,7 +75,7 @@ class MembershipDashboardFirestore implements MembershipDashboardRepository {
 //    The reason we're subscribing twice to the same list, is because the close on bloc isn't called. This needs to be fixed.
 //    See https://github.com/felangel/bloc/issues/2073.
 //    In the meantime:
-      stream = getQuery(appRepository().getSubCollection(appId, 'membershipDashboard'), currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots().map((data) {
+      stream = getQuery(appRepository().getSubCollection(appId, 'membershipdashboard'), currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots().map((data) {
       Iterable<MembershipDashboardModel> membershipDashboards  = data.docs.map((doc) {
         MembershipDashboardModel value = _populateDoc(doc);
         return value;
@@ -91,7 +91,7 @@ class MembershipDashboardFirestore implements MembershipDashboardRepository {
     Stream<List<MembershipDashboardModel>> stream;
 //  stream = getQuery(MembershipDashboardCollection, currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots()
 //  see comment listen(...) above
-    stream = getQuery(appRepository().getSubCollection(appId, 'membershipDashboard'), currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots()
+    stream = getQuery(appRepository().getSubCollection(appId, 'membershipdashboard'), currentMember: currentMember, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots()
         .asyncMap((data) async {
       return await Future.wait(data.docs.map((doc) =>  _populateDocPlus(doc)).toList());
     });
