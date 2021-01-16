@@ -40,12 +40,12 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
 
   Stream<MembershipDashboardListState> _mapLoadMembershipDashboardListToState({ String orderBy, bool descending }) async* {
     _membershipDashboardsListSubscription?.cancel();
-    _membershipDashboardsListSubscription = _membershipDashboardRepository.listen((list) => add(MembershipDashboardListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery, );
+    _membershipDashboardsListSubscription = _membershipDashboardRepository.listen((list) => add(MembershipDashboardListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery,);
   }
 
   Stream<MembershipDashboardListState> _mapLoadMembershipDashboardListWithDetailsToState({ String orderBy, bool descending }) async* {
     _membershipDashboardsListSubscription?.cancel();
-    _membershipDashboardsListSubscription = _membershipDashboardRepository.listenWithDetails((list) => add(MembershipDashboardListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery, );
+    _membershipDashboardsListSubscription = _membershipDashboardRepository.listenWithDetails((list) => add(MembershipDashboardListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery,);
   }
 
   Stream<MembershipDashboardListState> _mapAddMembershipDashboardListToState(AddMembershipDashboardList event) async* {

@@ -40,12 +40,12 @@ class MemberPublicInfoListBloc extends Bloc<MemberPublicInfoListEvent, MemberPub
 
   Stream<MemberPublicInfoListState> _mapLoadMemberPublicInfoListToState({ String orderBy, bool descending }) async* {
     _memberPublicInfosListSubscription?.cancel();
-    _memberPublicInfosListSubscription = _memberPublicInfoRepository.listen((list) => add(MemberPublicInfoListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery, );
+    _memberPublicInfosListSubscription = _memberPublicInfoRepository.listen((list) => add(MemberPublicInfoListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery,);
   }
 
   Stream<MemberPublicInfoListState> _mapLoadMemberPublicInfoListWithDetailsToState({ String orderBy, bool descending }) async* {
     _memberPublicInfosListSubscription?.cancel();
-    _memberPublicInfosListSubscription = _memberPublicInfoRepository.listenWithDetails((list) => add(MemberPublicInfoListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery, );
+    _memberPublicInfosListSubscription = _memberPublicInfoRepository.listenWithDetails((list) => add(MemberPublicInfoListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery,);
   }
 
   Stream<MemberPublicInfoListState> _mapAddMemberPublicInfoListToState(AddMemberPublicInfoList event) async* {
