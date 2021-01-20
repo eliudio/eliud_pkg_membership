@@ -122,7 +122,6 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<MembershipDashboardListBloc>(
           create: (context) => MembershipDashboardListBloc(
-            BlocProvider.of<AccessBloc>(context), 
             membershipDashboardRepository: membershipDashboardRepository(appId: AccessBloc.appId(context)),
           )..add(LoadMembershipDashboardList()),
         )
@@ -136,7 +135,6 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<MemberPublicInfoListBloc>(
           create: (context) => MemberPublicInfoListBloc(
-            BlocProvider.of<AccessBloc>(context), 
             memberPublicInfoRepository: memberPublicInfoRepository(),
           )..add(LoadMemberPublicInfoList()),
         )
@@ -172,7 +170,6 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<MembershipDashboardListBloc>(
           create: (context) => MembershipDashboardListBloc(
-            BlocProvider.of<AccessBloc>(context), 
             membershipDashboardRepository: membershipDashboardRepository(appId: AccessBloc.appId(context)),
           )..add(LoadMembershipDashboardList()),
         )
@@ -186,7 +183,6 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<MemberPublicInfoListBloc>(
           create: (context) => MemberPublicInfoListBloc(
-            BlocProvider.of<AccessBloc>(context), 
             memberPublicInfoRepository: memberPublicInfoRepository(),
           )..add(LoadMemberPublicInfoList()),
         )

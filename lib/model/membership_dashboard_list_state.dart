@@ -27,11 +27,12 @@ class MembershipDashboardListLoading extends MembershipDashboardListState {}
 
 class MembershipDashboardListLoaded extends MembershipDashboardListState {
   final List<MembershipDashboardModel> values;
+  final bool mightHaveMore;
 
-  const MembershipDashboardListLoaded({this.values = const []});
+  const MembershipDashboardListLoaded({this.mightHaveMore, this.values = const []});
 
   @override
-  List<Object> get props => [ values ];
+  List<Object> get props => [ values, mightHaveMore ];
 
   @override
   String toString() => 'MembershipDashboardListLoaded { values: $values }';

@@ -22,18 +22,9 @@ abstract class MembershipDashboardListEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadMembershipDashboardList extends MembershipDashboardListEvent {
-  final String orderBy;
-  final bool descending;
+class LoadMembershipDashboardList extends MembershipDashboardListEvent {}
 
-  LoadMembershipDashboardList({this.orderBy, this.descending});
-
-  @override
-  List<Object> get props => [orderBy, descending];
-
-}
-
-class LoadMembershipDashboardListWithDetails extends MembershipDashboardListEvent {}
+class NewPage extends MembershipDashboardListEvent {}
 
 class AddMembershipDashboardList extends MembershipDashboardListEvent {
   final MembershipDashboardModel value;
@@ -73,13 +64,14 @@ class DeleteMembershipDashboardList extends MembershipDashboardListEvent {
 
 class MembershipDashboardListUpdated extends MembershipDashboardListEvent {
   final List<MembershipDashboardModel> value;
+  final bool mightHaveMore;
 
-  const MembershipDashboardListUpdated({ this.value });
-
-  @override
-  List<Object> get props => [ value ];
+  const MembershipDashboardListUpdated({ this.value, this.mightHaveMore });
 
   @override
-  String toString() => 'MembershipDashboardListUpdated{ value: $value }';
+  List<Object> get props => [ value, mightHaveMore ];
+
+  @override
+  String toString() => 'MembershipDashboardListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 

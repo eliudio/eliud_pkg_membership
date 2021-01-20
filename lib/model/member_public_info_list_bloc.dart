@@ -20,32 +20,48 @@ import 'package:meta/meta.dart';
 import 'package:eliud_pkg_membership/model/member_public_info_repository.dart';
 import 'package:eliud_pkg_membership/model/member_public_info_list_event.dart';
 import 'package:eliud_pkg_membership/model/member_public_info_list_state.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_event.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
 
+
+const _memberPublicInfoLimit = 5;
 
 class MemberPublicInfoListBloc extends Bloc<MemberPublicInfoListEvent, MemberPublicInfoListState> {
   final MemberPublicInfoRepository _memberPublicInfoRepository;
   StreamSubscription _memberPublicInfosListSubscription;
-  final AccessBloc accessBloc;
   final EliudQuery eliudQuery;
+  int pages = 1;
+  final bool paged;
+  final String orderBy;
+  final bool descending;
+  final bool detailed;
 
-
-  MemberPublicInfoListBloc(this.accessBloc,{ this.eliudQuery, @required MemberPublicInfoRepository memberPublicInfoRepository })
+  MemberPublicInfoListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, @required MemberPublicInfoRepository memberPublicInfoRepository})
       : assert(memberPublicInfoRepository != null),
-      _memberPublicInfoRepository = memberPublicInfoRepository,
-      super(MemberPublicInfoListLoading());
+        _memberPublicInfoRepository = memberPublicInfoRepository,
+        super(MemberPublicInfoListLoading());
 
-  Stream<MemberPublicInfoListState> _mapLoadMemberPublicInfoListToState({ String orderBy, bool descending }) async* {
+  Stream<MemberPublicInfoListState> _mapLoadMemberPublicInfoListToState() async* {
+    int amountNow =  (state is MemberPublicInfoListLoaded) ? (state as MemberPublicInfoListLoaded).values.length : 0;
     _memberPublicInfosListSubscription?.cancel();
-    _memberPublicInfosListSubscription = _memberPublicInfoRepository.listen((list) => add(MemberPublicInfoListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery,);
+    _memberPublicInfosListSubscription = _memberPublicInfoRepository.listen(
+          (list) => add(MemberPublicInfoListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+      orderBy: orderBy,
+      descending: descending,
+      eliudQuery: eliudQuery,
+      limit: ((paged != null) && (paged)) ? pages * _memberPublicInfoLimit : null
+    );
   }
 
-  Stream<MemberPublicInfoListState> _mapLoadMemberPublicInfoListWithDetailsToState({ String orderBy, bool descending }) async* {
+  Stream<MemberPublicInfoListState> _mapLoadMemberPublicInfoListWithDetailsToState() async* {
+    int amountNow =  (state is MemberPublicInfoListLoaded) ? (state as MemberPublicInfoListLoaded).values.length : 0;
     _memberPublicInfosListSubscription?.cancel();
-    _memberPublicInfosListSubscription = _memberPublicInfoRepository.listenWithDetails((list) => add(MemberPublicInfoListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery,);
+    _memberPublicInfosListSubscription = _memberPublicInfoRepository.listenWithDetails(
+            (list) => add(MemberPublicInfoListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && (paged)) ? pages * _memberPublicInfoLimit : null
+    );
   }
 
   Stream<MemberPublicInfoListState> _mapAddMemberPublicInfoListToState(AddMemberPublicInfoList event) async* {
@@ -60,17 +76,22 @@ class MemberPublicInfoListBloc extends Bloc<MemberPublicInfoListEvent, MemberPub
     _memberPublicInfoRepository.delete(event.value);
   }
 
-  Stream<MemberPublicInfoListState> _mapMemberPublicInfoListUpdatedToState(MemberPublicInfoListUpdated event) async* {
-    yield MemberPublicInfoListLoaded(values: event.value);
+  Stream<MemberPublicInfoListState> _mapMemberPublicInfoListUpdatedToState(
+      MemberPublicInfoListUpdated event) async* {
+    yield MemberPublicInfoListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
   }
-
 
   @override
   Stream<MemberPublicInfoListState> mapEventToState(MemberPublicInfoListEvent event) async* {
-    final currentState = state;
     if (event is LoadMemberPublicInfoList) {
-      yield* _mapLoadMemberPublicInfoListToState(orderBy: event.orderBy, descending: event.descending);
-    } if (event is LoadMemberPublicInfoListWithDetails) {
+      if ((detailed == null) || (!detailed)) {
+        yield* _mapLoadMemberPublicInfoListToState();
+      } else {
+        yield* _mapLoadMemberPublicInfoListWithDetailsToState();
+      }
+    }
+    if (event is NewPage) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadMemberPublicInfoListWithDetailsToState();
     } else if (event is AddMemberPublicInfoList) {
       yield* _mapAddMemberPublicInfoListToState(event);
@@ -88,7 +109,6 @@ class MemberPublicInfoListBloc extends Bloc<MemberPublicInfoListEvent, MemberPub
     _memberPublicInfosListSubscription?.cancel();
     return super.close();
   }
-
 }
 
 

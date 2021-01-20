@@ -20,32 +20,48 @@ import 'package:meta/meta.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_repository.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_list_event.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_list_state.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_event.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
 
+
+const _membershipDashboardLimit = 5;
 
 class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, MembershipDashboardListState> {
   final MembershipDashboardRepository _membershipDashboardRepository;
   StreamSubscription _membershipDashboardsListSubscription;
-  final AccessBloc accessBloc;
   final EliudQuery eliudQuery;
+  int pages = 1;
+  final bool paged;
+  final String orderBy;
+  final bool descending;
+  final bool detailed;
 
-
-  MembershipDashboardListBloc(this.accessBloc,{ this.eliudQuery, @required MembershipDashboardRepository membershipDashboardRepository })
+  MembershipDashboardListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, @required MembershipDashboardRepository membershipDashboardRepository})
       : assert(membershipDashboardRepository != null),
-      _membershipDashboardRepository = membershipDashboardRepository,
-      super(MembershipDashboardListLoading());
+        _membershipDashboardRepository = membershipDashboardRepository,
+        super(MembershipDashboardListLoading());
 
-  Stream<MembershipDashboardListState> _mapLoadMembershipDashboardListToState({ String orderBy, bool descending }) async* {
+  Stream<MembershipDashboardListState> _mapLoadMembershipDashboardListToState() async* {
+    int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values.length : 0;
     _membershipDashboardsListSubscription?.cancel();
-    _membershipDashboardsListSubscription = _membershipDashboardRepository.listen((list) => add(MembershipDashboardListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery,);
+    _membershipDashboardsListSubscription = _membershipDashboardRepository.listen(
+          (list) => add(MembershipDashboardListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+      orderBy: orderBy,
+      descending: descending,
+      eliudQuery: eliudQuery,
+      limit: ((paged != null) && (paged)) ? pages * _membershipDashboardLimit : null
+    );
   }
 
-  Stream<MembershipDashboardListState> _mapLoadMembershipDashboardListWithDetailsToState({ String orderBy, bool descending }) async* {
+  Stream<MembershipDashboardListState> _mapLoadMembershipDashboardListWithDetailsToState() async* {
+    int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values.length : 0;
     _membershipDashboardsListSubscription?.cancel();
-    _membershipDashboardsListSubscription = _membershipDashboardRepository.listenWithDetails((list) => add(MembershipDashboardListUpdated(value: list)), orderBy: orderBy, descending: descending, eliudQuery: eliudQuery,);
+    _membershipDashboardsListSubscription = _membershipDashboardRepository.listenWithDetails(
+            (list) => add(MembershipDashboardListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && (paged)) ? pages * _membershipDashboardLimit : null
+    );
   }
 
   Stream<MembershipDashboardListState> _mapAddMembershipDashboardListToState(AddMembershipDashboardList event) async* {
@@ -60,17 +76,22 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
     _membershipDashboardRepository.delete(event.value);
   }
 
-  Stream<MembershipDashboardListState> _mapMembershipDashboardListUpdatedToState(MembershipDashboardListUpdated event) async* {
-    yield MembershipDashboardListLoaded(values: event.value);
+  Stream<MembershipDashboardListState> _mapMembershipDashboardListUpdatedToState(
+      MembershipDashboardListUpdated event) async* {
+    yield MembershipDashboardListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
   }
-
 
   @override
   Stream<MembershipDashboardListState> mapEventToState(MembershipDashboardListEvent event) async* {
-    final currentState = state;
     if (event is LoadMembershipDashboardList) {
-      yield* _mapLoadMembershipDashboardListToState(orderBy: event.orderBy, descending: event.descending);
-    } if (event is LoadMembershipDashboardListWithDetails) {
+      if ((detailed == null) || (!detailed)) {
+        yield* _mapLoadMembershipDashboardListToState();
+      } else {
+        yield* _mapLoadMembershipDashboardListWithDetailsToState();
+      }
+    }
+    if (event is NewPage) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadMembershipDashboardListWithDetailsToState();
     } else if (event is AddMembershipDashboardList) {
       yield* _mapAddMembershipDashboardListToState(event);
@@ -88,7 +109,6 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
     _membershipDashboardsListSubscription?.cancel();
     return super.close();
   }
-
 }
 
 

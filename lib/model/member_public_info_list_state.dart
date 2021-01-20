@@ -27,11 +27,12 @@ class MemberPublicInfoListLoading extends MemberPublicInfoListState {}
 
 class MemberPublicInfoListLoaded extends MemberPublicInfoListState {
   final List<MemberPublicInfoModel> values;
+  final bool mightHaveMore;
 
-  const MemberPublicInfoListLoaded({this.values = const []});
+  const MemberPublicInfoListLoaded({this.mightHaveMore, this.values = const []});
 
   @override
-  List<Object> get props => [ values ];
+  List<Object> get props => [ values, mightHaveMore ];
 
   @override
   String toString() => 'MemberPublicInfoListLoaded { values: $values }';
