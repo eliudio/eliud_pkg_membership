@@ -180,6 +180,12 @@ class MembershipDashboardFirestore implements MembershipDashboardRepository {
     return firestoreTimeStampToString(timeStamp);
   } 
 
+  Future<MembershipDashboardModel> changeValue(String documentId, String fieldName, num changeByThisValue) {
+    var change = FieldValue.increment(changeByThisValue);
+    return MembershipDashboardCollection.doc(documentId).update({fieldName: change}).then((v) => get(documentId));
+  }
+
+
   final String appId;
   MembershipDashboardFirestore(this.MembershipDashboardCollection, this.appId);
 

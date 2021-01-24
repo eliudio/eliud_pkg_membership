@@ -180,6 +180,12 @@ class MemberPublicInfoFirestore implements MemberPublicInfoRepository {
     return firestoreTimeStampToString(timeStamp);
   } 
 
+  Future<MemberPublicInfoModel> changeValue(String documentId, String fieldName, num changeByThisValue) {
+    var change = FieldValue.increment(changeByThisValue);
+    return MemberPublicInfoCollection.doc(documentId).update({fieldName: change}).then((v) => get(documentId));
+  }
+
+
   MemberPublicInfoFirestore();
 
   final CollectionReference MemberPublicInfoCollection = FirebaseFirestore.instance.collection('memberpublicinfo');
