@@ -146,6 +146,13 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
     if (accessModel != null) {
       accessModel.privilegeLevel = PrivilegeLevel.Level1Privilege;
       await accessRepository(appId: assignmentModel.appId).update(accessModel);
+    } else {
+      await accessRepository(appId: assignmentModel.appId).add(AccessModel(
+          documentID: assignmentModel.reporter.documentID,
+          privilegeLevel: PrivilegeLevel.Level1Privilege,
+          points: 0,
+          blocked: false,
+      ));
     }
     finishTask(
         context,
