@@ -3,6 +3,7 @@ import 'package:eliud_core/model/abstract_repository_singleton.dart' as corerepo
 import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
+import 'package:eliud_core/package/package.dart';
 import 'package:eliud_core/package/package_with_subscription.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
@@ -82,4 +83,7 @@ abstract class MembershipPackage extends PackageWithSubscription {
     TaskModelRegistry.registry().addMapper(RequestMembershipTaskEntity.label, RequestMembershipTaskModelMapper());
     TaskModelRegistry.registry().addMapper(ApproveMembershipTaskEntity.label, ApproveMembershipTaskModelMapper());
   }
+
+  @override
+  List<MemberCollectionInfo> getMemberCollectionInfo() => AbstractRepositorySingleton.collections;
 }

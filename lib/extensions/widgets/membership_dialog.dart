@@ -188,8 +188,8 @@ class _MembershipDialogState extends State<MembershipDialog> {
                 privilegeLevelToMemberRoleString(state.accessModel.privilegeLevel, state.accessModel.blocked),
             contents: getFieldsWidget(
                 context, state.appId, state.accessModel, state.member),
-            buttons: <FlatButton>[
-              FlatButton(
+            buttons: <TextButton>[
+              TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },

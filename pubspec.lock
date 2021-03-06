@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.39.17"
+  archive:
+    dependency: transitive
+    description:
+      name: archive
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.13"
   args:
     dependency: transitive
     description:
@@ -127,20 +134,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
-  chewie:
-    dependency: transitive
-    description:
-      name: chewie
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.12.2"
-  chewie_audio:
-    dependency: transitive
-    description:
-      name: chewie_audio
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.2"
   cli_repl:
     dependency: transitive
     description:
@@ -176,6 +169,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0+2"
+  cloud_functions:
+    dependency: transitive
+    description:
+      name: cloud_functions
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.0"
+  cloud_functions_platform_interface:
+    dependency: transitive
+    description:
+      name: cloud_functions_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.1"
+  cloud_functions_web:
+    dependency: transitive
+    description:
+      name: cloud_functions_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.3"
   code_builder:
     dependency: transitive
     description:
@@ -218,13 +232,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
-  css_colors:
-    dependency: transitive
-    description:
-      name: css_colors
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   csslib:
     dependency: transitive
     description:
@@ -267,6 +274,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  docx_template:
+    dependency: transitive
+    description:
+      name: docx_template
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.7"
   eliud_core:
     dependency: "direct main"
     description:
@@ -412,13 +426,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.4"
-  flutter_html:
-    dependency: transitive
-    description:
-      name: flutter_html
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0"
   flutter_iconpicker:
     dependency: transitive
     description:
@@ -426,13 +433,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.2"
-  flutter_layout_grid:
+  flutter_markdown:
     dependency: transitive
     description:
-      name: flutter_layout_grid
+      name: flutter_markdown
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.5"
+    version: "0.3.5"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -440,13 +447,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.11"
-  flutter_svg:
-    dependency: transitive
-    description:
-      name: flutter_svg
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.19.2+1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -529,6 +529,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.4"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.14"
   image_cropper:
     dependency: transitive
     description:
@@ -543,13 +550,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3+4"
-  import_js_library:
-    dependency: transitive
-    description:
-      name: import_js_library
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   intl:
     dependency: transitive
     description:
@@ -599,6 +599,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.11.4"
+  markdown:
+    dependency: transitive
+    description:
+      name: markdown
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.8"
   matcher:
     dependency: transitive
     description:
@@ -669,20 +676,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0-nullsafety.3"
-  path_drawing:
-    dependency: transitive
-    description:
-      name: path_drawing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.1+1"
-  path_parsing:
-    dependency: transitive
-    description:
-      name: path_parsing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   path_provider:
     dependency: transitive
     description:
@@ -942,27 +935,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.8"
-  wakelock:
-    dependency: transitive
-    description:
-      name: wakelock
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.1+1"
-  wakelock_platform_interface:
-    dependency: transitive
-    description:
-      name: wakelock_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0+1"
-  wakelock_web:
-    dependency: transitive
-    description:
-      name: wakelock_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0+3"
   watcher:
     dependency: transitive
     description:
@@ -977,13 +949,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  webview_flutter:
-    dependency: transitive
-    description:
-      name: webview_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.7"
   xml:
     dependency: transitive
     description:
@@ -999,5 +964,5 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
-  dart: ">=2.12.0-29.10.beta <3.0.0"
-  flutter: ">=1.24.0-6.0.pre"
+  dart: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.22.0"
