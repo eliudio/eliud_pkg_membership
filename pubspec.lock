@@ -315,7 +315,7 @@ packages:
       name: equatable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.5"
+    version: "2.0.0"
   expandable:
     dependency: transitive
     description:
@@ -425,14 +425,14 @@ packages:
       name: flutter_colorpicker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.4"
+    version: "0.3.5"
   flutter_iconpicker:
     dependency: transitive
     description:
       name: flutter_iconpicker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.2"
+    version: "2.2.3"
   flutter_markdown:
     dependency: transitive
     description:
@@ -452,6 +452,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_widget_from_html_core:
+    dependency: transitive
+    description:
+      name: flutter_widget_from_html_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.2+1"
   font_awesome_flutter:
     dependency: transitive
     description:
@@ -675,7 +682,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0-nullsafety.3"
+    version: "1.8.0"
   path_provider:
     dependency: transitive
     description:
