@@ -42,8 +42,8 @@ import 'package:eliud_pkg_membership/model/membership_dashboard_form_state.dart'
 import 'package:eliud_pkg_membership/model/membership_dashboard_repository.dart';
 
 class MembershipDashboardFormBloc extends Bloc<MembershipDashboardFormEvent, MembershipDashboardFormState> {
-  final FormAction formAction;
-  final String appId;
+  final FormAction? formAction;
+  final String? appId;
 
   MembershipDashboardFormBloc(this.appId, { this.formAction }): super(MembershipDashboardFormUninitialized());
   @override
@@ -65,20 +65,20 @@ class MembershipDashboardFormBloc extends Bloc<MembershipDashboardFormEvent, Mem
 
       if (event is InitialiseMembershipDashboardFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
-        MembershipDashboardFormLoaded loaded = MembershipDashboardFormLoaded(value: await membershipDashboardRepository(appId: appId).get(event.value.documentID));
+        MembershipDashboardFormLoaded loaded = MembershipDashboardFormLoaded(value: await membershipDashboardRepository(appId: appId)!.get(event!.value!.documentID));
         yield loaded;
         return;
       } else if (event is InitialiseMembershipDashboardFormNoLoadEvent) {
-        MembershipDashboardFormLoaded loaded = MembershipDashboardFormLoaded(value: event.value);
+        MembershipDashboardFormLoaded loaded = MembershipDashboardFormLoaded(value: event!.value);
         yield loaded;
         return;
       }
     } else if (currentState is MembershipDashboardFormInitialized) {
-      MembershipDashboardModel newValue = null;
+      MembershipDashboardModel? newValue = null;
       if (event is ChangedMembershipDashboardDocumentID) {
-        newValue = currentState.value.copyWith(documentID: event.value);
+        newValue = currentState.value!.copyWith(documentID: event!.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          yield* _isDocumentIDValid(event!.value, newValue).asStream();
         } else {
           yield SubmittableMembershipDashboardForm(value: newValue);
         }
@@ -86,19 +86,19 @@ class MembershipDashboardFormBloc extends Bloc<MembershipDashboardFormEvent, Mem
         return;
       }
       if (event is ChangedMembershipDashboardAppId) {
-        newValue = currentState.value.copyWith(appId: event.value);
+        newValue = currentState.value!.copyWith(appId: event!.value);
         yield SubmittableMembershipDashboardForm(value: newValue);
 
         return;
       }
       if (event is ChangedMembershipDashboardDescription) {
-        newValue = currentState.value.copyWith(description: event.value);
+        newValue = currentState.value!.copyWith(description: event!.value);
         yield SubmittableMembershipDashboardForm(value: newValue);
 
         return;
       }
       if (event is ChangedMembershipDashboardConditions) {
-        newValue = currentState.value.copyWith(conditions: event.value);
+        newValue = currentState.value!.copyWith(conditions: event!.value);
         yield SubmittableMembershipDashboardForm(value: newValue);
 
         return;
@@ -109,10 +109,10 @@ class MembershipDashboardFormBloc extends Bloc<MembershipDashboardFormEvent, Mem
 
   DocumentIDMembershipDashboardFormError error(String message, MembershipDashboardModel newValue) => DocumentIDMembershipDashboardFormError(message: message, value: newValue);
 
-  Future<MembershipDashboardFormState> _isDocumentIDValid(String value, MembershipDashboardModel newValue) async {
+  Future<MembershipDashboardFormState> _isDocumentIDValid(String? value, MembershipDashboardModel newValue) async {
     if (value == null) return Future.value(error("Provide value for documentID", newValue));
     if (value.length == 0) return Future.value(error("Provide value for documentID", newValue));
-    Future<MembershipDashboardModel> findDocument = membershipDashboardRepository(appId: appId).get(value);
+    Future<MembershipDashboardModel?> findDocument = membershipDashboardRepository(appId: appId)!.get(value);
     return await findDocument.then((documentFound) {
       if (documentFound == null) {
         return SubmittableMembershipDashboardForm(value: newValue);

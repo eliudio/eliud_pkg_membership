@@ -22,13 +22,13 @@ abstract class MembershipDashboardFormState extends Equatable {
   const MembershipDashboardFormState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 // Startup: menu has not been initialised yet and so we should show a "loading indicator" or something
 class MembershipDashboardFormUninitialized extends MembershipDashboardFormState {
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 
   @override
   String toString() {
@@ -38,22 +38,22 @@ class MembershipDashboardFormUninitialized extends MembershipDashboardFormState 
 
 // MembershipDashboardModel has been initialised and hence MembershipDashboardModel is available
 class MembershipDashboardFormInitialized extends MembershipDashboardFormState {
-  final MembershipDashboardModel value;
+  final MembershipDashboardModel? value;
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   const MembershipDashboardFormInitialized({ this.value });
 }
 
 // Menu has been initialised and hence a menu is available
 abstract class MembershipDashboardFormError extends MembershipDashboardFormInitialized {
-  final String message;
+  final String? message;
 
   @override
-  List<Object> get props => [ message, value ];
+  List<Object?> get props => [ message, value ];
 
-  const MembershipDashboardFormError({this.message, MembershipDashboardModel value }) : super(value: value);
+  const MembershipDashboardFormError({this.message, MembershipDashboardModel? value }) : super(value: value);
 
   @override
   String toString() {
@@ -64,10 +64,10 @@ abstract class MembershipDashboardFormError extends MembershipDashboardFormIniti
   }
 }
 class DocumentIDMembershipDashboardFormError extends MembershipDashboardFormError { 
-  const DocumentIDMembershipDashboardFormError({ String message, MembershipDashboardModel value }): super(message: message, value: value);
+  const DocumentIDMembershipDashboardFormError({ String? message, MembershipDashboardModel? value }): super(message: message, value: value);
 
   @override
-  List<Object> get props => [ message, value ];
+  List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
@@ -80,10 +80,10 @@ class DocumentIDMembershipDashboardFormError extends MembershipDashboardFormErro
 
 
 class AppIdMembershipDashboardFormError extends MembershipDashboardFormError { 
-  const AppIdMembershipDashboardFormError({ String message, MembershipDashboardModel value }): super(message: message, value: value);
+  const AppIdMembershipDashboardFormError({ String? message, MembershipDashboardModel? value }): super(message: message, value: value);
 
   @override
-  List<Object> get props => [ message, value ];
+  List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
@@ -96,10 +96,10 @@ class AppIdMembershipDashboardFormError extends MembershipDashboardFormError {
 
 
 class DescriptionMembershipDashboardFormError extends MembershipDashboardFormError { 
-  const DescriptionMembershipDashboardFormError({ String message, MembershipDashboardModel value }): super(message: message, value: value);
+  const DescriptionMembershipDashboardFormError({ String? message, MembershipDashboardModel? value }): super(message: message, value: value);
 
   @override
-  List<Object> get props => [ message, value ];
+  List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
@@ -112,10 +112,10 @@ class DescriptionMembershipDashboardFormError extends MembershipDashboardFormErr
 
 
 class ConditionsMembershipDashboardFormError extends MembershipDashboardFormError { 
-  const ConditionsMembershipDashboardFormError({ String message, MembershipDashboardModel value }): super(message: message, value: value);
+  const ConditionsMembershipDashboardFormError({ String? message, MembershipDashboardModel? value }): super(message: message, value: value);
 
   @override
-  List<Object> get props => [ message, value ];
+  List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
@@ -128,10 +128,10 @@ class ConditionsMembershipDashboardFormError extends MembershipDashboardFormErro
 
 
 class MembershipDashboardFormLoaded extends MembershipDashboardFormInitialized { 
-  const MembershipDashboardFormLoaded({ MembershipDashboardModel value }): super(value: value);
+  const MembershipDashboardFormLoaded({ MembershipDashboardModel? value }): super(value: value);
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() {
@@ -143,10 +143,10 @@ class MembershipDashboardFormLoaded extends MembershipDashboardFormInitialized {
 
 
 class SubmittableMembershipDashboardForm extends MembershipDashboardFormInitialized { 
-  const SubmittableMembershipDashboardForm({ MembershipDashboardModel value }): super(value: value);
+  const SubmittableMembershipDashboardForm({ MembershipDashboardModel? value }): super(value: value);
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() {

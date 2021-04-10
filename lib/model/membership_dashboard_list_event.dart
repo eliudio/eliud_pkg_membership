@@ -19,7 +19,7 @@ import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
 abstract class MembershipDashboardListEvent extends Equatable {
   const MembershipDashboardListEvent();
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class LoadMembershipDashboardList extends MembershipDashboardListEvent {}
@@ -27,49 +27,49 @@ class LoadMembershipDashboardList extends MembershipDashboardListEvent {}
 class NewPage extends MembershipDashboardListEvent {}
 
 class AddMembershipDashboardList extends MembershipDashboardListEvent {
-  final MembershipDashboardModel value;
+  final MembershipDashboardModel? value;
 
   const AddMembershipDashboardList({ this.value });
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'AddMembershipDashboardList{ value: $value }';
 }
 
 class UpdateMembershipDashboardList extends MembershipDashboardListEvent {
-  final MembershipDashboardModel value;
+  final MembershipDashboardModel? value;
 
   const UpdateMembershipDashboardList({ this.value });
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'UpdateMembershipDashboardList{ value: $value }';
 }
 
 class DeleteMembershipDashboardList extends MembershipDashboardListEvent {
-  final MembershipDashboardModel value;
+  final MembershipDashboardModel? value;
 
   const DeleteMembershipDashboardList({ this.value });
 
   @override
-  List<Object> get props => [ value ];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'DeleteMembershipDashboardList{ value: $value }';
 }
 
 class MembershipDashboardListUpdated extends MembershipDashboardListEvent {
-  final List<MembershipDashboardModel> value;
-  final bool mightHaveMore;
+  final List<MembershipDashboardModel?>? value;
+  final bool? mightHaveMore;
 
   const MembershipDashboardListUpdated({ this.value, this.mightHaveMore });
 
   @override
-  List<Object> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [ value, mightHaveMore ];
 
   @override
   String toString() => 'MembershipDashboardListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';

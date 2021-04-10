@@ -36,18 +36,18 @@ import 'package:eliud_core/tools/random.dart';
 
 
 class MembershipDashboardModel {
-  String documentID;
+  String? documentID;
 
   // This is the identifier of the app to which this feed belongs
-  String appId;
-  String description;
-  ConditionsSimpleModel conditions;
+  String? appId;
+  String? description;
+  ConditionsSimpleModel? conditions;
 
   MembershipDashboardModel({this.documentID, this.appId, this.description, this.conditions, })  {
     assert(documentID != null);
   }
 
-  MembershipDashboardModel copyWith({String documentID, String appId, String description, ConditionsSimpleModel conditions, }) {
+  MembershipDashboardModel copyWith({String? documentID, String? appId, String? description, ConditionsSimpleModel? conditions, }) {
     return MembershipDashboardModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, conditions: conditions ?? this.conditions, );
   }
 
@@ -69,15 +69,15 @@ class MembershipDashboardModel {
     return 'MembershipDashboardModel{documentID: $documentID, appId: $appId, description: $description, conditions: $conditions}';
   }
 
-  MembershipDashboardEntity toEntity({String appId}) {
+  MembershipDashboardEntity toEntity({String? appId}) {
     return MembershipDashboardEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
-          conditions: (conditions != null) ? conditions.toEntity(appId: appId) : null, 
+          conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
 
-  static MembershipDashboardModel fromEntity(String documentID, MembershipDashboardEntity entity) {
+  static MembershipDashboardModel? fromEntity(String documentID, MembershipDashboardEntity? entity) {
     if (entity == null) return null;
     return MembershipDashboardModel(
           documentID: documentID, 
@@ -88,7 +88,7 @@ class MembershipDashboardModel {
     );
   }
 
-  static Future<MembershipDashboardModel> fromEntityPlus(String documentID, MembershipDashboardEntity entity, { String appId}) async {
+  static Future<MembershipDashboardModel?> fromEntityPlus(String documentID, MembershipDashboardEntity? entity, { String? appId}) async {
     if (entity == null) return null;
 
     return MembershipDashboardModel(

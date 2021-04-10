@@ -14,4 +14,3 @@
 */
 
 export '../model/membership_dashboard_cache.dart';
-export '../model/member_public_info_cache.dart';

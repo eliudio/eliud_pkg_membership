@@ -25,7 +25,7 @@ import 'package:eliud_pkg_membership/model/membership_dashboard_component_state.
 
 abstract class AbstractMembershipDashboardComponent extends StatelessWidget {
   static String componentName = "membershipDashboards";
-  final String membershipDashboardID;
+  final String? membershipDashboardID;
 
   AbstractMembershipDashboardComponent({this.membershipDashboardID});
 
@@ -63,7 +63,7 @@ abstract class AbstractMembershipDashboardComponent extends StatelessWidget {
     });
   }
 
-  Widget yourWidget(BuildContext context, MembershipDashboardModel value);
+  Widget yourWidget(BuildContext context, MembershipDashboardModel? value);
   Widget alertWidget({ title: String, content: String});
   MembershipDashboardRepository getMembershipDashboardRepository(BuildContext context);
 }

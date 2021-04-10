@@ -27,53 +27,59 @@ const _membershipDashboardLimit = 5;
 
 class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, MembershipDashboardListState> {
   final MembershipDashboardRepository _membershipDashboardRepository;
-  StreamSubscription _membershipDashboardsListSubscription;
-  final EliudQuery eliudQuery;
+  StreamSubscription? _membershipDashboardsListSubscription;
+  final EliudQuery? eliudQuery;
   int pages = 1;
-  final bool paged;
-  final String orderBy;
-  final bool descending;
-  final bool detailed;
+  final bool? paged;
+  final String? orderBy;
+  final bool? descending;
+  final bool? detailed;
 
-  MembershipDashboardListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, @required MembershipDashboardRepository membershipDashboardRepository})
+  MembershipDashboardListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MembershipDashboardRepository membershipDashboardRepository})
       : assert(membershipDashboardRepository != null),
         _membershipDashboardRepository = membershipDashboardRepository,
         super(MembershipDashboardListLoading());
 
   Stream<MembershipDashboardListState> _mapLoadMembershipDashboardListToState() async* {
-    int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values.length : 0;
+    int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values!.length : 0;
     _membershipDashboardsListSubscription?.cancel();
     _membershipDashboardsListSubscription = _membershipDashboardRepository.listen(
           (list) => add(MembershipDashboardListUpdated(value: list, mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && (paged)) ? pages * _membershipDashboardLimit : null
+      limit: ((paged != null) && paged!) ? pages * _membershipDashboardLimit : null
     );
   }
 
   Stream<MembershipDashboardListState> _mapLoadMembershipDashboardListWithDetailsToState() async* {
-    int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values.length : 0;
+    int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values!.length : 0;
     _membershipDashboardsListSubscription?.cancel();
     _membershipDashboardsListSubscription = _membershipDashboardRepository.listenWithDetails(
             (list) => add(MembershipDashboardListUpdated(value: list, mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && (paged)) ? pages * _membershipDashboardLimit : null
+        limit: ((paged != null) && paged!) ? pages * _membershipDashboardLimit : null
     );
   }
 
   Stream<MembershipDashboardListState> _mapAddMembershipDashboardListToState(AddMembershipDashboardList event) async* {
-    _membershipDashboardRepository.add(event.value);
+    var value = event.value;
+    if (value != null) 
+      _membershipDashboardRepository.add(value);
   }
 
   Stream<MembershipDashboardListState> _mapUpdateMembershipDashboardListToState(UpdateMembershipDashboardList event) async* {
-    _membershipDashboardRepository.update(event.value);
+    var value = event.value;
+    if (value != null) 
+      _membershipDashboardRepository.update(value);
   }
 
   Stream<MembershipDashboardListState> _mapDeleteMembershipDashboardListToState(DeleteMembershipDashboardList event) async* {
-    _membershipDashboardRepository.delete(event.value);
+    var value = event.value;
+    if (value != null) 
+      _membershipDashboardRepository.delete(value);
   }
 
   Stream<MembershipDashboardListState> _mapMembershipDashboardListUpdatedToState(
@@ -84,7 +90,7 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
   @override
   Stream<MembershipDashboardListState> mapEventToState(MembershipDashboardListEvent event) async* {
     if (event is LoadMembershipDashboardList) {
-      if ((detailed == null) || (!detailed)) {
+      if ((detailed == null) || (!detailed!)) {
         yield* _mapLoadMembershipDashboardListToState();
       } else {
         yield* _mapLoadMembershipDashboardListWithDetailsToState();

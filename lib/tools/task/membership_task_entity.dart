@@ -3,7 +3,7 @@ import 'package:eliud_pkg_workflow/tools/task/task_entity.dart';
 // ***** MembershipEntity *****
 
 abstract class MembershipEntity extends TaskEntity {
-  const MembershipEntity( { String taskString, String description, bool executeInstantly }) : super(taskString: taskString, description: description, executeInstantly: executeInstantly);
+  const MembershipEntity( { String? taskString, String? description, bool? executeInstantly }) : super(taskString: taskString, description: description, executeInstantly: executeInstantly);
 }
 
 class RequestMembershipTaskEntity extends MembershipEntity {

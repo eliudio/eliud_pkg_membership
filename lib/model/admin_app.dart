@@ -53,7 +53,7 @@ class AdminApp extends AdminAppInstallerBase {
 
 
   PageModel _membershipDashboardsPages() {
-    List<BodyComponentModel> components = List();
+    List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
       documentID: "internalWidget-membershipDashboards", componentName: "eliud_pkg_membership_internalWidgets", componentId: "membershipDashboards"));
     PageModel page = PageModel(
@@ -76,35 +76,9 @@ class AdminApp extends AdminAppInstallerBase {
   }
 
 
-  PageModel _memberPublicInfosPages() {
-    List<BodyComponentModel> components = List();
-    components.add(BodyComponentModel(
-      documentID: "internalWidget-memberPublicInfos", componentName: "eliud_pkg_membership_internalWidgets", componentId: "memberPublicInfos"));
-    PageModel page = PageModel(
-        conditions: ConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
-          packageCondition: null,
-          conditionOverride: null,
-        ),
-        appId: appId,
-        documentID: "eliud_pkg_membership_memberpublicinfos_page",
-        title: "MemberPublicInfos",
-        drawer: _drawer,
-        endDrawer: _endDrawer,
-        appBar: _appBar,
-        homeMenu: _homeMenu,
-        bodyComponents: components,
-        layout: PageLayout.OnlyTheFirstComponent
-    );
-    return page;
-  }
-
-
   Future<void> _setupAdminPages() {
 
-    return pageRepository(appId: appId).add(_membershipDashboardsPages())
-
-        .then((_) => pageRepository(appId: appId).add(_memberPublicInfosPages()))
+    return pageRepository(appId: appId)!.add(_membershipDashboardsPages())
 
     ;
   }
@@ -120,7 +94,7 @@ class AdminApp extends AdminAppInstallerBase {
 class AdminMenu extends AdminAppMenuInstallerBase {
 
   Future<MenuDefModel> menu(String appId) async {
-    List<MenuItemModel> menuItems = List<MenuItemModel>();
+    var menuItems = <MenuItemModel>[];
 
     menuItems.add(
       MenuItemModel(
@@ -132,16 +106,6 @@ class AdminMenu extends AdminAppMenuInstallerBase {
     );
 
 
-    menuItems.add(
-      MenuItemModel(
-        documentID: "MemberPublicInfos",
-        text: "MemberPublicInfos",
-        description: "MemberPublicInfos",
-        icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_membership_memberpublicinfos_page"))
-    );
-
-
     MenuDefModel menu = MenuDefModel(
       admin: true,
       documentID: "eliud_pkg_membership_admin_menu",
@@ -149,7 +113,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
       name: "eliud_pkg_membership",
       menuItems: menuItems
     );
-    await menuDefRepository(appId: appId).add(menu);
+    await menuDefRepository(appId: appId)!.add(menu);
     return menu;
   }
 }
@@ -158,7 +122,6 @@ class AdminAppWiper extends AdminAppWiperBase {
 
   @override
   Future<void> deleteAll(String appId) async {
-    await memberPublicInfoRepository().deleteAll();
     ;
   }
 

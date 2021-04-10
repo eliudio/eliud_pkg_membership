@@ -26,11 +26,11 @@ import 'package:eliud_pkg_membership/model/internal_component.dart';
 class ComponentRegistry {
 
   void init() {
-    Registry.registry().addInternalComponents('eliud_pkg_membership', ["membershipDashboards", "memberPublicInfos", ]);
+    Registry.registry()!.addInternalComponents('eliud_pkg_membership', ["membershipDashboards", ]);
 
-    Registry.registry().register(componentName: "eliud_pkg_membership_internalWidgets", componentConstructor: ListComponentFactory());
-    Registry.registry().addDropDownSupporter("membershipDashboards", DropdownButtonComponentFactory());
-    Registry.registry().register(componentName: "membershipDashboards", componentConstructor: MembershipDashboardComponentConstructorDefault());
+    Registry.registry()!.register(componentName: "eliud_pkg_membership_internalWidgets", componentConstructor: ListComponentFactory());
+    Registry.registry()!.addDropDownSupporter("membershipDashboards", DropdownButtonComponentFactory());
+    Registry.registry()!.register(componentName: "membershipDashboards", componentConstructor: MembershipDashboardComponentConstructorDefault());
 
   }
 }

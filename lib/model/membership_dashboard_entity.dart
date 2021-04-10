@@ -22,21 +22,21 @@ import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_membership/model/entity_export.dart';
 
 class MembershipDashboardEntity {
-  final String appId;
-  final String description;
-  final ConditionsSimpleEntity conditions;
+  final String? appId;
+  final String? description;
+  final ConditionsSimpleEntity? conditions;
 
   MembershipDashboardEntity({this.appId, this.description, this.conditions, });
 
 
-  List<Object> get props => [appId, description, conditions, ];
+  List<Object?> get props => [appId, description, conditions, ];
 
   @override
   String toString() {
     return 'MembershipDashboardEntity{appId: $appId, description: $description, conditions: $conditions}';
   }
 
-  static MembershipDashboardEntity fromMap(Map map) {
+  static MembershipDashboardEntity? fromMap(Map? map) {
     if (map == null) return null;
 
     var conditionsFromMap;
@@ -51,12 +51,12 @@ class MembershipDashboardEntity {
     );
   }
 
-  Map<String, Object> toDocument() {
-    final Map<String, dynamic> conditionsMap = conditions != null 
-        ? conditions.toDocument()
+  Map<String, Object?> toDocument() {
+    final Map<String, dynamic>? conditionsMap = conditions != null 
+        ? conditions!.toDocument()
         : null;
 
-    Map<String, Object> theDocument = HashMap();
+    Map<String, Object?> theDocument = HashMap();
     if (appId != null) theDocument["appId"] = appId;
       else theDocument["appId"] = null;
     if (description != null) theDocument["description"] = description;
@@ -66,8 +66,8 @@ class MembershipDashboardEntity {
     return theDocument;
   }
 
-  static MembershipDashboardEntity fromJsonString(String json) {
-    Map<String, dynamic> generationSpecificationMap = jsonDecode(json);
+  static MembershipDashboardEntity? fromJsonString(String json) {
+    Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
     return fromMap(generationSpecificationMap);
   }
 

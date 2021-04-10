@@ -33,29 +33,29 @@ import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
-typedef MembershipDashboardModelTrigger(List<MembershipDashboardModel> list);
-typedef MembershipDashboardChanged(MembershipDashboardModel value);
+typedef MembershipDashboardModelTrigger(List<MembershipDashboardModel?> list);
+typedef MembershipDashboardChanged(MembershipDashboardModel? value);
 
 abstract class MembershipDashboardRepository {
   Future<MembershipDashboardModel> add(MembershipDashboardModel value);
   Future<void> delete(MembershipDashboardModel value);
-  Future<MembershipDashboardModel> get(String id, { Function(Exception) onError });
+  Future<MembershipDashboardModel?> get(String? id, { Function(Exception)? onError });
   Future<MembershipDashboardModel> update(MembershipDashboardModel value);
 
-  Stream<List<MembershipDashboardModel>> values({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
-  Stream<List<MembershipDashboardModel>> valuesWithDetails({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
-  Future<List<MembershipDashboardModel>> valuesList({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
-  Future<List<MembershipDashboardModel>> valuesListWithDetails({String orderBy, bool descending, Object startAfter, int limit, SetLastDoc setLastDoc, int privilegeLevel, EliudQuery eliudQuery });
+  Stream<List<MembershipDashboardModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  Stream<List<MembershipDashboardModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  Future<List<MembershipDashboardModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  Future<List<MembershipDashboardModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
 
-  StreamSubscription<List<MembershipDashboardModel>> listen(MembershipDashboardModelTrigger trigger, {String orderBy, bool descending, Object startAfter, int limit, int privilegeLevel, EliudQuery eliudQuery });
-  StreamSubscription<List<MembershipDashboardModel>> listenWithDetails(MembershipDashboardModelTrigger trigger, {String orderBy, bool descending, Object startAfter, int limit, int privilegeLevel, EliudQuery eliudQuery });
-  StreamSubscription<MembershipDashboardModel> listenTo(String documentId, MembershipDashboardChanged changed);
+  StreamSubscription<List<MembershipDashboardModel?>> listen(MembershipDashboardModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
+  StreamSubscription<List<MembershipDashboardModel?>> listenWithDetails(MembershipDashboardModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
+  StreamSubscription<MembershipDashboardModel?> listenTo(String documentId, MembershipDashboardChanged changed);
   void flush();
   
-  String timeStampToString(dynamic timeStamp);
+  String? timeStampToString(dynamic timeStamp);
 
   dynamic getSubCollection(String documentId, String name);
-  Future<MembershipDashboardModel> changeValue(String documentId, String fieldName, num changeByThisValue);
+  Future<MembershipDashboardModel?> changeValue(String documentId, String fieldName, num changeByThisValue);
 
   Future<void> deleteAll();
 }

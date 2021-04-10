@@ -23,7 +23,7 @@ import 'package:eliud_pkg_membership/model/membership_dashboard_repository.dart'
 import 'package:flutter/services.dart';
 
 class MembershipDashboardComponentBloc extends Bloc<MembershipDashboardComponentEvent, MembershipDashboardComponentState> {
-  final MembershipDashboardRepository membershipDashboardRepository;
+  final MembershipDashboardRepository? membershipDashboardRepository;
 
   MembershipDashboardComponentBloc({ this.membershipDashboardRepository }): super(MembershipDashboardComponentUninitialized());
   @override
@@ -33,9 +33,9 @@ class MembershipDashboardComponentBloc extends Bloc<MembershipDashboardComponent
       try {
         if (currentState is MembershipDashboardComponentUninitialized) {
           bool permissionDenied = false;
-          final model = await membershipDashboardRepository.get(event.id, onError: (error) {
+          final model = await membershipDashboardRepository!.get(event.id, onError: (error) {
             // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message.startsWith("PERMISSION_DENIED"))) {
+            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
               permissionDenied = true;
             }
           });
@@ -45,7 +45,7 @@ class MembershipDashboardComponentBloc extends Bloc<MembershipDashboardComponent
             if (model != null) {
               yield MembershipDashboardComponentLoaded(value: model);
             } else {
-              String id = event.id;
+              String? id = event.id;
               yield MembershipDashboardComponentError(
                   message: "MembershipDashboard with id = '$id' not found");
             }
