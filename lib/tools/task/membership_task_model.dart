@@ -17,15 +17,15 @@ import 'membership_task_entity.dart';
 
 abstract class MembershipTaskModel extends TaskModel {
   MembershipTaskModel({
-    String description,
-    bool executeInstantly,
+    String? description,
+    bool? executeInstantly,
   }) : super(description: description, executeInstantly: executeInstantly);
 }
 
 // ***** RequestMembershipTaskModel *****
 
 class RequestMembershipTaskModel extends MembershipTaskModel {
-  RequestMembershipTaskModel({String description, bool executeInstantly})
+  RequestMembershipTaskModel({String? description, bool? executeInstantly})
       : super(
           description: description,
       executeInstantly: executeInstantly
@@ -33,7 +33,8 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
 
   @override
   Future<void> startTask(
-      BuildContext context, AssignmentModel assignmentModel) {
+      BuildContext? context, AssignmentModel? assignmentModel) {
+    if ((context == null) || (assignmentModel == null)) return Future.value(null);
     DialogStatefulWidgetHelper.openIt(
         context,
         YesNoDialog(
@@ -44,7 +45,7 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
                   assignmentModel,
                 ),
             noFunction: () => Navigator.pop(context)));
-    return null;
+    return Future.value(null);
   }
 
   void confirmMembershipRequest(
@@ -64,7 +65,7 @@ This is the wrong place to send this message
   }
 
   @override
-  TaskEntity toEntity({String appId}) => RequestMembershipTaskEntity(
+  TaskEntity toEntity({String? appId}) => RequestMembershipTaskEntity(
         description: description,
       executeInstantly: executeInstantly,
       );
@@ -86,7 +87,7 @@ This is the wrong place to send this message
 class RequestMembershipTaskModelMapper implements TaskModelMapper {
   @override
   TaskModel fromEntity(TaskEntity entity) =>
-      RequestMembershipTaskModel.fromEntity(entity);
+      RequestMembershipTaskModel.fromEntity(entity as RequestMembershipTaskEntity);
 
   @override
   TaskModel fromEntityPlus(TaskEntity entity) => fromEntity(entity);
@@ -100,7 +101,7 @@ class RequestMembershipTaskModelMapper implements TaskModelMapper {
 class ApproveMembershipTaskModel extends MembershipTaskModel {
   static String label = 'MEMBERSHIP_TASK_APPROVE_MEMBERSHIP';
 
-  ApproveMembershipTaskModel({String description, bool executeInstantly})
+  ApproveMembershipTaskModel({String? description, bool? executeInstantly})
       : super(
     description: description,
       executeInstantly: executeInstantly,
@@ -108,8 +109,9 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
 
   @override
   Future<void> startTask(
-      BuildContext context, AssignmentModel assignmentModel) {
-    String feedback = null;
+      BuildContext? context, AssignmentModel? assignmentModel) {
+    if ((context == null) || (assignmentModel == null)) return Future.value(null);
+    String? feedback = null;
     DialogStatefulWidgetHelper.openIt(
       context,
       YesNoIgnoreDialogWithAssignmentResults(
@@ -135,20 +137,24 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
                 ))
           ]),
     );
-    return null;
+    return Future.value(null);
   }
 
   Future<void> _approveMembershipRequest(
-      BuildContext context, AssignmentModel assignmentModel, String comment) async {
+      BuildContext context, AssignmentModel assignmentModel, String? comment) async {
     _sendMessage(context, assignmentModel, "Your membership request has been approved", comment);
     Navigator.pop(context);
-    var accessModel = await accessRepository(appId: assignmentModel.appId).get(assignmentModel.reporter.documentID);
+    if (assignmentModel.reporter == null) {
+      print("assignmentModel.reporter is null");
+      return Future.value(null);
+    }
+    var accessModel = await accessRepository(appId: assignmentModel.appId)!.get(assignmentModel.reporter!.documentID);
     if (accessModel != null) {
       accessModel.privilegeLevel = PrivilegeLevel.Level1Privilege;
-      await accessRepository(appId: assignmentModel.appId).update(accessModel);
+      await accessRepository(appId: assignmentModel.appId)!.update(accessModel);
     } else {
-      await accessRepository(appId: assignmentModel.appId).add(AccessModel(
-          documentID: assignmentModel.reporter.documentID,
+      await accessRepository(appId: assignmentModel.appId)!.add(AccessModel(
+          documentID: assignmentModel.reporter!.documentID,
           privilegeLevel: PrivilegeLevel.Level1Privilege,
           points: 0,
           blocked: false,
@@ -163,7 +169,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
   }
 
   void _disapproveMembershipRequest(
-      BuildContext context, AssignmentModel assignmentModel, String comment) {
+      BuildContext context, AssignmentModel assignmentModel, String? comment) {
     _sendMessage(context, assignmentModel, "Your membership request has been disapproved", comment);
     Navigator.pop(context);
     finishTask(
@@ -174,15 +180,16 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         ), null);
   }
 
-  void _sendMessage(BuildContext context, AssignmentModel assignmentModel, String message, String comment) {
+  void _sendMessage(BuildContext context, AssignmentModel assignmentModel, String message, String? comment) {
     if (!((comment == null) || (comment.length == 0))) {
       message = message + " with these comments: " + comment;
     }
-    AbstractNotificationPlatform.platform.sendMessage(context, assignmentModel.assigneeId, message);
+    if (assignmentModel == null) return;
+    AbstractNotificationPlatform.platform!.sendMessage(context, assignmentModel.assigneeId!, message);
   }
 
   @override
-  TaskEntity toEntity({String appId}) => ApproveMembershipTaskEntity(
+  TaskEntity toEntity({String? appId}) => ApproveMembershipTaskEntity(
     description: description,
       executeInstantly: executeInstantly,
   );
@@ -204,7 +211,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
 class ApproveMembershipTaskModelMapper implements TaskModelMapper {
   @override
   TaskModel fromEntity(TaskEntity entity) =>
-      ApproveMembershipTaskModel.fromEntity(entity);
+      ApproveMembershipTaskModel.fromEntity(entity as ApproveMembershipTaskEntity);
 
   @override
   TaskModel fromEntityPlus(TaskEntity entity) => fromEntity(entity);

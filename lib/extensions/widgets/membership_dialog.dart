@@ -16,7 +16,7 @@ import 'bloc/membership_state.dart';
 
 class MembershipDialog extends StatefulWidget {
   MembershipDialog({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -45,7 +45,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
       blocked = false;
     }
     List<Widget> _buttons = [];
-    if ((oldAccessModel.blocked != null) && (oldAccessModel.blocked)) {
+    if ((oldAccessModel.blocked != null) && (oldAccessModel.blocked!)) {
       _buttons.add(RaisedButton(
           onPressed: () =>
               _askUnblock(),
@@ -141,7 +141,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
           noButtonText: 'Discard',
           hintText: 'Message',
           yesFunction: (msg) {
-            _sendMessage(msg, member);
+            _sendMessage(msg!, member);
             Navigator.pop(context);
           },
           noFunction: () => Navigator.pop(context)),
@@ -149,19 +149,19 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   Future<void> _block() async {
-    context.bloc<MembershipBloc>().add(BlockMember());
+    BlocProvider.of<MembershipBloc>(context).add(BlockMember());
   }
 
   Future<void> _promote() async {
-    context.bloc<MembershipBloc>().add(PromoteMember());
+    BlocProvider.of<MembershipBloc>(context).add(PromoteMember());
   }
 
   Future<void> _demote() async {
-    context.bloc<MembershipBloc>().add(DemoteMember());
+    BlocProvider.of<MembershipBloc>(context).add(DemoteMember());
   }
 
   Future<void> _unblock() async {
-    context.bloc<MembershipBloc>().add(UnblockMember());
+    BlocProvider.of<MembershipBloc>(context).add(UnblockMember());
   }
 
   void _sendMessage(
@@ -170,10 +170,10 @@ class _MembershipDialogState extends State<MembershipDialog> {
   ) {
     if (message == null) return;
     if (message.length == 0) return;
-    AbstractNotificationPlatform.platform.sendMessage(
-        context, member.documentID, message,
+    AbstractNotificationPlatform.platform!.sendMessage(
+        context, member.documentID!, message,
         postSendAction: (value) {
-          Registry.registry().snackbar("Yay! Message sent!");
+          Registry.registry()!.snackbar("Yay! Message sent!");
         });
   }
 
@@ -182,12 +182,18 @@ class _MembershipDialogState extends State<MembershipDialog> {
     return BlocBuilder<MembershipBloc, MembershipState>(
         builder: (context, state) {
       if (state is MembershipLoaded) {
+        var name;
+        if (state.member!.name == null) {
+          name = state.member!.name;
+        } else {
+          name = "No name";
+        }
         return dialogHelper.build(
-            title: state.member.name +
+            title: name +
                 ' - ' +
-                privilegeLevelToMemberRoleString(state.accessModel.privilegeLevel, state.accessModel.blocked),
+                privilegeLevelToMemberRoleString(state.accessModel!.privilegeLevel, state.accessModel!.blocked),
             contents: getFieldsWidget(
-                context, state.appId, state.accessModel, state.member),
+                context, state.appId!, state.accessModel!, state.member!),
             buttons: <TextButton>[
               TextButton(
                   onPressed: () {

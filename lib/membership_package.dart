@@ -16,22 +16,22 @@ import 'model/repository_singleton.dart';
 
 abstract class MembershipPackage extends PackageWithSubscription {
   static final String MEMBER_HAS_NO_MEMBERSHIP_YET = 'MemberHasNoMembershipYet';
-  AccessModel stateAccesModel;
+  AccessModel? stateAccesModel;
 
-  void _setState(AccessModel currentAccess, {MemberModel currentMember}) {
+  void _setState(AccessModel? currentAccess, {MemberModel? currentMember}) {
     if (stateAccesModel != currentAccess) {
       // force the member's screen to update when blocked state is different
-      var refresh = (stateAccesModel != null) && (currentAccess != null) && (stateAccesModel.blocked != currentAccess.blocked);
+      var refresh = (stateAccesModel != null) && (currentAccess != null) && (stateAccesModel!.blocked != currentAccess.blocked);
       accessBloc.add(MemberUpdated(currentMember, refresh: refresh));
       stateAccesModel = currentAccess;
     }
   }
 
   @override
-  void resubscribe(AppModel app, MemberModel currentMember) {
-    var appId = app.documentID;
+  void resubscribe(AppModel? app, MemberModel? currentMember) {
+    var appId = app!.documentID;
     if (currentMember != null) {
-      subscription = corerepo.accessRepository(appId: appId).listen((list) {
+      subscription = corerepo.accessRepository(appId: appId)!.listen((list) {
         if (list.isNotEmpty) {
           _setState(list.first, currentMember: currentMember);
         } else {
@@ -49,7 +49,7 @@ abstract class MembershipPackage extends PackageWithSubscription {
     _setState(null);
   }
 
-  static EliudQuery getAccessQuery(String appId, String memberId) {
+  static EliudQuery getAccessQuery(String? appId, String? memberId) {
     return EliudQuery(
         theConditions: [EliudQueryCondition(
             DocumentIdField(),
@@ -59,7 +59,7 @@ abstract class MembershipPackage extends PackageWithSubscription {
   }
 
   @override
-  Future<bool> isConditionOk(String packageCondition, AppModel app, MemberModel member, bool isOwner, bool isBlocked, PrivilegeLevel privilegeLevel) async {
+  Future<bool?> isConditionOk(String? packageCondition, AppModel? app, MemberModel? member, bool? isOwner, bool? isBlocked, PrivilegeLevel? privilegeLevel) async {
     if (member == null) return false;
     if (packageCondition == MEMBER_HAS_NO_MEMBERSHIP_YET) {
       return (privilegeLevel == PrivilegeLevel.NoPrivilege);
@@ -80,8 +80,8 @@ abstract class MembershipPackage extends PackageWithSubscription {
     AbstractRepositorySingleton.singleton = RepositorySingleton();
 
     // Register mappers for extra tasks
-    TaskModelRegistry.registry().addMapper(RequestMembershipTaskEntity.label, RequestMembershipTaskModelMapper());
-    TaskModelRegistry.registry().addMapper(ApproveMembershipTaskEntity.label, ApproveMembershipTaskModelMapper());
+    TaskModelRegistry.registry()!.addMapper(RequestMembershipTaskEntity.label, RequestMembershipTaskModelMapper());
+    TaskModelRegistry.registry()!.addMapper(ApproveMembershipTaskEntity.label, ApproveMembershipTaskModelMapper());
   }
 
   @override

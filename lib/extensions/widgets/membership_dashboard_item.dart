@@ -11,11 +11,11 @@ import 'bloc/membership_event.dart';
 import 'membership_dialog.dart';
 
 class MembershipDashboardItem extends StatelessWidget {
-  final MemberPublicInfoModel value;
-  final String appId;
+  final MemberPublicInfoModel? value;
+  final String? appId;
 
   MembershipDashboardItem({
-    Key key,
+    Key? key,
     @required this.value,
     this.appId,
   }) : super(key: key);
@@ -23,35 +23,42 @@ class MembershipDashboardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget profilePhoto;
-    if (value.photoURL != null) {
+    if ((value == null) || (value!.photoURL == null)) {
       profilePhoto = FadeInImage.memoryNetwork(
         placeholder: kTransparentImage,
-        image: value.photoURL,
+        image: value!.photoURL!,
       );
+    } else {
+      profilePhoto = Icon(Icons.person_outline);
     }
-    profilePhoto ??= Icon(Icons.person_outline);
+    var title;
+    if (value!.name != null) {
+      title = Text(value!.name!);
+    } else {
+      title = Text("No name");
+    }
     return Dismissible(
-        key: Key('__Membership_item_${value.documentID}'),
+        key: Key('__Membership_item_${value!.documentID!}'),
         child: ListTile(
             onTap: () {
               openOptions(context, profilePhoto);
             },
             trailing: Container(height: 100, width: 100, child: profilePhoto),
-            title: Text(
-              value.name,
-            )));
+            title: title));
   }
 
   Future<void> openOptions(BuildContext context, Widget profilePhoto) async {
+/*
     var accessModel =
-        await accessRepository(appId: appId).get(value.documentID);
+        await accessRepository(appId: appId)!.get(value!.documentID!);
+*/
     DialogStatefulWidgetHelper.openIt(context, _widget());
   }
 
   Widget _widget() {
     return BlocProvider<MembershipBloc>(
         create: (context) => MembershipBloc()
-          ..add(FetchMembershipEvent(memberId: value.documentID, appId: appId)),
+          ..add(FetchMembershipEvent(memberId: value!.documentID, appId: appId)),
         child: MembershipDialog());
   }
 }
