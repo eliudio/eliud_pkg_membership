@@ -22,7 +22,7 @@ abstract class MembershipPackage extends PackageWithSubscription {
     if (stateAccesModel != currentAccess) {
       // force the member's screen to update when blocked state is different
       var refresh = (stateAccesModel != null) && (currentAccess != null) && (stateAccesModel!.blocked != currentAccess.blocked);
-      accessBloc.add(MemberUpdated(currentMember, refresh: refresh));
+      accessBloc!.add(MemberUpdated(currentMember, refresh: refresh));
       stateAccesModel = currentAccess;
     }
   }
