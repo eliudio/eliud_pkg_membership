@@ -23,7 +23,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MembershipDashboardComponentConstructorDefault
     implements ComponentConstructor {
-  Widget createNew({String? id, Map<String, Object>? parameters}) {
+  Widget createNew({String? id, Map<String, dynamic>? parameters}) {
     return MembershipDashboard(id: id);
   }
 }
