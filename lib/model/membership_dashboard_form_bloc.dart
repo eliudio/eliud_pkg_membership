@@ -65,20 +65,20 @@ class MembershipDashboardFormBloc extends Bloc<MembershipDashboardFormEvent, Mem
 
       if (event is InitialiseMembershipDashboardFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
-        MembershipDashboardFormLoaded loaded = MembershipDashboardFormLoaded(value: await membershipDashboardRepository(appId: appId)!.get(event!.value!.documentID));
+        MembershipDashboardFormLoaded loaded = MembershipDashboardFormLoaded(value: await membershipDashboardRepository(appId: appId)!.get(event.value!.documentID));
         yield loaded;
         return;
       } else if (event is InitialiseMembershipDashboardFormNoLoadEvent) {
-        MembershipDashboardFormLoaded loaded = MembershipDashboardFormLoaded(value: event!.value);
+        MembershipDashboardFormLoaded loaded = MembershipDashboardFormLoaded(value: event.value);
         yield loaded;
         return;
       }
     } else if (currentState is MembershipDashboardFormInitialized) {
       MembershipDashboardModel? newValue = null;
       if (event is ChangedMembershipDashboardDocumentID) {
-        newValue = currentState.value!.copyWith(documentID: event!.value);
+        newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event!.value, newValue).asStream();
+          yield* _isDocumentIDValid(event.value, newValue).asStream();
         } else {
           yield SubmittableMembershipDashboardForm(value: newValue);
         }
@@ -86,19 +86,19 @@ class MembershipDashboardFormBloc extends Bloc<MembershipDashboardFormEvent, Mem
         return;
       }
       if (event is ChangedMembershipDashboardAppId) {
-        newValue = currentState.value!.copyWith(appId: event!.value);
+        newValue = currentState.value!.copyWith(appId: event.value);
         yield SubmittableMembershipDashboardForm(value: newValue);
 
         return;
       }
       if (event is ChangedMembershipDashboardDescription) {
-        newValue = currentState.value!.copyWith(description: event!.value);
+        newValue = currentState.value!.copyWith(description: event.value);
         yield SubmittableMembershipDashboardForm(value: newValue);
 
         return;
       }
       if (event is ChangedMembershipDashboardConditions) {
-        newValue = currentState.value!.copyWith(conditions: event!.value);
+        newValue = currentState.value!.copyWith(conditions: event.value);
         yield SubmittableMembershipDashboardForm(value: newValue);
 
         return;

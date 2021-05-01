@@ -42,13 +42,13 @@ class MembershipDashboardCache implements MembershipDashboardRepository {
 
   Future<MembershipDashboardModel> add(MembershipDashboardModel value) {
     return reference.add(value).then((newValue) {
-      fullCache[value!.documentID] = newValue;
+      fullCache[value.documentID] = newValue;
       return newValue;
     });
   }
 
   Future<void> delete(MembershipDashboardModel value){
-    fullCache.remove(value!.documentID);
+    fullCache.remove(value.documentID);
     reference.delete(value);
     return Future.value();
   }
@@ -63,7 +63,7 @@ class MembershipDashboardCache implements MembershipDashboardRepository {
 
   Future<MembershipDashboardModel> update(MembershipDashboardModel value) {
     return reference.update(value).then((newValue) {
-      fullCache[value!.documentID] = newValue;
+      fullCache[value.documentID] = newValue;
       return newValue;
     });
   }
