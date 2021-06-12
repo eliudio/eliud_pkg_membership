@@ -17,7 +17,7 @@ import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
-
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/core/global_data.dart';
 import 'package:eliud_core/tools/has_fab.dart';
 import 'package:flutter/material.dart';
@@ -78,11 +78,7 @@ class MembershipDashboardListWidgetState extends State<MembershipDashboardListWi
     if (accessState is AppLoaded) {
       return !accessState.memberIsOwner() 
         ? null
-        :FloatingActionButton(
-        heroTag: "MembershipDashboardFloatBtnTag",
-        foregroundColor: RgbHelper.color(rgbo: accessState.app.floatingButtonForegroundColor),
-        backgroundColor: RgbHelper.color(rgbo: accessState.app.floatingButtonBackgroundColor),
-        child: Icon(Icons.add),
+        : StyleRegistry.registry().styleWithContext(context).adminListStyle().floatingActionButton(context, 'PageFloatBtnTag', Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).push(
             pageRouteBuilder(accessState.app, page: BlocProvider.value(
@@ -113,8 +109,9 @@ class MembershipDashboardListWidgetState extends State<MembershipDashboardListWi
           if ((widget.isEmbedded != null) && widget.isEmbedded!) {
             var children = <Widget>[];
             children.add(theList(context, values, accessState));
-            children.add(RaisedButton(
-                    color: RgbHelper.color(rgbo: accessState.app.formSubmitButtonColor),
+            children.add(
+                StyleRegistry.registry().styleWithContext(context).adminFormStyle().submitButton(
+                    context, 'Add',
                     onPressed: () {
                       Navigator.of(context).push(
                                 pageRouteBuilder(accessState.app, page: BlocProvider.value(
@@ -125,7 +122,6 @@ class MembershipDashboardListWidgetState extends State<MembershipDashboardListWi
                                 )),
                               );
                     },
-                    child: Text('Add', style: TextStyle(color: RgbHelper.color(rgbo: accessState.app.formSubmitButtonTextColor))),
                   ));
             return ListView(
               padding: const EdgeInsets.all(8),
@@ -149,11 +145,9 @@ class MembershipDashboardListWidgetState extends State<MembershipDashboardListWi
   
   Widget theList(BuildContext context, values, AppLoaded accessState) {
     return Container(
-      decoration: widget.listBackground == null ? BoxDecorationHelper.boxDecoration(accessState, accessState.app.listBackground) : BoxDecorationHelper.boxDecoration(accessState, widget.listBackground),
+      decoration: widget.listBackground == null ? StyleRegistry.registry().styleWithContext(context).adminListStyle().boxDecorator(context) : BoxDecorationHelper.boxDecoration(accessState, widget.listBackground),
       child: ListView.separated(
-        separatorBuilder: (context, index) => Divider(
-          color: RgbHelper.color(rgbo: accessState.app.dividerColor)
-        ),
+        separatorBuilder: (context, index) => StyleRegistry.registry().styleWithContext(context).adminListStyle().divider(context),
         shrinkWrap: true,
         physics: ScrollPhysics(),
         itemCount: values.length,
@@ -233,19 +227,11 @@ class MembershipDashboardListItem extends StatelessWidget {
           tag: '${value!.documentID}__MembershipDashboardheroTag',
           child: Container(
             width: fullScreenWidth(context),
-            child: Center(child: Text(
-              value!.documentID!,
-              style: TextStyle(color: RgbHelper.color(rgbo: app.listTextItemColor)),
-            )),
+            child: Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)),
           ),
         ),
         subtitle: (value!.description != null) && (value!.description!.isNotEmpty)
-            ? Center( child: Text(
-          value!.description!,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(color: RgbHelper.color(rgbo: app.listTextItemColor)),
-        ))
+            ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.description!))
             : null,
       ),
     );
