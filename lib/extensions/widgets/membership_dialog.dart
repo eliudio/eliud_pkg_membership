@@ -1,5 +1,5 @@
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
-import 'package:eliud_core/tools/registry.dart';
+import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_core/tools/tool_set.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
 import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
