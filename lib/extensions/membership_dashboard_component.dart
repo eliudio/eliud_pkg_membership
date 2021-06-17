@@ -4,18 +4,15 @@ import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/background_model.dart';
-import 'package:eliud_core/model/member_list_bloc.dart';
-import 'package:eliud_core/model/member_list_event.dart';
-import 'package:eliud_core/tools/component_constructor.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_pkg_etc/tools/formatter/format_helpere.dart';
-import 'package:eliud_pkg_membership/extensions/widgets/membership_dashboard_item.dart';
-import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/member_public_info_list.dart';
 import 'package:eliud_core/model/member_public_info_list_bloc.dart';
 import 'package:eliud_core/model/member_public_info_list_event.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core/tools/component_constructor.dart';
+import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_pkg_membership/extensions/widgets/membership_dashboard_item.dart';
+import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_component.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_repository.dart';
@@ -55,7 +52,7 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
           memberPublicInfoRepository:
               memberPublicInfoRepository(appId: AccessBloc.appId(context))!,
         )..add(LoadMemberPublicInfoList()),
-        child: FormatHelper.getFormattedPost([MemberPublicInfoListWidget(
+        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().topicContainer(context, children: [MemberPublicInfoListWidget(
             readOnly: true,
             widgetProvider: (value) => widgetProvider(appId, value),
             listBackground: BackgroundModel(documentID: "`transparent"))]),

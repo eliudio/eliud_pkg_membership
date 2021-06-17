@@ -1,6 +1,5 @@
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

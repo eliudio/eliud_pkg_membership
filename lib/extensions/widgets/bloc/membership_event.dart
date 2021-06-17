@@ -1,4 +1,3 @@
-import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class MembershipEvent extends Equatable {
