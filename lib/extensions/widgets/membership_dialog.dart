@@ -1,7 +1,7 @@
 import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/tool_set.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
 import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
@@ -203,7 +203,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
                   child: Text('Close'))
             ]);
       } else {
-        return DelayedCircularProgressIndicator();
+        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
       }
     });
   }

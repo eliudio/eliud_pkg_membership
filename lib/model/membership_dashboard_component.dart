@@ -15,7 +15,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
+import 'package:eliud_core/style/style_registry.dart';
 
 import 'package:eliud_pkg_membership/model/membership_dashboard_component_bloc.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_component_event.dart';
@@ -57,7 +57,7 @@ abstract class AbstractMembershipDashboardComponent extends StatelessWidget {
         return alertWidget(title: 'Error', content: state.message);
       } else {
         return Center(
-          child: DelayedCircularProgressIndicator(),
+          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
         );
       }
     });

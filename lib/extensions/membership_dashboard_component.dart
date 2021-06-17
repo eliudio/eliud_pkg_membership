@@ -1,7 +1,6 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
-import 'package:eliud_core/core/widgets/progress_indicator.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_core/model/member_public_info_list.dart';
@@ -58,7 +57,7 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
             listBackground: BackgroundModel(documentID: "`transparent"))]),
       );
     } else {
-      return DelayedCircularProgressIndicator();
+      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
     }
   }
 
