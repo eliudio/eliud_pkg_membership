@@ -230,7 +230,7 @@ class MembershipDashboardListItem extends StatelessWidget {
             child: Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)),
           ),
         ),
-        subtitle: (value!.description != null) && (value!.description!.isNotEmpty)
+        subtitle: (value!.description! != null) && (value!.description!.isNotEmpty)
             ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.description!))
             : null,
       ),
