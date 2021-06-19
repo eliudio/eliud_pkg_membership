@@ -3,9 +3,7 @@ import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/tool_set.dart';
-import 'package:eliud_core/tools/widgets/dialog_helper.dart';
-import 'package:eliud_core/tools/widgets/request_value_dialog.dart';
-import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
+import 'package:eliud_core/tools/widgets/simple_dialog_api.dart';
 import 'package:eliud_pkg_notifications/platform/platform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,12 +23,10 @@ class MembershipDialog extends StatefulWidget {
 }
 
 class _MembershipDialogState extends State<MembershipDialog> {
-  final DialogStateHelper dialogHelper = DialogStateHelper();
-
   Widget getFieldsWidget(BuildContext context, String appId,
       AccessModel oldAccessModel, MemberPublicInfoModel member) {
-    return dialogHelper.fieldsWidget(
-        context, <Widget>[buttons(appId, oldAccessModel, member)],
+
+    return StyleRegistry.registry().styleWithContext(context).frontEndStyle().simpleTopicContainer(context, children: <Widget>[buttons(appId, oldAccessModel, member)],
         height: 200, width: 200);
   }
 
@@ -47,106 +43,89 @@ class _MembershipDialogState extends State<MembershipDialog> {
     }
     List<Widget> _buttons = [];
     if ((oldAccessModel.blocked != null) && (oldAccessModel.blocked!)) {
-      _buttons.add(RaisedButton(
-          onPressed: () =>
-              _askUnblock(),
-          child: Text('Unblock member')));
+      _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().button(context, label: 'Unblock member',
+          onPressed: () => _askUnblock()));
     } else {
       if (privilegeLevel != PrivilegeLevel.OwnerPrivilege) {
-        _buttons.add(RaisedButton(
-            onPressed: () => _askBlock(appId, oldAccessModel, member),
-            child: Text('Block member')));
+        _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().button(context, label: 'Block member',
+            onPressed: () => _askBlock(appId, oldAccessModel, member)));
       }
       if ((privilegeLevel.index >= PrivilegeLevel.NoPrivilege.index) &&
           (privilegeLevel.index < PrivilegeLevel.Level2Privilege.index)) {
-        _buttons.add(RaisedButton(
-            onPressed: () =>
-                _askPromote(privilegeLevel, blocked),
-            child: Text('Promote member')));
+        _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().button(context, label: 'Promote member',
+            onPressed: () => _askPromote(privilegeLevel, blocked)));
       }
       if ((privilegeLevel.index > PrivilegeLevel.NoPrivilege.index) &&
           (privilegeLevel.index <= PrivilegeLevel.Level2Privilege.index)) {
-        _buttons.add(RaisedButton(
-            onPressed: () =>
-                _askDemote(privilegeLevel, blocked),
-            child: Text('Demote member')));
+        _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().button(context, label: 'Demote member',
+            onPressed: () => _askDemote(privilegeLevel, blocked)));
       }
     }
-    _buttons.add(RaisedButton(
-        onPressed: () => _askSendMessage(member), child: Text('Send message')));
+    _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().button(context, label: 'Send message',
+        onPressed: () => _askSendMessage(member)));
     return ListView(
         shrinkWrap: true, physics: ScrollPhysics(), children: _buttons);
   }
 
   void _askBlock(
       String appId, AccessModel oldAccessModel, MemberPublicInfoModel member) {
-    DialogStatefulWidgetHelper.openIt(
-        context,
-        YesNoDialog(
-            title: 'Block',
-            message: 'Do you want to block this member from the app?',
-            yesFunction: () {
-              _block();
-              Navigator.pop(context);
-            },
-            noFunction: () => Navigator.pop(context)));
+    SimpleDialogApi.openAckNackDialog(context,
+        title: 'Block',
+        message: 'Do you want to block this member from the app?',
+        onSelection: (value) {
+      if (value == 0) {
+        _block();
+      }
+    });
   }
 
   void _askPromote(PrivilegeLevel privilegeLevel, bool blocked) {
-    DialogStatefulWidgetHelper.openIt(
-        context,
-        YesNoDialog(
-            title: 'Promote',
-            message: 'Do you want to promote this member? Current level is ' +
-                privilegeLevelToMemberRoleString(privilegeLevel, blocked),
-            yesFunction: () {
-              _promote();
-              Navigator.pop(context);
-            },
-            noFunction: () => Navigator.pop(context)));
+    SimpleDialogApi.openAckNackDialog(context,
+        title: 'Promote',
+        message: 'Do you want to promote this member? Current level is ' +
+            privilegeLevelToMemberRoleString(privilegeLevel, blocked),
+        onSelection: (value) {
+      if (value == 0) {
+        _promote();
+      }
+    });
   }
 
   Future<void> _askDemote(PrivilegeLevel privilegeLevel, bool blocked) async {
-    DialogStatefulWidgetHelper.openIt(
-        context,
-        YesNoDialog(
-            title: 'Promote',
-            message: 'Do you want to demote this member? Current level is ' +
-                privilegeLevelToPrivilegeString(privilegeLevel, blocked),
-            yesFunction: () {
-              _demote();
-              Navigator.pop(context);
-            },
-            noFunction: () => Navigator.pop(context)));
+    SimpleDialogApi.openAckNackDialog(context,
+        title: 'Demote',
+        message: 'Do you want to demote this member? Current level is ' +
+            privilegeLevelToPrivilegeString(privilegeLevel, blocked),
+        onSelection: (value) {
+      if (value == 0) {
+        _demote();
+      }
+    });
   }
 
   void _askUnblock() {
-    DialogStatefulWidgetHelper.openIt(
-        context,
-        YesNoDialog(
-            title: 'Unblock',
-            message: 'Do you want to unblock this member from the app?',
-            yesFunction: () {
-              _unblock();
-              Navigator.pop(context);
-            },
-            noFunction: () => Navigator.pop(context)));
+    SimpleDialogApi.openAckNackDialog(
+      context,
+      title: 'Unblock',
+      message: 'Do you want to unblock this member from the app?',
+      onSelection: (value) {
+        if (value == 0) {
+          _unblock();
+        }
+      },
+    );
   }
 
   void _askSendMessage(MemberPublicInfoModel member) {
-    DialogStatefulWidgetHelper.openIt(
-      context,
-      RequestValueDialog(
-          title: 'Send Message to Member',
-          yesButtonText: 'Send message',
-          noButtonText: 'Discard',
-          hintText: 'Message',
-          yesFunction: (msg) {
-            _sendMessage(msg!, member);
-            Navigator.pop(context);
-          },
-          noFunction: () => Navigator.pop(context)),
-    );
+    SimpleDialogApi.openEntryDialog(context,
+        title: 'Send Message to Member',
+        hintText: 'Message',
+        ackButtonLabel: 'Send message',
+        nackButtonLabel: 'Discard', onPressed: (value) {
+      if (value != null) {
+        _sendMessage(value, member);
+      }
+    });
   }
 
   Future<void> _block() async {
@@ -172,10 +151,9 @@ class _MembershipDialogState extends State<MembershipDialog> {
     if (message == null) return;
     if (message.length == 0) return;
     AbstractNotificationPlatform.platform!.sendMessage(
-        context, member.documentID!, message,
-        postSendAction: (value) {
-          Registry.registry()!.snackbar("Yay! Message sent!");
-        });
+        context, member.documentID!, message, postSendAction: (value) {
+      Registry.registry()!.snackbar("Yay! Message sent!");
+    });
   }
 
   @override
@@ -189,21 +167,18 @@ class _MembershipDialogState extends State<MembershipDialog> {
         } else {
           name = "No name";
         }
-        return dialogHelper.build(
-            title: name +
-                ' - ' +
-                privilegeLevelToMemberRoleString(state.accessModel!.privilegeLevel, state.accessModel!.blocked),
-            contents: getFieldsWidget(
-                context, state.appId!, state.accessModel!, state.member!),
-            buttons: <TextButton>[
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Close'))
-            ]);
+
+        return SimpleDialogApi.complexDialog(context, title: name +
+            ' - ' +
+            privilegeLevelToMemberRoleString(
+                state.accessModel!.privilegeLevel,
+                state.accessModel!.blocked), child: getFieldsWidget(
+            context, state.appId!, state.accessModel!, state.member!));
       } else {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+        return StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .progressIndicator(context);
       }
     });
   }

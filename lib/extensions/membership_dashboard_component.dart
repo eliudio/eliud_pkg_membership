@@ -51,7 +51,7 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
           memberPublicInfoRepository:
               memberPublicInfoRepository(appId: AccessBloc.appId(context))!,
         )..add(LoadMemberPublicInfoList()),
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().topicContainer(context, children: [MemberPublicInfoListWidget(
+        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().simpleTopicContainer(context, children: [MemberPublicInfoListWidget(
             readOnly: true,
             widgetProvider: (value) => widgetProvider(appId, value),
             listBackground: BackgroundModel(documentID: "`transparent"))]),

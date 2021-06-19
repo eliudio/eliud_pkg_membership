@@ -1,8 +1,10 @@
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/access_model.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/widgets/dialog_field.dart';
 import 'package:eliud_core/tools/widgets/dialog_helper.dart';
-import 'package:eliud_core/tools/widgets/yes_no_dialog.dart';
+import 'package:eliud_core/tools/widgets/simple_dialog_api.dart';
+import 'package:eliud_core/tools/widgets/simple_dialog_api.dart';
 import 'package:eliud_pkg_workflow/model/assignment_model.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_entity.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_model.dart';
@@ -26,25 +28,24 @@ abstract class MembershipTaskModel extends TaskModel {
 
 class RequestMembershipTaskModel extends MembershipTaskModel {
   RequestMembershipTaskModel({String? description, bool? executeInstantly})
-      : super(
-          description: description,
-      executeInstantly: executeInstantly
-        );
+      : super(description: description, executeInstantly: executeInstantly);
 
   @override
   Future<void> startTask(
       BuildContext? context, AssignmentModel? assignmentModel) {
-    if ((context == null) || (assignmentModel == null)) return Future.value(null);
-    DialogStatefulWidgetHelper.openIt(
-        context,
-        YesNoDialog(
-            title: 'Join',
-            message: 'Do you want to request membership?',
-            yesFunction: () => confirmMembershipRequest(
-                  context,
-                  assignmentModel,
-                ),
-            noFunction: () => Navigator.pop(context)));
+    if ((context == null) || (assignmentModel == null))
+      return Future.value(null);
+
+    SimpleDialogApi.openAckNackDialog(context,
+        title: 'Join',
+        message: 'Do you want to request membership?', onSelection: (value) {
+      if (value == 0) {
+        confirmMembershipRequest(
+          context,
+          assignmentModel,
+        );
+      }
+    });
     return Future.value(null);
   }
 
@@ -55,39 +56,39 @@ This is the wrong place to send this message
     AbstractNotificationPlatform.platform
         .sendMessage(context, assignmentModel.assigneeId, "You have requested membership for app " + assignmentModel.appId);
 */
-    Navigator.pop(context);
     finishTask(
         context,
         assignmentModel,
         ExecutionResults(
           ExecutionStatus.success,
-        ), null);
+        ),
+        null);
   }
 
   @override
   TaskEntity toEntity({String? appId}) => RequestMembershipTaskEntity(
         description: description,
-      executeInstantly: executeInstantly,
+        executeInstantly: executeInstantly,
       );
 
   static RequestMembershipTaskModel fromEntity(
           RequestMembershipTaskEntity entity) =>
       RequestMembershipTaskModel(
-        description: entity.description,
-          executeInstantly: entity.executeInstantly
-      );
+          description: entity.description,
+          executeInstantly: entity.executeInstantly);
 
   static RequestMembershipTaskEntity fromMap(Map snap) =>
       RequestMembershipTaskEntity(
         description: snap['description'],
-          executeInstantly: snap['executeInstantly'],
+        executeInstantly: snap['executeInstantly'],
       );
 }
 
 class RequestMembershipTaskModelMapper implements TaskModelMapper {
   @override
   TaskModel fromEntity(TaskEntity entity) =>
-      RequestMembershipTaskModel.fromEntity(entity as RequestMembershipTaskEntity);
+      RequestMembershipTaskModel.fromEntity(
+          entity as RequestMembershipTaskEntity);
 
   @override
   TaskModel fromEntityPlus(TaskEntity entity) => fromEntity(entity);
@@ -103,61 +104,66 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
 
   ApproveMembershipTaskModel({String? description, bool? executeInstantly})
       : super(
-    description: description,
-      executeInstantly: executeInstantly,
-  );
+          description: description,
+          executeInstantly: executeInstantly,
+        );
 
   @override
   Future<void> startTask(
       BuildContext? context, AssignmentModel? assignmentModel) {
-    if ((context == null) || (assignmentModel == null)) return Future.value(null);
+    if ((context == null) || (assignmentModel == null))
+      return Future.value(null);
     String? feedback = null;
     DialogStatefulWidgetHelper.openIt(
       context,
       YesNoIgnoreDialogWithAssignmentResults(
           title: 'Membership request',
           message:
-          'Below the payment details. Please review and confirm or decline and provide feedback.',
+              'Below the payment details. Please review and confirm or decline and provide feedback.',
           yesLabel: 'Confirm membership',
           noLabel: 'Decline membership',
           resultsPrevious: assignmentModel.resultsPrevious,
-          yesFunction: () => _approveMembershipRequest(context, assignmentModel,
-              feedback),
-          noFunction: () => _disapproveMembershipRequest(context, assignmentModel,
-              feedback),
+          yesFunction: () =>
+              _approveMembershipRequest(context, assignmentModel, feedback),
+          noFunction: () =>
+              _disapproveMembershipRequest(context, assignmentModel, feedback),
           extraFields: [
-            DialogStateHelper().getListTile(
-                leading: Icon(Icons.payment),
-                title: DialogField(
-                  valueChanged: (value) => feedback = value,
-                  decoration: const InputDecoration(
-                    hintText: 'Feedback to the member',
-                    labelText: 'Feedback to the member',
-                  ),
-                ))
+            StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .getListTile(context,
+                    leading: Icon(Icons.payment),
+                    title: SimpleDialogApi.dialogField(context,
+                      valueChanged: (value) => feedback = value,
+                      decoration: const InputDecoration(
+                        hintText: 'Feedback to the member',
+                        labelText: 'Feedback to the member',
+                      ),
+                    )),
           ]),
     );
     return Future.value(null);
   }
 
-  Future<void> _approveMembershipRequest(
-      BuildContext context, AssignmentModel assignmentModel, String? comment) async {
-    _sendMessage(context, assignmentModel, "Your membership request has been approved", comment);
-    Navigator.pop(context);
+  Future<void> _approveMembershipRequest(BuildContext context,
+      AssignmentModel assignmentModel, String? comment) async {
+    _sendMessage(context, assignmentModel,
+        "Your membership request has been approved", comment);
     if (assignmentModel.reporter == null) {
       print("assignmentModel.reporter is null");
       return Future.value(null);
     }
-    var accessModel = await accessRepository(appId: assignmentModel.appId)!.get(assignmentModel.reporter!.documentID);
+    var accessModel = await accessRepository(appId: assignmentModel.appId)!
+        .get(assignmentModel.reporter!.documentID);
     if (accessModel != null) {
       accessModel.privilegeLevel = PrivilegeLevel.Level1Privilege;
       await accessRepository(appId: assignmentModel.appId)!.update(accessModel);
     } else {
       await accessRepository(appId: assignmentModel.appId)!.add(AccessModel(
-          documentID: assignmentModel.reporter!.documentID,
-          privilegeLevel: PrivilegeLevel.Level1Privilege,
-          points: 0,
-          blocked: false,
+        documentID: assignmentModel.reporter!.documentID,
+        privilegeLevel: PrivilegeLevel.Level1Privilege,
+        points: 0,
+        blocked: false,
       ));
     }
     finishTask(
@@ -165,53 +171,59 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         assignmentModel,
         ExecutionResults(
           ExecutionStatus.success,
-        ), null);
+        ),
+        null);
   }
 
   void _disapproveMembershipRequest(
       BuildContext context, AssignmentModel assignmentModel, String? comment) {
-    _sendMessage(context, assignmentModel, "Your membership request has been disapproved", comment);
-    Navigator.pop(context);
+    _sendMessage(context, assignmentModel,
+        "Your membership request has been disapproved", comment);
     finishTask(
         context,
         assignmentModel,
         ExecutionResults(
-          ExecutionStatus.success,  // declining the membership request is also a successful end of the task, from a task perspective
-        ), null);
+          ExecutionStatus
+              .success, // declining the membership request is also a successful end of the task, from a task perspective
+        ),
+        null);
   }
 
-  void _sendMessage(BuildContext context, AssignmentModel assignmentModel, String message, String? comment) {
+  void _sendMessage(BuildContext context, AssignmentModel assignmentModel,
+      String message, String? comment) {
     if (!((comment == null) || (comment.length == 0))) {
       message = message + " with these comments: " + comment;
     }
     if (assignmentModel == null) return;
-    AbstractNotificationPlatform.platform!.sendMessage(context, assignmentModel.assigneeId!, message);
+    AbstractNotificationPlatform.platform!
+        .sendMessage(context, assignmentModel.assigneeId!, message);
   }
 
   @override
   TaskEntity toEntity({String? appId}) => ApproveMembershipTaskEntity(
-    description: description,
-      executeInstantly: executeInstantly,
-  );
+        description: description,
+        executeInstantly: executeInstantly,
+      );
 
   static ApproveMembershipTaskModel fromEntity(
-      ApproveMembershipTaskEntity entity) =>
+          ApproveMembershipTaskEntity entity) =>
       ApproveMembershipTaskModel(
         description: entity.description,
-          executeInstantly: entity.executeInstantly,
+        executeInstantly: entity.executeInstantly,
       );
 
   static ApproveMembershipTaskEntity fromMap(Map snap) =>
       ApproveMembershipTaskEntity(
         description: snap['description'],
-          executeInstantly: snap['executeInstantly'],
+        executeInstantly: snap['executeInstantly'],
       );
 }
 
 class ApproveMembershipTaskModelMapper implements TaskModelMapper {
   @override
   TaskModel fromEntity(TaskEntity entity) =>
-      ApproveMembershipTaskModel.fromEntity(entity as ApproveMembershipTaskEntity);
+      ApproveMembershipTaskModel.fromEntity(
+          entity as ApproveMembershipTaskEntity);
 
   @override
   TaskModel fromEntityPlus(TaskEntity entity) => fromEntity(entity);
