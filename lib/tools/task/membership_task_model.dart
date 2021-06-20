@@ -32,7 +32,7 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
     if ((context == null) || (assignmentModel == null))
       return Future.value(null);
 
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openAckNackDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openAckNackDialog(context,
         title: 'Join',
         message: 'Do you want to request membership?', onSelection: (value) {
       if (value == 0) {
@@ -110,7 +110,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
     if ((context == null) || (assignmentModel == null))
       return Future.value(null);
     String? feedback = null;
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openWidgetDialog(
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openWidgetDialog(
       context,
       child: YesNoIgnoreDialogWithAssignmentResults(
           title: 'Membership request',
@@ -126,10 +126,10 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
           extraFields: [
             StyleRegistry.registry()
                 .styleWithContext(context)
-                .frontEndStyle()
+                .frontEndStyle().listTileStyle()
                 .getListTile(context,
                     leading: Icon(Icons.payment),
-                    title: StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogField(context,
+                    title: StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogFieldStyle().dialogField(context,
                       valueChanged: (value) => feedback = value,
                       decoration: const InputDecoration(
                         hintText: 'Feedback to the member',

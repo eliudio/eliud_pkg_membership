@@ -25,7 +25,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   Widget getFieldsWidget(BuildContext context, String appId,
       AccessModel oldAccessModel, MemberPublicInfoModel member) {
 
-    return StyleRegistry.registry().styleWithContext(context).frontEndStyle().simpleTopicContainer(context, children: <Widget>[buttons(appId, oldAccessModel, member)],
+    return StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().simpleTopicContainer(context, children: <Widget>[buttons(appId, oldAccessModel, member)],
         height: 200, width: 200);
   }
 
@@ -42,25 +42,25 @@ class _MembershipDialogState extends State<MembershipDialog> {
     }
     List<Widget> _buttons = [];
     if ((oldAccessModel.blocked != null) && (oldAccessModel.blocked!)) {
-      _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().button(context, label: 'Unblock member',
+      _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().button(context, label: 'Unblock member',
           onPressed: () => _askUnblock()));
     } else {
       if (privilegeLevel != PrivilegeLevel.OwnerPrivilege) {
-        _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().button(context, label: 'Block member',
+        _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().button(context, label: 'Block member',
             onPressed: () => _askBlock(appId, oldAccessModel, member)));
       }
       if ((privilegeLevel.index >= PrivilegeLevel.NoPrivilege.index) &&
           (privilegeLevel.index < PrivilegeLevel.Level2Privilege.index)) {
-        _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().button(context, label: 'Promote member',
+        _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().button(context, label: 'Promote member',
             onPressed: () => _askPromote(privilegeLevel, blocked)));
       }
       if ((privilegeLevel.index > PrivilegeLevel.NoPrivilege.index) &&
           (privilegeLevel.index <= PrivilegeLevel.Level2Privilege.index)) {
-        _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().button(context, label: 'Demote member',
+        _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().button(context, label: 'Demote member',
             onPressed: () => _askDemote(privilegeLevel, blocked)));
       }
     }
-    _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().button(context, label: 'Send message',
+    _buttons.add(StyleRegistry.registry().styleWithContext(context).frontEndStyle().buttonStyle().button(context, label: 'Send message',
         onPressed: () => _askSendMessage(member)));
     return ListView(
         shrinkWrap: true, physics: ScrollPhysics(), children: _buttons);
@@ -68,7 +68,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
 
   void _askBlock(
       String appId, AccessModel oldAccessModel, MemberPublicInfoModel member) {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openAckNackDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openAckNackDialog(context,
         title: 'Block',
         message: 'Do you want to block this member from the app?',
         onSelection: (value) {
@@ -79,7 +79,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   void _askPromote(PrivilegeLevel privilegeLevel, bool blocked) {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openAckNackDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openAckNackDialog(context,
         title: 'Promote',
         message: 'Do you want to promote this member? Current level is ' +
             privilegeLevelToMemberRoleString(privilegeLevel, blocked),
@@ -91,7 +91,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   Future<void> _askDemote(PrivilegeLevel privilegeLevel, bool blocked) async {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openAckNackDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openAckNackDialog(context,
         title: 'Demote',
         message: 'Do you want to demote this member? Current level is ' +
             privilegeLevelToPrivilegeString(privilegeLevel, blocked),
@@ -103,7 +103,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   void _askUnblock() {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openAckNackDialog(
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openAckNackDialog(
       context,
       title: 'Unblock',
       message: 'Do you want to unblock this member from the app?',
@@ -116,7 +116,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   void _askSendMessage(MemberPublicInfoModel member) {
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openEntryDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openEntryDialog(context,
         title: 'Send Message to Member',
         hintText: 'Message',
         ackButtonLabel: 'Send message',
@@ -162,7 +162,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
       if (state is MembershipLoaded) {
         var name = state.member!.name ?? "No name";
 
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().complexDialog(context, title: name +
+        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogWidgetStyle().complexDialog(context, title: name +
             ' - ' +
             privilegeLevelToMemberRoleString(
                 state.accessModel!.privilegeLevel,
@@ -171,7 +171,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
       } else {
         return StyleRegistry.registry()
             .styleWithContext(context)
-            .frontEndStyle()
+            .frontEndStyle().progressIndicatorStyle()
             .progressIndicator(context);
       }
     });

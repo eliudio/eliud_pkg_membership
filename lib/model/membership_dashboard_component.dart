@@ -57,7 +57,7 @@ abstract class AbstractMembershipDashboardComponent extends StatelessWidget {
         return alertWidget(title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context),
+          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
         );
       }
     });

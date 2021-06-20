@@ -74,7 +74,7 @@ return widgets;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<MembershipDashboardListBloc, MembershipDashboardListState>(builder: (context, state) {
       if (state is MembershipDashboardListLoading) {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
       } else if (state is MembershipDashboardListLoaded) {
         String? valueChosen;
         if (state.values!.indexWhere((v) => (v!.documentID == widget.value)) >= 0)
@@ -125,7 +125,7 @@ return widgets;
           return Center(child: button);
         }
       } else {
-        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
       }
     });
   }

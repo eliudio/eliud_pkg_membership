@@ -51,7 +51,7 @@ class MembershipDashboardItem extends StatelessWidget {
     var accessModel =
         await accessRepository(appId: appId)!.get(value!.documentID!);
 */
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openWidgetDialog(context, child: _widget());
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openWidgetDialog(context, child: _widget());
   }
 
   Widget _widget() {
