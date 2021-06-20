@@ -3,7 +3,6 @@ import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/tool_set.dart';
-import 'package:eliud_core/tools/widgets/simple_dialog_api.dart';
 import 'package:eliud_pkg_notifications/platform/platform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +68,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
 
   void _askBlock(
       String appId, AccessModel oldAccessModel, MemberPublicInfoModel member) {
-    SimpleDialogApi.openAckNackDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openAckNackDialog(context,
         title: 'Block',
         message: 'Do you want to block this member from the app?',
         onSelection: (value) {
@@ -80,7 +79,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   void _askPromote(PrivilegeLevel privilegeLevel, bool blocked) {
-    SimpleDialogApi.openAckNackDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openAckNackDialog(context,
         title: 'Promote',
         message: 'Do you want to promote this member? Current level is ' +
             privilegeLevelToMemberRoleString(privilegeLevel, blocked),
@@ -92,7 +91,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   Future<void> _askDemote(PrivilegeLevel privilegeLevel, bool blocked) async {
-    SimpleDialogApi.openAckNackDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openAckNackDialog(context,
         title: 'Demote',
         message: 'Do you want to demote this member? Current level is ' +
             privilegeLevelToPrivilegeString(privilegeLevel, blocked),
@@ -104,7 +103,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   void _askUnblock() {
-    SimpleDialogApi.openAckNackDialog(
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openAckNackDialog(
       context,
       title: 'Unblock',
       message: 'Do you want to unblock this member from the app?',
@@ -117,7 +116,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   void _askSendMessage(MemberPublicInfoModel member) {
-    SimpleDialogApi.openEntryDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openEntryDialog(context,
         title: 'Send Message to Member',
         hintText: 'Message',
         ackButtonLabel: 'Send message',
@@ -168,7 +167,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
           name = "No name";
         }
 
-        return SimpleDialogApi.complexDialog(context, title: name +
+        return StyleRegistry.registry().styleWithContext(context).frontEndStyle().complexDialog(context, title: name +
             ' - ' +
             privilegeLevelToMemberRoleString(
                 state.accessModel!.privilegeLevel,

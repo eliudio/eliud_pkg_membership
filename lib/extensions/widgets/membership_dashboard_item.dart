@@ -1,5 +1,5 @@
 import 'package:eliud_core/model/member_public_info_model.dart';
-import 'package:eliud_core/tools/widgets/dialog_helper.dart';
+import 'package:eliud_core/style/style_registry.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,7 +51,7 @@ class MembershipDashboardItem extends StatelessWidget {
     var accessModel =
         await accessRepository(appId: appId)!.get(value!.documentID!);
 */
-    DialogStatefulWidgetHelper.openIt(context, _widget());
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openWidgetDialog(context, child: _widget());
   }
 
   Widget _widget() {

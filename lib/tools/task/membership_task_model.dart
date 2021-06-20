@@ -1,10 +1,6 @@
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/widgets/dialog_field.dart';
-import 'package:eliud_core/tools/widgets/dialog_helper.dart';
-import 'package:eliud_core/tools/widgets/simple_dialog_api.dart';
-import 'package:eliud_core/tools/widgets/simple_dialog_api.dart';
 import 'package:eliud_pkg_workflow/model/assignment_model.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_entity.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_model.dart';
@@ -32,11 +28,11 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
 
   @override
   Future<void> startTask(
-      BuildContext? context, AssignmentModel? assignmentModel) {
+      BuildContext context, AssignmentModel? assignmentModel) {
     if ((context == null) || (assignmentModel == null))
       return Future.value(null);
 
-    SimpleDialogApi.openAckNackDialog(context,
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openAckNackDialog(context,
         title: 'Join',
         message: 'Do you want to request membership?', onSelection: (value) {
       if (value == 0) {
@@ -110,13 +106,13 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
 
   @override
   Future<void> startTask(
-      BuildContext? context, AssignmentModel? assignmentModel) {
+      BuildContext context, AssignmentModel? assignmentModel) {
     if ((context == null) || (assignmentModel == null))
       return Future.value(null);
     String? feedback = null;
-    DialogStatefulWidgetHelper.openIt(
+    StyleRegistry.registry().styleWithContext(context).frontEndStyle().openWidgetDialog(
       context,
-      YesNoIgnoreDialogWithAssignmentResults(
+      child: YesNoIgnoreDialogWithAssignmentResults(
           title: 'Membership request',
           message:
               'Below the payment details. Please review and confirm or decline and provide feedback.',
@@ -133,7 +129,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
                 .frontEndStyle()
                 .getListTile(context,
                     leading: Icon(Icons.payment),
-                    title: SimpleDialogApi.dialogField(context,
+                    title: StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogField(context,
                       valueChanged: (value) => feedback = value,
                       decoration: const InputDecoration(
                         hintText: 'Feedback to the member',
