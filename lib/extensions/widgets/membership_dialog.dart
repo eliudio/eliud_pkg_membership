@@ -160,12 +160,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
     return BlocBuilder<MembershipBloc, MembershipState>(
         builder: (context, state) {
       if (state is MembershipLoaded) {
-        var name;
-        if (state.member!.name == null) {
-          name = state.member!.name;
-        } else {
-          name = "No name";
-        }
+        var name = state.member!.name ?? "No name";
 
         return StyleRegistry.registry().styleWithContext(context).frontEndStyle().complexDialog(context, title: name +
             ' - ' +
