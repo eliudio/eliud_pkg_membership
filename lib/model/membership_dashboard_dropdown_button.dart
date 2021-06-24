@@ -13,7 +13,7 @@
 
 */
 
-import 'package:eliud_core/core/global_data.dart';
+import 'package:eliud_core/core/packages.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
