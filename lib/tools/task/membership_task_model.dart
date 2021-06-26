@@ -111,8 +111,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
       return Future.value(null);
     String? feedback = null;
     StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openWidgetDialog(
-      context,
-      child: YesNoIgnoreDialogWithAssignmentResults(
+      context, child: YesNoIgnoreDialogWithAssignmentResults.get(context,
           title: 'Membership request',
           message:
               'Below the payment details. Please review and confirm or decline and provide feedback.',
