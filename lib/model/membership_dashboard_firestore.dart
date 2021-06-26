@@ -61,10 +61,11 @@ class MembershipDashboardFirestore implements MembershipDashboardRepository {
       var doc = await collection.get();
       return await _populateDocPlus(doc);
     } on Exception catch(e) {
-      print("Error whilst retrieving MembershipDashboard with id $id");
-      print("Exceptoin: $e");
       if (onError != null) {
         onError(e);
+      } else {
+        print("Error whilst retrieving MembershipDashboard with id $id");
+        print("Exceptoin: $e");
       }
     };
   }
