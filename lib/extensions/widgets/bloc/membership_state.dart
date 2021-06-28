@@ -4,12 +4,18 @@ import 'package:equatable/equatable.dart';
 
 abstract class MembershipState extends Equatable {
   const MembershipState();
-
-  @override
-  List<Object> get props => [];
 }
 
 class UnitializedMembership extends MembershipState {
+  UnitializedMembership();
+
+  @override
+  List<Object> get props => [];
+
+  @override
+  bool operator == (Object other) =>
+      identical(this, other) ||
+          other is MembershipLoaded;
 }
 
 class MembershipLoaded extends MembershipState {
@@ -21,4 +27,13 @@ class MembershipLoaded extends MembershipState {
 
   @override
   List<Object> get props => [ accessModel!, appId!, member!];
+
+  @override
+  bool operator == (Object other) =>
+      identical(this, other) ||
+          other is MembershipLoaded &&
+              runtimeType == other.runtimeType &&
+              accessModel == other.accessModel &&
+              appId == other.appId &&
+              member == other.member;
 }
