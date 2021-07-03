@@ -45,7 +45,12 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
     var state = AccessBloc.getState(context);
     if (state is AppLoaded) {
       var appId = state.app.documentID;
-      return BlocProvider<MemberPublicInfoListBloc>(
+      return StyleRegistry.registry()
+          .styleWithContext(context)
+          .frontEndStyle()
+          .containerStyle()
+          .topicContainer(context, children: [
+        BlocProvider<MemberPublicInfoListBloc>(
         create: (context) => MemberPublicInfoListBloc(
           eliudQuery: getSubscribedMembers(state.app.documentID!),
           memberPublicInfoRepository:
@@ -55,7 +60,7 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
             readOnly: true,
             widgetProvider: (value) => widgetProvider(appId, value),
             listBackground: BackgroundModel(documentID: "`transparent"))]),
-      );
+      )]);
     } else {
       return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
     }
