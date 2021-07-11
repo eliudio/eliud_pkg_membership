@@ -13,17 +13,22 @@
 
 */
 
+import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_etc/model/repository_export.dart';
+import 'package:eliud_pkg_etc/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
+import 'package:eliud_pkg_etc/model/model_export.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_membership/model/model_export.dart';
 import 'package:eliud_core/model/entity_export.dart';
+import 'package:eliud_pkg_etc/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_membership/model/entity_export.dart';
 
@@ -40,18 +45,21 @@ class MembershipDashboardModel {
   // This is the identifier of the app to which this feed belongs
   String? appId;
   String? description;
+
+  // The extra actions that can be done on a member
+  List<MemberActionModel>? memberActions;
   ConditionsSimpleModel? conditions;
 
-  MembershipDashboardModel({this.documentID, this.appId, this.description, this.conditions, })  {
+  MembershipDashboardModel({this.documentID, this.appId, this.description, this.memberActions, this.conditions, })  {
     assert(documentID != null);
   }
 
-  MembershipDashboardModel copyWith({String? documentID, String? appId, String? description, ConditionsSimpleModel? conditions, }) {
-    return MembershipDashboardModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, conditions: conditions ?? this.conditions, );
+  MembershipDashboardModel copyWith({String? documentID, String? appId, String? description, List<MemberActionModel>? memberActions, ConditionsSimpleModel? conditions, }) {
+    return MembershipDashboardModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, memberActions: memberActions ?? this.memberActions, conditions: conditions ?? this.conditions, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ conditions.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ memberActions.hashCode ^ conditions.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -61,17 +69,23 @@ class MembershipDashboardModel {
           documentID == other.documentID &&
           appId == other.appId &&
           description == other.description &&
+          ListEquality().equals(memberActions, other.memberActions) &&
           conditions == other.conditions;
 
   @override
   String toString() {
-    return 'MembershipDashboardModel{documentID: $documentID, appId: $appId, description: $description, conditions: $conditions}';
+    String memberActionsCsv = (memberActions == null) ? '' : memberActions!.join(', ');
+
+    return 'MembershipDashboardModel{documentID: $documentID, appId: $appId, description: $description, memberActions: MemberAction[] { $memberActionsCsv }, conditions: $conditions}';
   }
 
   MembershipDashboardEntity toEntity({String? appId}) {
     return MembershipDashboardEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
+          memberActions: (memberActions != null) ? memberActions
+            !.map((item) => item.toEntity(appId: appId))
+            .toList() : null, 
           conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
@@ -83,6 +97,14 @@ class MembershipDashboardModel {
           documentID: documentID, 
           appId: entity.appId, 
           description: entity.description, 
+          memberActions: 
+            entity.memberActions == null ? null :
+            entity.memberActions
+            !.map((item) {
+              counter++; 
+              return MemberActionModel.fromEntity(counter.toString(), item)!;
+            })
+            .toList(), 
           conditions: 
             ConditionsSimpleModel.fromEntity(entity.conditions), 
     );
@@ -96,6 +118,12 @@ class MembershipDashboardModel {
           documentID: documentID, 
           appId: entity.appId, 
           description: entity.description, 
+          memberActions: 
+            entity. memberActions == null ? null : List<MemberActionModel>.from(await Future.wait(entity. memberActions
+            !.map((item) {
+            counter++;
+            return MemberActionModel.fromEntityPlus(counter.toString(), item, appId: appId);})
+            .toList())), 
           conditions: 
             await ConditionsSimpleModel.fromEntityPlus(entity.conditions, appId: appId), 
     );

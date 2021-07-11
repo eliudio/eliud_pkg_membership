@@ -111,6 +111,22 @@ class DescriptionMembershipDashboardFormError extends MembershipDashboardFormErr
 }
 
 
+class MemberActionsMembershipDashboardFormError extends MembershipDashboardFormError { 
+  const MemberActionsMembershipDashboardFormError({ String? message, MembershipDashboardModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''MemberActionsMembershipDashboardFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ConditionsMembershipDashboardFormError extends MembershipDashboardFormError { 
   const ConditionsMembershipDashboardFormError({ String? message, MembershipDashboardModel? value }): super(message: message, value: value);
 

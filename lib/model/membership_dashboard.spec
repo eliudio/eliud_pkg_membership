@@ -41,6 +41,13 @@
       "group": "general"
     },
     {
+      "fieldName": "memberActions",
+      "remark": "The extra actions that can be done on a member",
+      "fieldType": "MemberAction",
+      "group": "memberAction",
+      "arrayType": "Array"
+    },
+    {
       "fieldName": "conditions",
       "displayName": "Conditions",
       "fieldType": "ConditionsSimple",
@@ -55,11 +62,19 @@
     {
         "group": "conditions",
         "description": "Conditions"
+    },
+    {
+        "group": "memberAction",
+        "description": "Extra Member Actions"
+    },
+    {
+        "group": "openProfileAction",
+        "description": "Open Profile Action"
     }
  ],
   "listFields": {
     "title": "documentID!",
     "subTitle": "description!"
   },
-  "depends": ["eliud_core"]
+  "depends": ["eliud_core", "eliud_pkg_etc" ]
 }

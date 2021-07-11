@@ -58,7 +58,7 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
         )..add(LoadMemberPublicInfoList()),
         child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().simpleTopicContainer(context, children: [MemberPublicInfoListWidget(
             readOnly: true,
-            widgetProvider: (value) => widgetProvider(appId, value),
+            widgetProvider: (value) => widgetProvider(appId, value, dashboardModel!),
             listBackground: BackgroundModel(documentID: "`transparent"))]),
       )]);
     } else {
@@ -66,8 +66,8 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
     }
   }
 
-  Widget widgetProvider(String? appId, MemberPublicInfoModel? value) {
-    return MembershipDashboardItem(appId: appId, value: value);
+  Widget widgetProvider(String? appId, MemberPublicInfoModel? value, MembershipDashboardModel dashboardModel) {
+    return MembershipDashboardItem(appId: appId, value: value, dashboardModel: dashboardModel);
   }
 
   @override

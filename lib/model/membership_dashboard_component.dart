@@ -45,7 +45,6 @@ abstract class AbstractMembershipDashboardComponent extends StatelessWidget {
         if (state.value == null) {
           return alertWidget(title: 'Error', content: 'No MembershipDashboard defined');
         } else {
-          
           return yourWidget(context, state.value);
         }
       } else if (state is MembershipDashboardComponentPermissionDenied) {
