@@ -176,25 +176,6 @@ class _MyMembershipDashboardFormState extends State<MyMembershipDashboardForm> {
 
         children.add(
 
-                new Container(
-                    height: (fullScreenHeight(context) / 2.5), 
-                    child: memberActionsList(context, state.value!.memberActions, _onMemberActionsChanged)
-                )
-          );
-
-
-        children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().divider(context));
-
-
-         children.add(Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithContext(context).adminFormStyle().groupTitle(context, 'General')
-                ));
-
-        children.add(
-
                   StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDMembershipDashboardFormError ? state.message : null, hintText: null)
           );
 
@@ -228,8 +209,16 @@ class _MyMembershipDashboardFormState extends State<MyMembershipDashboardForm> {
          children.add(Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithContext(context).adminFormStyle().groupTitle(context, 'Open Feed Action')
+                  child: StyleRegistry.registry().styleWithContext(context).adminFormStyle().groupTitle(context, 'Extra Member Actions')
                 ));
+
+        children.add(
+
+                new Container(
+                    height: (fullScreenHeight(context) / 2.5), 
+                    child: memberActionsList(context, state.value!.memberActions, _onMemberActionsChanged)
+                )
+          );
 
 
         children.add(Container(height: 20.0));
