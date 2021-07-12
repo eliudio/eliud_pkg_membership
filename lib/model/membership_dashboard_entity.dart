@@ -40,8 +40,9 @@ class MembershipDashboardEntity {
     return 'MembershipDashboardEntity{appId: $appId, description: $description, memberActions: MemberAction[] { $memberActionsCsv }, conditions: $conditions}';
   }
 
-  static MembershipDashboardEntity? fromMap(Map? map) {
-    if (map == null) return null;
+  static MembershipDashboardEntity? fromMap(Object? o) {
+    if (o == null) return null;
+    var map = o as Map<String, dynamic>;
 
     var memberActionsFromMap;
     memberActionsFromMap = map['memberActions'];
