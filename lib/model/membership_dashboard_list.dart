@@ -152,7 +152,7 @@ class MembershipDashboardListWidgetState extends State<MembershipDashboardListWi
 
           return MembershipDashboardListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<MembershipDashboardListBloc>(context)
                   .add(DeleteMembershipDashboardList(value: value));
@@ -199,7 +199,6 @@ class MembershipDashboardListWidgetState extends State<MembershipDashboardListWi
 class MembershipDashboardListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final MembershipDashboardModel? value;
 
   MembershipDashboardListItem({
@@ -207,7 +206,6 @@ class MembershipDashboardListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override
