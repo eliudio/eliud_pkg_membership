@@ -29,5 +29,6 @@ abstract class AbstractRepositorySingleton {
   MembershipDashboardRepository? membershipDashboardRepository(String? appId);
 
   void flush(String? appId) {
+    membershipDashboardRepository(appId)!.flush();
   }
 }

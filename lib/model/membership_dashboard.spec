@@ -17,7 +17,7 @@
     "generateInternalComponent": true,
     "generateEmbeddedComponent": false,
     "isExtension": true,
-    "isDocumentCollection": true
+    "documentSubCollectionOf": "app"
   },
   "fields": [
     {
