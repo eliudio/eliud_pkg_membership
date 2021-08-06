@@ -23,7 +23,6 @@ import 'package:eliud_pkg_membership/model/membership_dashboard_list_state.dart'
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _membershipDashboardLimit = 5;
 
 class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, MembershipDashboardListState> {
   final MembershipDashboardRepository _membershipDashboardRepository;
@@ -34,8 +33,9 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int membershipDashboardLimit;
 
-  MembershipDashboardListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MembershipDashboardRepository membershipDashboardRepository})
+  MembershipDashboardListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MembershipDashboardRepository membershipDashboardRepository, this.membershipDashboardLimit = 5})
       : assert(membershipDashboardRepository != null),
         _membershipDashboardRepository = membershipDashboardRepository,
         super(MembershipDashboardListLoading());
@@ -48,7 +48,7 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _membershipDashboardLimit : null
+      limit: ((paged != null) && paged!) ? pages * membershipDashboardLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _membershipDashboardLimit : null
+        limit: ((paged != null) && paged!) ? pages * membershipDashboardLimit : null
     );
   }
 
