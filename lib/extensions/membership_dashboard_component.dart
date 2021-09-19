@@ -7,6 +7,8 @@ import 'package:eliud_core/model/member_public_info_list.dart';
 import 'package:eliud_core/model/member_public_info_list_bloc.dart';
 import 'package:eliud_core/model/member_public_info_list_event.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_core/style/frontend/has_container.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
@@ -45,24 +47,20 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
     var state = AccessBloc.getState(context);
     if (state is AppLoaded) {
       var appId = state.app.documentID;
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .containerStyle()
-          .topicContainer(context, children: [
+      return topicContainer(context, children: [
         BlocProvider<MemberPublicInfoListBloc>(
         create: (context) => MemberPublicInfoListBloc(
           eliudQuery: getSubscribedMembers(state.app.documentID!),
           memberPublicInfoRepository:
               memberPublicInfoRepository(appId: AccessBloc.appId(context))!,
         )..add(LoadMemberPublicInfoList()),
-        child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().containerStyle().simpleTopicContainer(context, children: [MemberPublicInfoListWidget(
+        child: simpleTopicContainer(context, children: [MemberPublicInfoListWidget(
             readOnly: true,
             widgetProvider: (value) => widgetProvider(appId, value, dashboardModel!),
             listBackground: BackgroundModel(documentID: "`transparent"))]),
       )]);
     } else {
-      return StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context);
+      return progressIndicator(context);
     }
   }
 

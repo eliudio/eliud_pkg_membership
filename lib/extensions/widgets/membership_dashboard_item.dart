@@ -1,4 +1,5 @@
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_etc/tools/member_popup_menu.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
@@ -56,11 +57,7 @@ class MembershipDashboardItem extends StatelessWidget {
     var accessModel =
         await accessRepository(appId: appId)!.get(value!.documentID!);
 */
-    StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .dialogStyle()
-        .openWidgetDialog(context, child: _widget());
+    openWidgetDialog(context, child: _widget());
   }
 
   Widget _widget() {

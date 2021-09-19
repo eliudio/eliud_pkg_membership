@@ -1,5 +1,8 @@
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/access_model.dart';
+import 'package:eliud_core/style/frontend/has_dialog.dart';
+import 'package:eliud_core/style/frontend/has_dialog_field.dart';
+import 'package:eliud_core/style/frontend/has_list_tile.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_workflow/model/assignment_model.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_entity.dart';
@@ -32,7 +35,7 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
     if ((context == null) || (assignmentModel == null))
       return Future.value(null);
 
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openAckNackDialog(context,
+    openAckNackDialog(context,
         title: 'Join',
         message: 'Do you want to request membership?', onSelection: (value) {
       if (value == 0) {
@@ -110,7 +113,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
     if ((context == null) || (assignmentModel == null))
       return Future.value(null);
     String? feedback = null;
-    StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogStyle().openWidgetDialog(
+    openWidgetDialog(
       context, child: YesNoIgnoreDialogWithAssignmentResults.get(context,
           title: 'Membership request',
           message:
@@ -123,12 +126,9 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
           noFunction: () =>
               _disapproveMembershipRequest(context, assignmentModel, feedback),
           extraFields: [
-            StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle().listTileStyle()
-                .getListTile(context,
+            getListTile(context,
                     leading: Icon(Icons.payment),
-                    title: StyleRegistry.registry().styleWithContext(context).frontEndStyle().dialogFieldStyle().dialogField(context,
+                    title: dialogField(context,
                       valueChanged: (value) => feedback = value,
                       decoration: const InputDecoration(
                         hintText: 'Feedback to the member',
