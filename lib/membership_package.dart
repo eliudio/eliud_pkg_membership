@@ -15,6 +15,8 @@ import 'package:eliud_pkg_workflow/tools/task/task_model.dart';
 import 'model/repository_singleton.dart';
 
 abstract class MembershipPackage extends PackageWithSubscription {
+  MembershipPackage() : super('eliud_pkg_membership');
+
   static final String MEMBER_HAS_NO_MEMBERSHIP_YET = 'MemberHasNoMembershipYet';
   AccessModel? stateAccesModel;
 
