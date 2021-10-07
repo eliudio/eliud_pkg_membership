@@ -47,12 +47,22 @@ class ListComponentFactory implements ComponentConstructor {
   Widget? createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
     return ListComponent(componentId: id);
   }
+
+  @override
+  dynamic getModel({required String appId, required String id}) {
+    return null;
+  }
 }
 
 
 typedef DropdownButtonChanged(String? value);
 
 class DropdownButtonComponentFactory implements ComponentDropDown {
+  @override
+  dynamic getModel({required String appId, required String id}) {
+    return null;
+  }
+
 
   bool supports(String id) {
 
