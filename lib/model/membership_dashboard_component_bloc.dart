@@ -24,42 +24,30 @@ import 'package:flutter/services.dart';
 
 class MembershipDashboardComponentBloc extends Bloc<MembershipDashboardComponentEvent, MembershipDashboardComponentState> {
   final MembershipDashboardRepository? membershipDashboardRepository;
+  StreamSubscription? _membershipDashboardSubscription;
+
+  Stream<MembershipDashboardComponentState> _mapLoadMembershipDashboardComponentUpdateToState(String documentId) async* {
+    _membershipDashboardSubscription?.cancel();
+    _membershipDashboardSubscription = membershipDashboardRepository!.listenTo(documentId, (value) {
+      if (value != null) add(MembershipDashboardComponentUpdated(value: value!));
+    });
+  }
 
   MembershipDashboardComponentBloc({ this.membershipDashboardRepository }): super(MembershipDashboardComponentUninitialized());
+
   @override
   Stream<MembershipDashboardComponentState> mapEventToState(MembershipDashboardComponentEvent event) async* {
     final currentState = state;
     if (event is FetchMembershipDashboardComponent) {
-      try {
-        if (currentState is MembershipDashboardComponentUninitialized) {
-          bool permissionDenied = false;
-          final model = await membershipDashboardRepository!.get(event.id, onError: (error) {
-            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
-              permissionDenied = true;
-            }
-          });
-          if (permissionDenied) {
-            yield MembershipDashboardComponentPermissionDenied();
-          } else {
-            if (model != null) {
-              yield MembershipDashboardComponentLoaded(value: model);
-            } else {
-              String? id = event.id;
-              yield MembershipDashboardComponentError(
-                  message: "MembershipDashboard with id = '$id' not found");
-            }
-          }
-          return;
-        }
-      } catch (_) {
-        yield MembershipDashboardComponentError(message: "Unknown error whilst retrieving MembershipDashboard");
-      }
+      yield* _mapLoadMembershipDashboardComponentUpdateToState(event.id!);
+    } else if (event is MembershipDashboardComponentUpdated) {
+      yield MembershipDashboardComponentLoaded(value: event.value);
     }
   }
 
   @override
   Future<void> close() {
+    _membershipDashboardSubscription?.cancel();
     return super.close();
   }
 

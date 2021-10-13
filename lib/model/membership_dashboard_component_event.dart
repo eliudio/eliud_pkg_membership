@@ -14,6 +14,7 @@
 */
 
 import 'package:equatable/equatable.dart';
+import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
 
 abstract class MembershipDashboardComponentEvent extends Equatable {
   @override
@@ -25,4 +26,11 @@ class FetchMembershipDashboardComponent extends MembershipDashboardComponentEven
 
   FetchMembershipDashboardComponent({ this.id });
 }
+
+class MembershipDashboardComponentUpdated extends MembershipDashboardComponentEvent {
+  final MembershipDashboardModel value;
+
+  MembershipDashboardComponentUpdated({ required this.value });
+}
+
 

@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 
 class MembershipDashboardComponentEditorConstructor extends ComponentEditorConstructor {
   @override
-  void updateComponent(BuildContext context, model) {
+  void updateComponent(BuildContext context, model, EditorFeedback feedback) {
     openErrorDialog(context, title: 'Problem', errorMessage: 'No editor for this component available yet');
   }
 
   @override
-  void createNewComponent(BuildContext context) {
+  void createNewComponent(BuildContext context, EditorFeedback feedback) {
     openErrorDialog(context, title: 'Problem', errorMessage: 'No editor for this component available yet');
   }
 
   @override
-  void updateComponentWithID(BuildContext context, String id) {
+  void updateComponentWithID(BuildContext context, String id, EditorFeedback feedback) {
     openErrorDialog(context, title: 'Problem', errorMessage: 'No editor for this component available yet');
   }
 }
