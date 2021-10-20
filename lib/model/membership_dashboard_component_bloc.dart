@@ -29,7 +29,7 @@ class MembershipDashboardComponentBloc extends Bloc<MembershipDashboardComponent
   Stream<MembershipDashboardComponentState> _mapLoadMembershipDashboardComponentUpdateToState(String documentId) async* {
     _membershipDashboardSubscription?.cancel();
     _membershipDashboardSubscription = membershipDashboardRepository!.listenTo(documentId, (value) {
-      if (value != null) add(MembershipDashboardComponentUpdated(value: value!));
+      if (value != null) add(MembershipDashboardComponentUpdated(value: value));
     });
   }
 
