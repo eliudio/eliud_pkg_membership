@@ -5,6 +5,7 @@ import 'package:eliud_core/style/frontend/has_dialog_field.dart';
 import 'package:eliud_core/style/frontend/has_list_tile.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_workflow/model/assignment_model.dart';
+import 'package:eliud_pkg_workflow/tools/task/execution_results.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_entity.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_model.dart';
 import 'package:eliud_pkg_notifications/platform/platform.dart';
@@ -12,100 +13,19 @@ import 'package:eliud_pkg_workflow/tools/widgets/workflow_dialog_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'approve_membership_task_entity.dart';
 import 'membership_task_entity.dart';
-
-// ***** MembershipTaskModel *****
-
-abstract class MembershipTaskModel extends TaskModel {
-  MembershipTaskModel({
-    String? description,
-    bool? executeInstantly,
-  }) : super(description: description, executeInstantly: executeInstantly);
-}
-
-// ***** RequestMembershipTaskModel *****
-
-class RequestMembershipTaskModel extends MembershipTaskModel {
-  RequestMembershipTaskModel({String? description, bool? executeInstantly})
-      : super(description: description, executeInstantly: executeInstantly);
-
-  @override
-  Future<void> startTask(
-      BuildContext context, AssignmentModel? assignmentModel) {
-    if ((context == null) || (assignmentModel == null))
-      return Future.value(null);
-
-    openAckNackDialog(context,
-        title: 'Join',
-        message: 'Do you want to request membership?', onSelection: (value) {
-      if (value == 0) {
-        confirmMembershipRequest(
-          context,
-          assignmentModel,
-        );
-      }
-    });
-    return Future.value(null);
-  }
-
-  void confirmMembershipRequest(
-      BuildContext context, AssignmentModel assignmentModel) {
-/*
-This is the wrong place to send this message
-    AbstractNotificationPlatform.platform
-        .sendMessage(context, assignmentModel.assigneeId, "You have requested membership for app " + assignmentModel.appId);
-*/
-    finishTask(
-        context,
-        assignmentModel,
-        ExecutionResults(
-          ExecutionStatus.success,
-        ),
-        null);
-  }
-
-  @override
-  TaskEntity toEntity({String? appId}) => RequestMembershipTaskEntity(
-        description: description,
-        executeInstantly: executeInstantly,
-      );
-
-  static RequestMembershipTaskModel fromEntity(
-          RequestMembershipTaskEntity entity) =>
-      RequestMembershipTaskModel(
-          description: entity.description,
-          executeInstantly: entity.executeInstantly);
-
-  static RequestMembershipTaskEntity fromMap(Map snap) =>
-      RequestMembershipTaskEntity(
-        description: snap['description'],
-        executeInstantly: snap['executeInstantly'],
-      );
-}
-
-class RequestMembershipTaskModelMapper implements TaskModelMapper {
-  @override
-  TaskModel fromEntity(TaskEntity entity) =>
-      RequestMembershipTaskModel.fromEntity(
-          entity as RequestMembershipTaskEntity);
-
-  @override
-  TaskModel fromEntityPlus(TaskEntity entity) => fromEntity(entity);
-
-  @override
-  TaskEntity fromMap(Map map) => RequestMembershipTaskModel.fromMap(map);
-}
-
-// ***** ApproveMembershipTaskModel *****
+import 'membership_task_model.dart';
 
 class ApproveMembershipTaskModel extends MembershipTaskModel {
   static String label = 'MEMBERSHIP_TASK_APPROVE_MEMBERSHIP';
+  static String definition = "Approve membership";
 
-  ApproveMembershipTaskModel({String? description, bool? executeInstantly})
+  ApproveMembershipTaskModel({required String identifier, required String description, required bool executeInstantly})
       : super(
-          description: description,
-          executeInstantly: executeInstantly,
-        );
+      identifier: identifier,
+      description: description,
+      executeInstantly: executeInstantly);
 
   @override
   Future<void> startTask(
@@ -203,6 +123,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
   static ApproveMembershipTaskModel fromEntity(
           ApproveMembershipTaskEntity entity) =>
       ApproveMembershipTaskModel(
+        identifier: entity.identifier,
         description: entity.description,
         executeInstantly: entity.executeInstantly,
       );
@@ -212,17 +133,4 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         description: snap['description'],
         executeInstantly: snap['executeInstantly'],
       );
-}
-
-class ApproveMembershipTaskModelMapper implements TaskModelMapper {
-  @override
-  TaskModel fromEntity(TaskEntity entity) =>
-      ApproveMembershipTaskModel.fromEntity(
-          entity as ApproveMembershipTaskEntity);
-
-  @override
-  TaskModel fromEntityPlus(TaskEntity entity) => fromEntity(entity);
-
-  @override
-  TaskEntity fromMap(Map map) => ApproveMembershipTaskModel.fromMap(map);
 }
