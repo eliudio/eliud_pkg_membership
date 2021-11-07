@@ -30,7 +30,6 @@ abstract class MembershipPackage extends PackageWithSubscription {
       var refresh = (stateAccesModel != null) &&
           (currentAccess != null) &&
           (stateAccesModel!.blocked != currentAccess.blocked);
-      accessBloc!.add(MemberUpdated(currentMember, refresh: refresh));
       stateAccesModel = currentAccess;
     }
   }
