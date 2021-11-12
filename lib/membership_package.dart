@@ -1,11 +1,11 @@
-import 'package:eliud_core/core/access/bloc/access_event.dart';
+import 'dart:async';
+
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
 import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
-import 'package:eliud_core/package/package_with_subscription.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/component_registry.dart';
@@ -18,11 +18,12 @@ import 'package:eliud_pkg_workflow/tools/task/task_model_registry.dart';
 
 import 'model/repository_singleton.dart';
 
-abstract class MembershipPackage extends PackageWithSubscription {
+abstract class MembershipPackage extends Package {
   MembershipPackage() : super('eliud_pkg_membership');
 
   static final String MEMBER_HAS_NO_MEMBERSHIP_YET = 'MemberHasNoMembershipYet';
   AccessModel? stateAccesModel;
+  late StreamSubscription<List<AccessModel?>> subscription;
 
   void _setState(AccessModel? currentAccess, {MemberModel? currentMember}) {
     if (stateAccesModel != currentAccess) {
@@ -48,11 +49,6 @@ abstract class MembershipPackage extends PackageWithSubscription {
     } else {
       _setState(null);
     }
-  }
-
-  void unsubscribe() {
-    super.unsubscribe();
-    _setState(null);
   }
 
   static EliudQuery getAccessQuery(String? appId, String? memberId) {

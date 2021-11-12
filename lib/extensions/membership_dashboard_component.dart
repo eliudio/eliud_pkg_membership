@@ -1,5 +1,6 @@
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
-import 'package:eliud_core/core/access/bloc/access_state.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/background_model.dart';
@@ -48,24 +49,26 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
   @override
   Widget yourWidget(
       BuildContext context, MembershipDashboardModel? dashboardModel) {
-    var state = AccessBloc.getState(context);
-    if (state is AppLoaded) {
-      var appId = state.app.documentID;
-      return topicContainer(context, children: [
-        BlocProvider<MemberPublicInfoListBloc>(
-        create: (context) => MemberPublicInfoListBloc(
-          eliudQuery: getSubscribedMembers(state.app.documentID!),
-          memberPublicInfoRepository:
-              memberPublicInfoRepository(appId: AccessBloc.appId(context))!,
-        )..add(LoadMemberPublicInfoList()),
-        child: simpleTopicContainer(context, children: [MemberPublicInfoListWidget(
-            readOnly: true,
-            widgetProvider: (value) => widgetProvider(appId, value, dashboardModel!),
-            listBackground: BackgroundModel(documentID: "`transparent"))]),
-      )]);
-    } else {
-      return progressIndicator(context);
-    }
+    return BlocBuilder<AccessBloc, AccessState>(
+        builder: (context, accessState) {
+          if (accessState is AccessDetermined) {
+            var appId = accessState.currentApp.documentID;
+            return topicContainer(context, children: [
+              BlocProvider<MemberPublicInfoListBloc>(
+                create: (context) => MemberPublicInfoListBloc(
+                  eliudQuery: getSubscribedMembers(accessState.currentApp.documentID!),
+                  memberPublicInfoRepository:
+                  memberPublicInfoRepository(appId: accessState.currentAppId())!,
+                )..add(LoadMemberPublicInfoList()),
+                child: simpleTopicContainer(context, children: [MemberPublicInfoListWidget(
+                    readOnly: true,
+                    widgetProvider: (value) => widgetProvider(appId, value, dashboardModel!),
+                    listBackground: BackgroundModel(documentID: "`transparent"))]),
+              )]);
+          } else {
+            return progressIndicator(context);
+          }
+        });
   }
 
   Widget widgetProvider(String? appId, MemberPublicInfoModel? value, MembershipDashboardModel dashboardModel) {
@@ -75,6 +78,6 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
   @override
   MembershipDashboardRepository getMembershipDashboardRepository(
       BuildContext context) {
-    return membershipDashboardRepository(appId: AccessBloc.appId(context))!;
+    return membershipDashboardRepository(appId: AccessBloc.currentAppId(context))!;
   }
 }
