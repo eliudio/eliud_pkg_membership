@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_pkg_membership/tasks/request_membership_task_entity.dart';
 import 'package:eliud_pkg_workflow/model/assignment_model.dart';
@@ -22,6 +23,7 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
       return Future.value(null);
 
     openAckNackDialog(context,
+        AccessBloc.currentAppId(context) + '/membershipreq',
         title: 'Join',
         message: 'Do you want to request membership?', onSelection: (value) {
       if (value == 0) {

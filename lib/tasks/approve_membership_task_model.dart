@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
@@ -34,7 +35,9 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
       return Future.value(null);
     String? feedback = null;
     openWidgetDialog(
-      context, child: YesNoIgnoreDialogWithAssignmentResults.get(context,
+      context,
+      AccessBloc.currentAppId(context) + '/membershipreq',
+      child: YesNoIgnoreDialogWithAssignmentResults.get(context,
           title: 'Membership request',
           message:
               'Below the payment details. Please review and confirm or decline and provide feedback.',

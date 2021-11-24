@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/style_registry.dart';
@@ -57,7 +58,7 @@ class MembershipDashboardItem extends StatelessWidget {
     var accessModel =
         await accessRepository(appId: appId)!.get(value!.documentID!);
 */
-    openWidgetDialog(context, child: _widget());
+    openWidgetDialog(context, AccessBloc.currentAppId(context) + '/_membershipoptions', child: _widget());
   }
 
   Widget _widget() {

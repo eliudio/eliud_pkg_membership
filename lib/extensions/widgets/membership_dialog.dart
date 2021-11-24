@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
@@ -73,7 +74,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
 
   void _askBlock(
       String appId, AccessModel oldAccessModel, MemberPublicInfoModel member) {
-    openAckNackDialog(context,
+    openAckNackDialog(context, AccessBloc.currentAppId(context) + '/_block',
         title: 'Block',
         message: 'Do you want to block this member from the app?',
         onSelection: (value) {
@@ -84,7 +85,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   void _askPromote(PrivilegeLevel privilegeLevel, bool blocked) {
-    openAckNackDialog(context,
+    openAckNackDialog(context, AccessBloc.currentAppId(context) + '/_promote',
         title: 'Promote',
         message: 'Do you want to promote this member? Current level is ' +
             privilegeLevelToMemberRoleString(privilegeLevel, blocked),
@@ -96,7 +97,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   Future<void> _askDemote(PrivilegeLevel privilegeLevel, bool blocked) async {
-    openAckNackDialog(context,
+    openAckNackDialog(context, AccessBloc.currentAppId(context) + '/_demote',
         title: 'Demote',
         message: 'Do you want to demote this member? Current level is ' +
             privilegeLevelToPrivilegeString(privilegeLevel, blocked),
@@ -109,7 +110,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
 
   void _askUnblock() {
     openAckNackDialog(
-      context,
+      context, AccessBloc.currentAppId(context) + '/_unblock',
       title: 'Unblock',
       message: 'Do you want to unblock this member from the app?',
       onSelection: (value) {
@@ -121,7 +122,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   void _askSendMessage(MemberPublicInfoModel member) {
-    openEntryDialog(context,
+    openEntryDialog(context,AccessBloc.currentAppId(context) + '/_sendmsg',
         title: 'Send Message to Member',
         hintText: 'Message',
         ackButtonLabel: 'Send message',
