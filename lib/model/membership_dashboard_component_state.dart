@@ -35,9 +35,9 @@ class MembershipDashboardComponentPermissionDenied extends MembershipDashboardCo
 }
 
 class MembershipDashboardComponentLoaded extends MembershipDashboardComponentState {
-  final MembershipDashboardModel? value;
+  final MembershipDashboardModel value;
 
-  const MembershipDashboardComponentLoaded({ this.value });
+  const MembershipDashboardComponentLoaded({ required this.value });
 
   MembershipDashboardComponentLoaded copyWith({ MembershipDashboardModel? copyThis }) {
     return MembershipDashboardComponentLoaded(value: copyThis ?? this.value);

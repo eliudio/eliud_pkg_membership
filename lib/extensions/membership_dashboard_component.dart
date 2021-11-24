@@ -24,8 +24,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MembershipDashboardComponentConstructorDefault
     implements ComponentConstructor {
   @override
-  Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
-    return MembershipDashboard(key: key, id: id);
+  Widget createNew({Key? key, required String appId, required String id, Map<String, dynamic>? parameters}) {
+    return MembershipDashboard(key: key, appId: appId, id: id);
   }
 
   @override
@@ -33,7 +33,7 @@ class MembershipDashboardComponentConstructorDefault
 }
 
 class MembershipDashboard extends AbstractMembershipDashboardComponent {
-  MembershipDashboard({Key? key, required String id}) : super(key: key, membershipDashboardID: id);
+  MembershipDashboard({Key? key, required String appId, required String id}) : super(key: key, theAppId: appId, membershipDashboardId: id);
 
   @override
   Widget alertWidget({title = String, content = String}) {
@@ -52,13 +52,13 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {
-            var appId = accessState.currentApp.documentID;
+            var appId = accessState.currentAppId(context);
             return topicContainer(context, children: [
               BlocProvider<MemberPublicInfoListBloc>(
                 create: (context) => MemberPublicInfoListBloc(
-                  eliudQuery: getSubscribedMembers(accessState.currentApp.documentID!),
+                  eliudQuery: getSubscribedMembers(appId),
                   memberPublicInfoRepository:
-                  memberPublicInfoRepository(appId: accessState.currentAppId())!,
+                  memberPublicInfoRepository(appId: appId)!,
                 )..add(LoadMemberPublicInfoList()),
                 child: simpleTopicContainer(context, children: [MemberPublicInfoListWidget(
                     readOnly: true,
