@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
 import 'package:eliud_core/model/access_model.dart';
@@ -58,15 +59,9 @@ abstract class MembershipPackage extends Package {
   }
 
   @override
-  Future<bool?> isConditionOk(
-      String? packageCondition,
-      AppModel? app,
-      MemberModel? member,
-      bool? isOwner,
-      bool? isBlocked,
-      PrivilegeLevel? privilegeLevel) async {
+  Future<bool?> isConditionOk(AccessBloc accessBloc, String pluginCondition, AppModel app, MemberModel? member, bool isOwner, bool? isBlocked, PrivilegeLevel? privilegeLevel) async {
     if (member == null) return false;
-    if (packageCondition == MEMBER_HAS_NO_MEMBERSHIP_YET) {
+    if (pluginCondition == MEMBER_HAS_NO_MEMBERSHIP_YET) {
       return (privilegeLevel == PrivilegeLevel.NoPrivilege);
     }
     return null;
