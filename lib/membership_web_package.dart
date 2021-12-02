@@ -1,10 +1,12 @@
+import 'package:flutter/foundation.dart';
+
 import 'membership_package.dart';
 
 class MembershipWebPackage extends MembershipPackage {
 
   @override
   List<Object?> get props => [
-    stateAccesModel
+    stateMEMBER_HAS_NO_MEMBERSHIP_YET
   ];
 
   @override
@@ -12,5 +14,5 @@ class MembershipWebPackage extends MembershipPackage {
       identical(this, other) ||
           other is MembershipWebPackage &&
               runtimeType == other.runtimeType &&
-              stateAccesModel == other.stateAccesModel;
+              mapEquals(stateMEMBER_HAS_NO_MEMBERSHIP_YET, other.stateMEMBER_HAS_NO_MEMBERSHIP_YET);
 }

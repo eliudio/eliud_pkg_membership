@@ -18,12 +18,12 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
 
   @override
   Future<void> startTask(
-      BuildContext context, AssignmentModel? assignmentModel) {
+      BuildContext context, String  appId, AssignmentModel? assignmentModel) {
     if ((context == null) || (assignmentModel == null))
       return Future.value(null);
 
     openAckNackDialog(context,
-        AccessBloc.currentAppId(context) + '/membershipreq',
+        appId + '/membershipreq',
         title: 'Join',
         message: 'Do you want to request membership?', onSelection: (value) {
       if (value == 0) {

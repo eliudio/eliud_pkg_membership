@@ -30,13 +30,13 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
 
   @override
   Future<void> startTask(
-      BuildContext context, AssignmentModel? assignmentModel) {
+      BuildContext context, String appId, AssignmentModel? assignmentModel) {
     if ((context == null) || (assignmentModel == null))
       return Future.value(null);
     String? feedback = null;
     openWidgetDialog(
       context,
-      AccessBloc.currentAppId(context) + '/membershipreq',
+      appId + '/membershipreq',
       child: YesNoIgnoreDialogWithAssignmentResults.get(context,
           title: 'Membership request',
           message:

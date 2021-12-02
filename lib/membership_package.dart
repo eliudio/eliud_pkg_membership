@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/access_event.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
-    as corerepo;
+as corerepo;
 import 'package:eliud_core/model/access_model.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
@@ -23,32 +24,51 @@ abstract class MembershipPackage extends Package {
   MembershipPackage() : super('eliud_pkg_membership');
 
   static final String MEMBER_HAS_NO_MEMBERSHIP_YET = 'MemberHasNoMembershipYet';
-  AccessModel? stateAccesModel;
-  late StreamSubscription<List<AccessModel?>> subscription;
-
-  void _setState(AccessModel? currentAccess, {MemberModel? currentMember}) {
-    if (stateAccesModel != currentAccess) {
-      // force the member's screen to update when blocked state is different
-      var refresh = (stateAccesModel != null) &&
-          (currentAccess != null) &&
-          (stateAccesModel!.blocked != currentAccess.blocked);
-      stateAccesModel = currentAccess;
-    }
-  }
+  Map<String, bool?> stateMEMBER_HAS_NO_MEMBERSHIP_YET = {};
+  Map<String, StreamSubscription<List<AccessModel?>>> subscription = {};
 
   @override
-  void resubscribe(AppModel? app, MemberModel? currentMember) {
-    var appId = app!.documentID;
-    if (currentMember != null) {
-      subscription = corerepo.accessRepository(appId: appId)!.listen((list) {
-        if (list.isNotEmpty) {
-          _setState(list.first, currentMember: currentMember);
+  Future<List<PackageConditionDetails>>? getAndSubscribe(
+      AccessBloc accessBloc,
+      AppModel app,
+      MemberModel? member,
+      bool isOwner,
+      bool? isBlocked,
+      PrivilegeLevel? privilegeLevel) {
+    String appId = app.documentID!;
+    subscription[appId]?.cancel();
+    if (member != null) {
+      final c = Completer<List<PackageConditionDetails>>();
+      subscription[appId] = corerepo.accessRepository(appId: appId)!.listen((list) {
+        var accessValue = list.first;
+
+        var valueHasNoMembershipYet = (accessValue == null) || ((accessValue.blocked == null) || (!accessValue.blocked!)) && ((accessValue.privilegeLevel == null) || (accessValue.privilegeLevel == PrivilegeLevel.NoPrivilege));
+
+        if (!c.isCompleted) {
+          // the first time we get this trigger, it's upon entry of the getAndSubscribe. Now we simply return the value
+          c.complete([
+            PackageConditionDetails(
+                packageName: packageName,
+                conditionName: MEMBER_HAS_NO_MEMBERSHIP_YET,
+                value: valueHasNoMembershipYet)
+          ]);
         } else {
-          _setState(null, currentMember: currentMember);
+          // subsequent calls we get this trigger, it's when the date has changed. Now add the event to the bloc
+          if (valueHasNoMembershipYet != stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId]) {
+            stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId] = valueHasNoMembershipYet;
+            accessBloc.add(UpdatePackageConditionEvent(
+                app, this, MEMBER_HAS_NO_MEMBERSHIP_YET, valueHasNoMembershipYet));
+          }
         }
-      }, eliudQuery: getAccessQuery(appId, currentMember.documentID));
+      }, eliudQuery: getAccessQuery(appId, member.documentID!));
+      return c.future;
     } else {
-      _setState(null);
+      return Future.value([
+        PackageConditionDetails(
+            packageName: packageName,
+            conditionName: MEMBER_HAS_NO_MEMBERSHIP_YET,
+            value: false)
+      ]);
     }
   }
 
@@ -101,4 +121,5 @@ abstract class MembershipPackage extends Package {
   @override
   List<MemberCollectionInfo> getMemberCollectionInfo() =>
       AbstractRepositorySingleton.collections;
+
 }
