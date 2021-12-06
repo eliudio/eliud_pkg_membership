@@ -49,6 +49,7 @@ abstract class MembershipPackage extends Package {
 
         if (!c.isCompleted) {
           // the first time we get this trigger, it's upon entry of the getAndSubscribe. Now we simply return the value
+          stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId] = valueHasNoMembershipYet;
           c.complete([
             PackageConditionDetails(
                 packageName: packageName,
@@ -59,6 +60,7 @@ abstract class MembershipPackage extends Package {
           // subsequent calls we get this trigger, it's when the date has changed. Now add the event to the bloc
           if (valueHasNoMembershipYet !=
               stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId]) {
+            stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId] = valueHasNoMembershipYet;
             noMembershipYet(accessBloc, app, valueHasNoMembershipYet);
           }
         }

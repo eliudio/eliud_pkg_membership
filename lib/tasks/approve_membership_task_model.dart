@@ -22,18 +22,20 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
   static String label = 'MEMBERSHIP_TASK_APPROVE_MEMBERSHIP';
   static String definition = "Approve membership";
 
-  ApproveMembershipTaskModel({required String identifier, required String description, required bool executeInstantly})
+  ApproveMembershipTaskModel(
+      {required String identifier,
+      required String description,
+      required bool executeInstantly})
       : super(
-      identifier: identifier,
-      description: description,
-      executeInstantly: executeInstantly);
+            identifier: identifier,
+            description: description,
+            executeInstantly: executeInstantly);
 
   @override
   Future<void> startTask(
       BuildContext context, String appId, AssignmentModel? assignmentModel) {
-    if ((context == null) || (assignmentModel == null))
-      return Future.value(null);
-    String? feedback = null;
+    if (assignmentModel == null) return Future.value(null);
+    String? feedback;
     openWidgetDialog(
       context,
       appId + '/membershipreq',
@@ -43,22 +45,22 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
               'Below the payment details. Please review and confirm or decline and provide feedback.',
           yesLabel: 'Confirm membership',
           noLabel: 'Decline membership',
-          resultsPrevious: assignmentModel.resultsPrevious,
-          yesFunction: () =>
-              _approveMembershipRequest(context, assignmentModel, feedback),
-          noFunction: () =>
-              _disapproveMembershipRequest(context, assignmentModel, feedback),
-          extraFields: [
-            getListTile(context,
-                    leading: Icon(Icons.payment),
-                    title: dialogField(context,
-                      valueChanged: (value) => feedback = value,
-                      decoration: const InputDecoration(
-                        hintText: 'Feedback to the member',
-                        labelText: 'Feedback to the member',
-                      ),
-                    )),
-          ]),
+          resultsPrevious: assignmentModel.resultsPrevious, yesFunction: () async {
+        await _approveMembershipRequest(context, assignmentModel, feedback);
+      }, noFunction: () async {
+        await _disapproveMembershipRequest(context, assignmentModel, feedback);
+      }, extraFields: [
+        getListTile(context,
+            leading: Icon(Icons.payment),
+            title: dialogField(
+              context,
+              valueChanged: (value) => feedback = value,
+              decoration: const InputDecoration(
+                hintText: 'Feedback to the member',
+                labelText: 'Feedback to the member',
+              ),
+            )),
+      ]),
     );
     return Future.value(null);
   }
@@ -84,20 +86,21 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         blocked: false,
       ));
     }
-    finishTask(
+    await finishTask(
         context,
         assignmentModel,
         ExecutionResults(
           ExecutionStatus.success,
         ),
         null);
+    Navigator.pop(context);
   }
 
-  void _disapproveMembershipRequest(
-      BuildContext context, AssignmentModel assignmentModel, String? comment) {
+  Future<void> _disapproveMembershipRequest(BuildContext context,
+      AssignmentModel assignmentModel, String? comment) async {
     _sendMessage(context, assignmentModel,
         "Your membership request has been disapproved", comment);
-    finishTask(
+    await finishTask(
         context,
         assignmentModel,
         ExecutionResults(
@@ -105,6 +108,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
               .success, // declining the membership request is also a successful end of the task, from a task perspective
         ),
         null);
+    Navigator.pop(context);
   }
 
   void _sendMessage(BuildContext context, AssignmentModel assignmentModel,
