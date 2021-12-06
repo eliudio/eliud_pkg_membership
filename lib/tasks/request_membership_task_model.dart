@@ -18,7 +18,7 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
 
   @override
   Future<void> startTask(
-      BuildContext context, String  appId, AssignmentModel? assignmentModel) {
+      BuildContext context, String  appId, String? memberId, AssignmentModel? assignmentModel) {
     if ((context == null) || (assignmentModel == null))
       return Future.value(null);
 

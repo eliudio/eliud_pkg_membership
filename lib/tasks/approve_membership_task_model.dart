@@ -33,8 +33,9 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
 
   @override
   Future<void> startTask(
-      BuildContext context, String appId, AssignmentModel? assignmentModel) {
+      BuildContext context, String appId, String? memberId, AssignmentModel? assignmentModel) {
     if (assignmentModel == null) return Future.value(null);
+    if (memberId == null) throw Exception("Can't approve membership when no member");
     String? feedback;
     openWidgetDialog(
       context,
@@ -46,9 +47,9 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
           yesLabel: 'Confirm membership',
           noLabel: 'Decline membership',
           resultsPrevious: assignmentModel.resultsPrevious, yesFunction: () async {
-        await _approveMembershipRequest(context, assignmentModel, feedback);
+        await _approveMembershipRequest(context, appId, memberId, assignmentModel, feedback);
       }, noFunction: () async {
-        await _disapproveMembershipRequest(context, assignmentModel, feedback);
+        await _disapproveMembershipRequest(context, appId, memberId, assignmentModel, feedback);
       }, extraFields: [
         getListTile(context,
             leading: Icon(Icons.payment),
@@ -65,9 +66,9 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
     return Future.value(null);
   }
 
-  Future<void> _approveMembershipRequest(BuildContext context,
+  Future<void> _approveMembershipRequest(BuildContext context, String appId, String memberId,
       AssignmentModel assignmentModel, String? comment) async {
-    _sendMessage(context, assignmentModel,
+    _sendMessage(appId, memberId, assignmentModel,
         "Your membership request has been approved", comment);
     if (assignmentModel.reporter == null) {
       print("assignmentModel.reporter is null");
@@ -93,12 +94,11 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
           ExecutionStatus.success,
         ),
         null);
-    Navigator.pop(context);
   }
 
-  Future<void> _disapproveMembershipRequest(BuildContext context,
+  Future<void> _disapproveMembershipRequest(BuildContext context,String appId, String memberId,
       AssignmentModel assignmentModel, String? comment) async {
-    _sendMessage(context, assignmentModel,
+    _sendMessage(appId, memberId, assignmentModel,
         "Your membership request has been disapproved", comment);
     await finishTask(
         context,
@@ -108,17 +108,16 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
               .success, // declining the membership request is also a successful end of the task, from a task perspective
         ),
         null);
-    Navigator.pop(context);
   }
 
-  void _sendMessage(BuildContext context, AssignmentModel assignmentModel,
+  void _sendMessage(String appId, String memberId, AssignmentModel assignmentModel,
       String message, String? comment) {
     if (!((comment == null) || (comment.length == 0))) {
       message = message + " with these comments: " + comment;
     }
     if (assignmentModel == null) return;
     AbstractNotificationPlatform.platform!
-        .sendMessage(context, assignmentModel.assigneeId!, message);
+        .sendMessage(appId, memberId, assignmentModel.assigneeId!, message);
   }
 
   @override

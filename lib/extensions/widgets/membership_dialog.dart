@@ -67,7 +67,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
       }
     }
     _buttons.add(button(context, label: 'Send message',
-        onPressed: () => _askSendMessage(member)));
+        onPressed: () => _askSendMessage(appId, member)));
     return ListView(
         shrinkWrap: true, physics: ScrollPhysics(), children: _buttons);
   }
@@ -121,14 +121,14 @@ class _MembershipDialogState extends State<MembershipDialog> {
     );
   }
 
-  void _askSendMessage(MemberPublicInfoModel member) {
+  void _askSendMessage(String appId, MemberPublicInfoModel member) {
     openEntryDialog(context,AccessBloc.currentAppId(context) + '/_sendmsg',
         title: 'Send Message to Member',
         hintText: 'Message',
         ackButtonLabel: 'Send message',
         nackButtonLabel: 'Discard', onPressed: (value) {
       if (value != null) {
-        _sendMessage(value, member);
+        _sendMessage(appId, value, member);
       }
     });
   }
@@ -149,14 +149,14 @@ class _MembershipDialogState extends State<MembershipDialog> {
     BlocProvider.of<MembershipBloc>(context).add(UnblockMember());
   }
 
-  void _sendMessage(
+  void _sendMessage(String appId,
     String message,
     MemberPublicInfoModel member,
   ) {
     if (message == null) return;
     if (message.length == 0) return;
     AbstractNotificationPlatform.platform!.sendMessage(
-        context, member.documentID!, message, postSendAction: (value) {
+        appId, member.documentID!, member.documentID!, message, postSendAction: (value) {
       Registry.registry()!.snackbar("Yay! Message sent!");
     });
   }
