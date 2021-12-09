@@ -112,7 +112,7 @@ class ChangedMembershipDashboardMemberActions extends MembershipDashboardFormEve
 }
 
 class ChangedMembershipDashboardConditions extends MembershipDashboardFormEvent {
-  final ConditionsSimpleModel? value;
+  final StorageConditionsModel? value;
 
   ChangedMembershipDashboardConditions({this.value});
 
