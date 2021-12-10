@@ -70,18 +70,18 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
       AssignmentModel assignmentModel, String? comment) async {
     _sendMessage(appId, memberId, assignmentModel,
         "Your membership request has been approved", comment);
-    if (assignmentModel.reporter == null) {
-      print("assignmentModel.reporter is null");
+    if (assignmentModel.reporterId == null) {
+      print("assignmentModel.reporterId is null");
       return Future.value(null);
     }
     var accessModel = await accessRepository(appId: assignmentModel.appId)!
-        .get(assignmentModel.reporter!.documentID);
+        .get(assignmentModel.reporterId);
     if (accessModel != null) {
       accessModel.privilegeLevel = PrivilegeLevel.Level1Privilege;
       await accessRepository(appId: assignmentModel.appId)!.update(accessModel);
     } else {
       await accessRepository(appId: assignmentModel.appId)!.add(AccessModel(
-        documentID: assignmentModel.reporter!.documentID,
+        documentID: assignmentModel.reporterId,
         privilegeLevel: PrivilegeLevel.Level1Privilege,
         points: 0,
         blocked: false,
