@@ -52,7 +52,7 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {
-            var appId = accessState.currentAppId(context);
+            var appId = accessState.currentApp.documentID!;
             return topicContainer(context, children: [
               BlocProvider<MemberPublicInfoListBloc>(
                 create: (context) => MemberPublicInfoListBloc(
