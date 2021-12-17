@@ -128,7 +128,12 @@ class MembershipDashboardCache implements MembershipDashboardRepository {
 
   @override
   StreamSubscription<MembershipDashboardModel?> listenTo(String documentId, MembershipDashboardChanged changed) {
-    return reference.listenTo(documentId, changed);
+    return reference.listenTo(documentId, ((value) {
+      if (value != null) {
+        fullCache[value.documentID] = value;
+      }
+      changed(value);
+    }));
   }
 
   static Future<MembershipDashboardModel> refreshRelations(MembershipDashboardModel model) async {

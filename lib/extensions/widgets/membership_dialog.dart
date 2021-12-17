@@ -156,7 +156,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
     if (message == null) return;
     if (message.length == 0) return;
     AbstractNotificationPlatform.platform!.sendMessage(
-        appId, member.documentID!, member.documentID!, message, postSendAction: (value) {
+        appId, AccessBloc.currentOwnerId(context), member.documentID!, message, postSendAction: (value) {
       Registry.registry()!.snackbar("Yay! Message sent!");
     });
   }
