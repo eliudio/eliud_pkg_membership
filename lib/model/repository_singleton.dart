@@ -25,7 +25,7 @@ class RepositorySingleton extends AbstractRepositorySingleton {
     var _membershipDashboardRepository = HashMap<String, MembershipDashboardRepository>();
 
     MembershipDashboardRepository? membershipDashboardRepository(String? appId) {
-      if ((appId != null) && (_membershipDashboardRepository[appId] == null)) _membershipDashboardRepository[appId] = MembershipDashboardCache(MembershipDashboardFirestore(appRepository()!.getSubCollection(appId, 'membershipdashboard'), appId));
+      if ((appId != null) && (_membershipDashboardRepository[appId] == null)) _membershipDashboardRepository[appId] = MembershipDashboardCache(MembershipDashboardFirestore(() => appRepository()!.getSubCollection(appId, 'membershipdashboard'), appId));
       return _membershipDashboardRepository[appId];
     }
 
