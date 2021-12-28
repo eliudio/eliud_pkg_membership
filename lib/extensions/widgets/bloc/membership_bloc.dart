@@ -46,9 +46,9 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
   @override
   Stream<MembershipState> mapEventToState(MembershipEvent event) async* {
     if (event is FetchMembershipEvent) {
-      var accessModel = await accessRepository(appId: event.appId)!.get(event.memberId);
-      var member = await memberPublicInfoRepository(appId: event.appId)!.get(event.memberId);
-      yield MembershipLoaded(accessModel, event.appId, member);
+      var accessModel = await accessRepository(appId: event.app.documentID!)!.get(event.memberId);
+      var member = await memberPublicInfoRepository(appId: event.app.documentID!)!.get(event.memberId);
+      yield MembershipLoaded(accessModel, event.app.documentID, member);
     } else if (state is MembershipLoaded) {
       MembershipLoaded theState = state as MembershipLoaded;
       if (event is BlockMember) {

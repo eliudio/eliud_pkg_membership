@@ -44,12 +44,12 @@ import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_membership/model/entity_export.dart';
 
 class ListComponentFactory implements ComponentConstructor {
-  Widget? createNew({Key? key, required String appId,  required String id, Map<String, dynamic>? parameters}) {
-    return ListComponent(appId: appId, componentId: id);
+  Widget? createNew({Key? key, required AppModel app,  required String id, Map<String, dynamic>? parameters}) {
+    return ListComponent(app: app, componentId: id);
   }
 
   @override
-  dynamic getModel({required String appId, required String id}) {
+  dynamic getModel({required AppModel app, required String id}) {
     return null;
   }
 }
@@ -59,7 +59,7 @@ typedef DropdownButtonChanged(String? value);
 
 class DropdownButtonComponentFactory implements ComponentDropDown {
   @override
-  dynamic getModel({required String appId, required String id}) {
+  dynamic getModel({required AppModel app, required String id}) {
     return null;
   }
 
@@ -70,10 +70,10 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
     return false;
   }
 
-  Widget createNew({Key? key, required String appId, required String id, Map<String, dynamic>? parameters, String? value, DropdownButtonChanged? trigger, bool? optional}) {
+  Widget createNew({Key? key, required AppModel app, required String id, Map<String, dynamic>? parameters, String? value, DropdownButtonChanged? trigger, bool? optional}) {
 
     if (id == "membershipDashboards")
-      return DropdownButtonComponent(appId: appId, componentId: id, value: value, trigger: trigger, optional: optional);
+      return DropdownButtonComponent(app: app, componentId: id, value: value, trigger: trigger, optional: optional);
 
     return Text("Id $id not found");
   }
@@ -81,7 +81,7 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
 
 
 class ListComponent extends StatelessWidget with HasFab {
-  final String appId;
+  final AppModel app;
   final String? componentId;
   Widget? widget;
 
@@ -94,7 +94,7 @@ class ListComponent extends StatelessWidget with HasFab {
     return null;
   }
 
-  ListComponent({required this.appId, this.componentId}) {
+  ListComponent({required this.app, this.componentId}) {
     initWidget();
   }
 
@@ -106,7 +106,7 @@ class ListComponent extends StatelessWidget with HasFab {
   }
 
   void initWidget() {
-    if (componentId == 'membershipDashboards') widget = MembershipDashboardListWidget();
+    if (componentId == 'membershipDashboards') widget = MembershipDashboardListWidget(app: app);
   }
 
   Widget _membershipDashboardBuild(BuildContext context) {
@@ -114,7 +114,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<MembershipDashboardListBloc>(
           create: (context) => MembershipDashboardListBloc(
-            membershipDashboardRepository: membershipDashboardRepository(appId: appId)!,
+            membershipDashboardRepository: membershipDashboardRepository(appId: app.documentID!)!,
           )..add(LoadMembershipDashboardList()),
         )
       ],
@@ -128,13 +128,13 @@ class ListComponent extends StatelessWidget with HasFab {
 typedef Changed(String? value);
 
 class DropdownButtonComponent extends StatelessWidget {
-  final String appId;
+  final AppModel app;
   final String? componentId;
   final String? value;
   final Changed? trigger;
   final bool? optional;
 
-  DropdownButtonComponent({required this.appId, this.componentId, this.value, this.trigger, this.optional});
+  DropdownButtonComponent({required this.app, this.componentId, this.value, this.trigger, this.optional});
 
   @override
   Widget build(BuildContext context) {
@@ -149,11 +149,11 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<MembershipDashboardListBloc>(
           create: (context) => MembershipDashboardListBloc(
-            membershipDashboardRepository: membershipDashboardRepository(appId: appId)!,
+            membershipDashboardRepository: membershipDashboardRepository(appId: app.documentID!)!,
           )..add(LoadMembershipDashboardList()),
         )
       ],
-      child: MembershipDashboardDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+      child: MembershipDashboardDropdownButtonWidget(app: app, value: value, trigger: trigger, optional: optional),
     );
   }
 

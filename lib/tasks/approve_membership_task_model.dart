@@ -1,6 +1,7 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/access_model.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/frontend/has_dialog_field.dart';
 import 'package:eliud_core/style/frontend/has_list_tile.dart';
@@ -32,28 +33,28 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
             executeInstantly: executeInstantly);
 
   @override
-  Future<void> startTask(
-      BuildContext context, String appId, String? memberId, AssignmentModel? assignmentModel) {
+  Future<void> startTask(AppModel app,
+      BuildContext context, String? memberId, AssignmentModel? assignmentModel) {
     if (assignmentModel == null) return Future.value(null);
     if (memberId == null) throw Exception("Can't approve membership when no member");
     String? feedback;
-    openWidgetDialog(
+    openWidgetDialog(app,
       context,
-      appId + '/membershipreq',
-      child: YesNoIgnoreDialogWithAssignmentResults.get(context,
+      app.documentID! + '/membershipreq',
+      child: YesNoIgnoreDialogWithAssignmentResults.get(app, context,
           title: 'Membership request',
           message:
               'Below the payment details. Please review and confirm or decline and provide feedback.',
           yesLabel: 'Confirm membership',
           noLabel: 'Decline membership',
           resultsPrevious: assignmentModel.resultsPrevious, yesFunction: () async {
-        await _approveMembershipRequest(context, appId, memberId, assignmentModel, feedback);
+        await _approveMembershipRequest(app, context, memberId, assignmentModel, feedback);
       }, noFunction: () async {
-        await _disapproveMembershipRequest(context, appId, memberId, assignmentModel, feedback);
+        await _disapproveMembershipRequest(app, context, memberId, assignmentModel, feedback);
       }, extraFields: [
-        getListTile(context,
+        getListTile(context, app,
             leading: Icon(Icons.payment),
-            title: dialogField(
+            title: dialogField(app,
               context,
               valueChanged: (value) => feedback = value,
               decoration: const InputDecoration(
@@ -66,9 +67,9 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
     return Future.value(null);
   }
 
-  Future<void> _approveMembershipRequest(BuildContext context, String appId, String memberId,
+  Future<void> _approveMembershipRequest(AppModel app, BuildContext context, String memberId,
       AssignmentModel assignmentModel, String? comment) async {
-    _sendMessage(appId, memberId, assignmentModel,
+    _sendMessage(app, memberId, assignmentModel,
         "Your membership request has been approved", comment);
     if (assignmentModel.reporterId == null) {
       print("assignmentModel.reporterId is null");
@@ -87,7 +88,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         blocked: false,
       ));
     }
-    await finishTask(
+    await finishTask(app,
         context,
         assignmentModel,
         ExecutionResults(
@@ -96,11 +97,11 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         null);
   }
 
-  Future<void> _disapproveMembershipRequest(BuildContext context,String appId, String memberId,
+  Future<void> _disapproveMembershipRequest(AppModel app, BuildContext context, String memberId,
       AssignmentModel assignmentModel, String? comment) async {
-    _sendMessage(appId, memberId, assignmentModel,
+    _sendMessage(app, memberId, assignmentModel,
         "Your membership request has been disapproved", comment);
-    await finishTask(
+    await finishTask(app,
         context,
         assignmentModel,
         ExecutionResults(
@@ -110,14 +111,14 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         null);
   }
 
-  void _sendMessage(String appId, String memberId, AssignmentModel assignmentModel,
+  void _sendMessage(AppModel app, String memberId, AssignmentModel assignmentModel,
       String message, String? comment) {
     if (!((comment == null) || (comment.length == 0))) {
       message = message + " with these comments: " + comment;
     }
     if (assignmentModel == null) return;
     AbstractNotificationPlatform.platform!
-        .sendMessage(appId, memberId, assignmentModel.assigneeId!, message);
+        .sendMessage(app, memberId, assignmentModel.assigneeId!, message);
   }
 
   @override

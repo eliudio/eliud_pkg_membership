@@ -3,6 +3,7 @@ import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_core/model/member_public_info_list.dart';
 import 'package:eliud_core/model/member_public_info_list_bloc.dart';
@@ -10,7 +11,6 @@ import 'package:eliud_core/model/member_public_info_list_event.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/component/component_constructor.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_membership/extensions/widgets/membership_dashboard_item.dart';
@@ -24,20 +24,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MembershipDashboardComponentConstructorDefault
     implements ComponentConstructor {
   @override
-  Widget createNew({Key? key, required String appId, required String id, Map<String, dynamic>? parameters}) {
-    return MembershipDashboard(key: key, appId: appId, id: id);
+  Widget createNew({Key? key, required AppModel app, required String id, Map<String, dynamic>? parameters}) {
+    return MembershipDashboard(key: key, app: app, id: id);
   }
 
   @override
-  Future<dynamic> getModel({required String appId, required String id}) async => await membershipDashboardRepository(appId: appId)!.get(id);
+  Future<dynamic> getModel({required AppModel app, required String id}) async => await membershipDashboardRepository(appId: app.documentID!)!.get(id);
 }
 
 class MembershipDashboard extends AbstractMembershipDashboardComponent {
-  MembershipDashboard({Key? key, required String appId, required String id}) : super(key: key, theAppId: appId, membershipDashboardId: id);
+  MembershipDashboard({Key? key, required AppModel app, required String id}) : super(key: key, app: app, membershipDashboardId: id);
 
   @override
   Widget alertWidget({title = String, content = String}) {
-    return AlertWidget(title: title, content: content);
+    return AlertWidget(app: app, title: title, content: content);
   }
 
   static EliudQuery getSubscribedMembers(String appId) {
@@ -52,32 +52,32 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {
-            var appId = accessState.currentApp.documentID!;
-            return topicContainer(context, children: [
+            var appId = app.documentID!;
+            return topicContainer(app, context, children: [
               BlocProvider<MemberPublicInfoListBloc>(
                 create: (context) => MemberPublicInfoListBloc(
                   eliudQuery: getSubscribedMembers(appId),
                   memberPublicInfoRepository:
                   memberPublicInfoRepository(appId: appId)!,
                 )..add(LoadMemberPublicInfoList()),
-                child: simpleTopicContainer(context, children: [MemberPublicInfoListWidget(
+                child: simpleTopicContainer(app, context, children: [MemberPublicInfoListWidget(app: app,
                     readOnly: true,
-                    widgetProvider: (value) => widgetProvider(appId, value, dashboardModel!),
+                    widgetProvider: (value) => widgetProvider(app, value, dashboardModel!),
                     listBackground: BackgroundModel(documentID: "`transparent"))]),
               )]);
           } else {
-            return progressIndicator(context);
+            return progressIndicator(app, context);
           }
         });
   }
 
-  Widget widgetProvider(String? appId, MemberPublicInfoModel? value, MembershipDashboardModel dashboardModel) {
-    return MembershipDashboardItem(appId: appId, value: value, dashboardModel: dashboardModel);
+  Widget widgetProvider(AppModel app, MemberPublicInfoModel? value, MembershipDashboardModel dashboardModel) {
+    return MembershipDashboardItem(app: app, value: value, dashboardModel: dashboardModel);
   }
 
   @override
   MembershipDashboardRepository getMembershipDashboardRepository(
       BuildContext context) {
-    return membershipDashboardRepository(appId: AccessBloc.currentAppId(context))!;
+    return membershipDashboardRepository(appId: app.documentID!)!;
   }
 }

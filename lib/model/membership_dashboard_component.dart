@@ -26,19 +26,20 @@ import 'package:eliud_core/style/style_registry.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_core/model/app_model.dart';
 
 abstract class AbstractMembershipDashboardComponent extends StatelessWidget {
   static String componentName = "membershipDashboards";
-  final String theAppId;
+  final AppModel app;
   final String membershipDashboardId;
 
-  AbstractMembershipDashboardComponent({Key? key, required this.theAppId, required this.membershipDashboardId}): super(key: key);
+  AbstractMembershipDashboardComponent({Key? key, required this.app, required this.membershipDashboardId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<MembershipDashboardComponentBloc> (
           create: (context) => MembershipDashboardComponentBloc(
-            membershipDashboardRepository: membershipDashboardRepository(appId: theAppId)!)
+            membershipDashboardRepository: membershipDashboardRepository(appId: app.documentID!)!)
         ..add(FetchMembershipDashboardComponent(id: membershipDashboardId)),
       child: _membershipDashboardBlockBuilder(context),
     );
@@ -48,7 +49,7 @@ abstract class AbstractMembershipDashboardComponent extends StatelessWidget {
     return BlocBuilder<MembershipDashboardComponentBloc, MembershipDashboardComponentState>(builder: (context, state) {
       if (state is MembershipDashboardComponentLoaded) {
         if (state.value == null) {
-          return AlertWidget(title: "Error", content: 'No MembershipDashboard defined');
+          return AlertWidget(app: app, title: "Error", content: 'No MembershipDashboard defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -59,10 +60,10 @@ abstract class AbstractMembershipDashboardComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is MembershipDashboardComponentError) {
-        return AlertWidget(title: 'Error', content: state.message);
+        return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
+          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
         );
       }
     });

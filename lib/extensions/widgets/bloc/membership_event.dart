@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/app_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class MembershipEvent extends Equatable {
@@ -6,13 +7,13 @@ abstract class MembershipEvent extends Equatable {
 }
 
 class FetchMembershipEvent extends MembershipEvent {
-  final String? memberId;
-  final String? appId;
+  final String memberId;
+  final AppModel app;
 
-  FetchMembershipEvent({ this.memberId, this.appId });
+  FetchMembershipEvent({ required this.memberId, required this.app });
 
   @override
-  List<Object> get props => [ memberId!, appId! ];
+  List<Object> get props => [ memberId, app ];
 }
 
 class BlockMember extends MembershipEvent {

@@ -1,4 +1,5 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_pkg_membership/tasks/request_membership_task_entity.dart';
 import 'package:eliud_pkg_workflow/model/assignment_model.dart';
@@ -17,17 +18,17 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
       : super(identifier: identifier, description: description, executeInstantly: executeInstantly);
 
   @override
-  Future<void> startTask(
-      BuildContext context, String  appId, String? memberId, AssignmentModel? assignmentModel) {
+  Future<void> startTask(AppModel app,
+      BuildContext context, String? memberId, AssignmentModel? assignmentModel) {
     if ((context == null) || (assignmentModel == null))
       return Future.value(null);
 
-    openAckNackDialog(context,
-        appId + '/membershipreq',
+    openAckNackDialog(app, context,
+        app.documentID! + '/membershipreq',
         title: 'Join',
         message: 'Do you want to request membership?', onSelection: (value) {
       if (value == 0) {
-        confirmMembershipRequest(
+        confirmMembershipRequest(app,
           context,
           assignmentModel,
         );
@@ -36,14 +37,14 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
     return Future.value(null);
   }
 
-  void confirmMembershipRequest(
+  void confirmMembershipRequest(AppModel app,
       BuildContext context, AssignmentModel assignmentModel) {
 /*
 This is the wrong place to send this message
     AbstractNotificationPlatform.platform
         .sendMessage(context, assignmentModel.assigneeId, "You have requested membership for app " + assignmentModel.appId);
 */
-    finishTask(
+    finishTask(app,
         context,
         assignmentModel,
         ExecutionResults(
