@@ -47,6 +47,7 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
   Stream<MembershipState> mapEventToState(MembershipEvent event) async* {
     if (event is FetchMembershipEvent) {
       var accessModel = await accessRepository(appId: event.app.documentID!)!.get(event.memberId);
+      //??   AccessModel(documentID: event.memberId, appId: event.app.documentID, privilegeLevel: PrivilegeLevel.NoPrivilege, points: 0, blocked: false, ) ;
       var member = await memberPublicInfoRepository(appId: event.app.documentID!)!.get(event.memberId);
       yield MembershipLoaded(accessModel, event.app.documentID, member);
     } else if (state is MembershipLoaded) {
@@ -55,7 +56,7 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
         yield await _update(theState.appId, theState.accessModel, AccessModel(
           documentID: theState.member!.documentID,
           privilegeLevel: PrivilegeLevel.NoPrivilege,
-          privilegeLevelBeforeBlocked: PLToPLBL(theState.accessModel!.privilegeLevel!),
+          privilegeLevelBeforeBlocked: theState.accessModel == null ? PrivilegeLevelBeforeBlocked.NoPrivilege : PLToPLBL(theState.accessModel!.privilegeLevel!),
           blocked: true,
         ), theState.member);
       } else if (event is UnblockMember) {
@@ -66,10 +67,10 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
             blocked: false,
           ), theState.member);
       } else if (event is PromoteMember) {
-        if (theState.accessModel!.privilegeLevel!.index <= PrivilegeLevel.OwnerPrivilege.index) {
+        if ((theState.accessModel == null) || (theState.accessModel!.privilegeLevel!.index <= PrivilegeLevel.OwnerPrivilege.index)) {
           yield await _update(theState.appId, theState.accessModel, AccessModel(
             documentID: theState.member!.documentID,
-            privilegeLevel: intToPL(theState.accessModel!.privilegeLevel!.index + 1),
+            privilegeLevel: theState.accessModel == null ? PrivilegeLevel.Level1Privilege : intToPL(theState.accessModel!.privilegeLevel!.index + 1),
           ), theState.member);
         }
       } else if (event is DemoteMember) {

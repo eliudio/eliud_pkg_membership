@@ -33,30 +33,30 @@ class MembershipDialog extends StatefulWidget {
 
 class _MembershipDialogState extends State<MembershipDialog> {
   Widget getFieldsWidget(BuildContext context, String appId,
-      AccessModel oldAccessModel, MemberPublicInfoModel member) {
+      AccessModel? oldAccessModel, MemberPublicInfoModel member) {
 
     return simpleTopicContainer(widget.app, context, children: <Widget>[buttons(oldAccessModel, member)],
         height: 200, width: 200);
   }
 
-  Widget buttons(AccessModel oldAccessModel, MemberPublicInfoModel member) {
+  Widget buttons(AccessModel? oldAccessModel, MemberPublicInfoModel member) {
     var privilegeLevel;
     var blocked;
     if (oldAccessModel != null) {
       privilegeLevel = oldAccessModel.privilegeLevel;
-      blocked = oldAccessModel.blocked;
+      blocked = oldAccessModel.blocked ?? false;
     } else {
       privilegeLevel = PrivilegeLevel.NoPrivilege;
       blocked = false;
     }
     List<Widget> _buttons = [];
-    if ((oldAccessModel.blocked != null) && (oldAccessModel.blocked!)) {
+    if (blocked) {
       _buttons.add(button(widget.app, context, label: 'Unblock member',
           onPressed: () => _askUnblock()));
     } else {
       if (privilegeLevel != PrivilegeLevel.OwnerPrivilege) {
         _buttons.add(button(widget.app, context, label: 'Block member',
-            onPressed: () => _askBlock(oldAccessModel, member)));
+            onPressed: () => _askBlock(member)));
       }
       if ((privilegeLevel.index >= PrivilegeLevel.NoPrivilege.index) &&
           (privilegeLevel.index < PrivilegeLevel.Level2Privilege.index)) {
@@ -75,7 +75,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
         shrinkWrap: true, physics: ScrollPhysics(), children: _buttons);
   }
 
-  void _askBlock(AccessModel oldAccessModel, MemberPublicInfoModel member) {
+  void _askBlock(MemberPublicInfoModel member) {
     openAckNackDialog(widget.app, context, widget.app.documentID! + '/_block',
         title: 'Block',
         message: 'Do you want to block this member from the app?',
@@ -173,9 +173,9 @@ class _MembershipDialogState extends State<MembershipDialog> {
         return complexDialog(widget.app, context, title: name +
             ' - ' +
             privilegeLevelToMemberRoleString(
-                state.accessModel!.privilegeLevel,
-                state.accessModel!.blocked), child: getFieldsWidget(
-            context, state.appId!, state.accessModel!, state.member!));
+                state.accessModel == null ? PrivilegeLevel.NoPrivilege : state.accessModel!.privilegeLevel,
+                state.accessModel == null ? false : state.accessModel!.blocked), child: getFieldsWidget(
+            context, state.appId!, state.accessModel, state.member!));
       } else {
         return progressIndicator(widget.app, context);
       }

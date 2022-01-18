@@ -41,29 +41,35 @@ abstract class MembershipPackage extends Package {
       final c = Completer<List<PackageConditionDetails>>();
       subscription[appId] =
           corerepo.accessRepository(appId: appId)!.listen((list) {
-        var valueHasNoMembershipYet = list.isEmpty ||
-            (list.first == null) ||
-            ((list.first!.blocked == null) || (!list.first!.blocked!)) &&
-                ((list.first!.privilegeLevel == null) ||
-                    (list.first!.privilegeLevel == PrivilegeLevel.NoPrivilege));
+          var valueHasNoMembershipYet = list.isEmpty ||
+              (list.first == null) ||
+              ((list.first!.blocked == null) || (!list.first!.blocked!)) &&
+                  ((list.first!.privilegeLevel == null) ||
+                      (list.first!.privilegeLevel == PrivilegeLevel.NoPrivilege));
 
-        if (!c.isCompleted) {
-          // the first time we get this trigger, it's upon entry of the getAndSubscribe. Now we simply return the value
-          stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId] = valueHasNoMembershipYet;
-          c.complete([
-            PackageConditionDetails(
-                packageName: packageName,
-                conditionName: MEMBER_HAS_NO_MEMBERSHIP_YET,
-                value: valueHasNoMembershipYet)
-          ]);
-        } else {
-          // subsequent calls we get this trigger, it's when the date has changed. Now add the event to the bloc
-          if (valueHasNoMembershipYet !=
-              stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId]) {
+          if (!c.isCompleted) {
+            // the first time we get this trigger, it's upon entry of the getAndSubscribe. Now we simply return the value
             stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId] = valueHasNoMembershipYet;
-            noMembershipYet(accessBloc, app, valueHasNoMembershipYet);
+            c.complete([
+              PackageConditionDetails(
+                  packageName: packageName,
+                  conditionName: MEMBER_HAS_NO_MEMBERSHIP_YET,
+                  value: valueHasNoMembershipYet)
+            ]);
+          } else {
+            // subsequent calls we get this trigger, it's when the date has changed. Now add the event to the bloc
+            if (valueHasNoMembershipYet !=
+                stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId]) {
+              stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId] =
+                  valueHasNoMembershipYet;
+              noMembershipYet(accessBloc, app, valueHasNoMembershipYet);
+            }
+            accessBloc.add(PrivilegeChangedEvent(
+              app,
+              (list.first == null) ? PrivilegeLevel.NoPrivilege : list.first!.privilegeLevel ?? PrivilegeLevel.NoPrivilege,
+              (list.first == null) ? false : list.first!.blocked ?? false,
+            ));
           }
-        }
       }, eliudQuery: getAccessQuery(appId, member.documentID!));
       return c.future;
     } else {
