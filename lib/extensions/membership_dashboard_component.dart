@@ -63,7 +63,7 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
                 child: simpleTopicContainer(app, context, children: [MemberPublicInfoListWidget(app: app,
                     readOnly: true,
                     widgetProvider: (value) => widgetProvider(app, value, dashboardModel!),
-                    listBackground: BackgroundModel(documentID: "`transparent"))]),
+                    listBackground: BackgroundModel())]),
               )]);
           } else {
             return progressIndicator(app, context);
