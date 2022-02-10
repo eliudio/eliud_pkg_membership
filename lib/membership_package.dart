@@ -9,13 +9,14 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_pkg_create/registry/registry.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/component_registry.dart';
 import 'package:eliud_pkg_membership/tasks/approve_membership_task_model.dart';
 import 'package:eliud_pkg_membership/tasks/approve_membership_task_model_mapper.dart';
 import 'package:eliud_pkg_membership/tasks/request_membership_task_model.dart';
 import 'package:eliud_pkg_membership/tasks/request_membership_task_model_mapper.dart';
-import 'package:eliud_pkg_workflow/tools/task/task_model.dart';
+import 'package:eliud_pkg_membership/wizards/membership_dashboard_wizard.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_model_registry.dart';
 
 import 'model/repository_singleton.dart';
@@ -124,6 +125,9 @@ abstract class MembershipPackage extends Package {
 
     // Initialise repository singleton
     AbstractRepositorySingleton.singleton = RepositorySingleton();
+
+    // core wizards
+    NewAppWizardRegistry.registry().register(MembershipDashboardWizard());
 
     // Register mappers for extra tasks
     TaskModelRegistry.registry()!.addTask(
