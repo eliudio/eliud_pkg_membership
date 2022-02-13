@@ -23,9 +23,6 @@ dependencies:
   eliud_pkg_etc:
     path: ../eliud_pkg_etc
 
-  eliud_pkg_create:
-    path: ../eliud_pkg_create
-
 dev_dependencies:
   build_runner: "1.11.5"
 
