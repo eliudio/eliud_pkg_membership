@@ -20,7 +20,7 @@ class MembershipDashboardWizard
 
   MembershipDashboardWizard()
       : super(
-            'membership', 'Membership', );
+            'membershipdashboard', 'Membership Dashboard', );
 
   @override
   NewAppWizardParameters newAppWizardParameters() {
