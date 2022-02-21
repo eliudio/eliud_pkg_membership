@@ -92,7 +92,7 @@ class MembershipDashboardWizard
   String? getPageID(String pageType) => null;
 
   @override
-  ActionModel? getAction(AppModel app, String actionType) => null;
+  ActionModel? getAction(AppModel app, String actionType, ) => null;
 
   @override
   AppModel updateApp(NewAppWizardParameters parameters, AppModel adjustMe) => adjustMe;
