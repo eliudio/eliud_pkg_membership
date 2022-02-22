@@ -9,6 +9,7 @@ import 'package:eliud_core/model/menu_item_model.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_core/wizards/join_action_specification_parameters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
@@ -47,6 +48,8 @@ class MembershipDashboardWizard
     AppBarProvider appBarProvider,
     DrawerProvider leftDrawerProvider,
     DrawerProvider rightDrawerProvider,
+    PageProvider pageProvider,
+    ActionProvider actionProvider,
   ) {
     if (parameters is MembershipDashboardWizardParameters) {
       var membershipDashboardSpecifications =
@@ -58,10 +61,8 @@ class MembershipDashboardWizard
         tasks.add(() async => await MembershipDashboardDialogBuilder(
               app,
               MEMBERSHIP_DASHBOARD_DIALOG_ID,
-              profilePageId:
-                  NewAppWizardRegistry.registry().getPageID("profilePageId"),
-              feedPageId:
-                  NewAppWizardRegistry.registry().getPageID("pageIdProvider"),
+              profilePageId: pageProvider("profilePageId"),
+              feedPageId:pageProvider("pageIdProvider"),
             ).create());
         return tasks;
       }
@@ -74,12 +75,7 @@ class MembershipDashboardWizard
   @override
   List<MenuItemModel>? getMenuItemsFor(AppModel app, NewAppWizardParameters parameters, MenuType type) {
     if (parameters is MembershipDashboardWizardParameters) {
-      var feedSpecifications = parameters.membershipDashboardSpecifications;
-      bool generate = (type == MenuType.leftDrawerMenu) && feedSpecifications.availableInLeftDrawer ||
-          (type == MenuType.rightDrawerMenu) && feedSpecifications.availableInRightDrawer ||
-          (type == MenuType.bottomNavBarMenu) && feedSpecifications.availableInHomeMenu ||
-          (type == MenuType.appBarMenu) && feedSpecifications.availableInAppBar;
-      if (generate) {
+      if (parameters.membershipDashboardSpecifications.should(type)) {
         return getThoseMenuItems(app);
       }
     } else {
@@ -89,10 +85,10 @@ class MembershipDashboardWizard
   }
 
   @override
-  String? getPageID(String pageType) => null;
+  String? getPageID(NewAppWizardParameters parameters, String pageType) => null;
 
   @override
-  ActionModel? getAction(AppModel app, String actionType, ) => null;
+  ActionModel? getAction(NewAppWizardParameters parameters, AppModel app, String actionType, ) => null;
 
   @override
   AppModel updateApp(NewAppWizardParameters parameters, AppModel adjustMe) => adjustMe;
