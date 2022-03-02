@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
 import 'package:eliud_core/core/wizards/builders/dialog_builder.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
@@ -12,8 +13,8 @@ class MembershipDashboardDialogBuilder extends DialogBuilder {
   final String? profilePageId;
   final String? feedPageId;
 
-  MembershipDashboardDialogBuilder(AppModel app, String dialogDocumentId, {required this.profilePageId, required this.feedPageId})
-      : super(app, dialogDocumentId);
+  MembershipDashboardDialogBuilder(String uniqueId, AppModel app, String dialogDocumentId, {required this.profilePageId, required this.feedPageId})
+      : super(uniqueId, app, dialogDocumentId);
 
   Future<DialogModel> _setupDialog() async {
     return await corerepo.AbstractRepositorySingleton.singleton
@@ -26,10 +27,10 @@ class MembershipDashboardDialogBuilder extends DialogBuilder {
     components.add(BodyComponentModel(
         documentID: "1",
         componentName: AbstractMembershipDashboardComponent.componentName,
-        componentId: dialogDocumentId));
+        componentId: constructDocumentId(uniqueId: uniqueId, documentId: dialogDocumentId)));
 
     return DialogModel(
-        documentID: dialogDocumentId,
+        documentID: constructDocumentId(uniqueId: uniqueId, documentId: dialogDocumentId),
         appId: app.documentID!,
         title: "Membership dashboard",
         layout: DialogLayout.ListView,
@@ -41,10 +42,10 @@ class MembershipDashboardDialogBuilder extends DialogBuilder {
 
   MembershipDashboardModel _dashboardModel() {
     return MembershipDashboardModel(
-        documentID: dialogDocumentId,
+        documentID: constructDocumentId(uniqueId: uniqueId, documentId: dialogDocumentId),
         appId: app.documentID!,
         description: "Members",
-        memberActions: ProfileAndFeedToAction.getMemberActionModels(app, profilePageId, feedPageId),
+        memberActions: ProfileAndFeedToAction.getMemberActionModels(uniqueId, app, profilePageId, feedPageId),
         conditions: StorageConditionsModel(
             privilegeLevelRequired: PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple
         ),

@@ -1,34 +1,34 @@
+import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
 import 'package:eliud_core/core/wizards/registry/action_specification.dart';
-import 'package:eliud_core/core/wizards/registry/new_app_wizard_info_with_action_specification.dart';
 import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/core/wizards/widgets/action_specification_widget.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/icon_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/menu_item_model.dart';
+import 'package:eliud_core/model/public_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/wizards/join_action_specification_parameters.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
 import 'builders/dialog/membership_dashboard_dialog_builder.dart';
 
-class MembershipDashboardWizard
-    extends NewAppWizardInfo {
-  static String MEMBERSHIP_DASHBOARD_DIALOG_ID = 'membership_dashboard';
+class MembershipDashboardWizard extends NewAppWizardInfo {
+  static String membershipDashboardDialogId = 'membership_dashboard';
 
   MembershipDashboardWizard()
       : super(
-            'membershipdashboard', 'Membership Dashboard', );
+          'membershipdashboard',
+          'Membership Dashboard',
+        );
 
   @override
   NewAppWizardParameters newAppWizardParameters() {
     return MembershipDashboardWizardParameters();
   }
 
-  List<MenuItemModel>? getThoseMenuItems(AppModel app) => [
+  List<MenuItemModel>? getThoseMenuItems(String uniqueId, AppModel app) => [
         MenuItemModel(
             documentID: newRandomKey(),
             text: 'Members',
@@ -36,11 +36,13 @@ class MembershipDashboardWizard
             icon: IconModel(
                 codePoint: Icons.people.codePoint,
                 fontFamily: Icons.notifications.fontFamily),
-            action: OpenDialog(app, dialogID: MEMBERSHIP_DASHBOARD_DIALOG_ID))
+            action: OpenDialog(app,
+                dialogID: constructDocumentId(uniqueId: uniqueId, documentId: membershipDashboardDialogId)))
       ];
 
   @override
   List<NewAppTask>? getCreateTasks(
+    String uniqueId,
     AppModel app,
     NewAppWizardParameters parameters,
     MemberModel member,
@@ -59,10 +61,11 @@ class MembershipDashboardWizard
         print("Membership Dashboard");
         List<NewAppTask> tasks = [];
         tasks.add(() async => await MembershipDashboardDialogBuilder(
+              uniqueId,
               app,
-              MEMBERSHIP_DASHBOARD_DIALOG_ID,
+          membershipDashboardDialogId,
               profilePageId: pageProvider("profilePageId"),
-              feedPageId:pageProvider("pageIdProvider"),
+              feedPageId: pageProvider("pageIdProvider"),
             ).create());
         return tasks;
       }
@@ -73,39 +76,58 @@ class MembershipDashboardWizard
   }
 
   @override
-  List<MenuItemModel>? getMenuItemsFor(AppModel app, NewAppWizardParameters parameters, MenuType type) {
+  List<MenuItemModel>? getMenuItemsFor(String uniqueId, AppModel app,
+      NewAppWizardParameters parameters, MenuType type) {
     if (parameters is MembershipDashboardWizardParameters) {
       if (parameters.membershipDashboardSpecifications.should(type)) {
-        return getThoseMenuItems(app);
+        return getThoseMenuItems(
+          uniqueId,
+          app,
+        );
       }
     } else {
-      throw Exception('Unexpected class for parameters: ' + parameters.toString());
+      throw Exception(
+          'Unexpected class for parameters: ' + parameters.toString());
     }
     return null;
   }
 
   @override
-  String? getPageID(NewAppWizardParameters parameters, String pageType) => null;
+  String? getPageID(String uniqueId, NewAppWizardParameters parameters,
+          String pageType) =>
+      null;
 
   @override
-  ActionModel? getAction(NewAppWizardParameters parameters, AppModel app, String actionType, ) => null;
+  ActionModel? getAction(
+    String uniqueId,
+    NewAppWizardParameters parameters,
+    AppModel app,
+    String actionType,
+  ) =>
+      null;
 
   @override
-  AppModel updateApp(NewAppWizardParameters parameters, AppModel adjustMe) => adjustMe;
+  AppModel updateApp(String uniqueId, NewAppWizardParameters parameters,
+          AppModel adjustMe) =>
+      adjustMe;
 
   @override
-  Widget wizardParametersWidget(AppModel app, BuildContext context, NewAppWizardParameters parameters) {
+  Widget wizardParametersWidget(
+      AppModel app, BuildContext context, NewAppWizardParameters parameters) {
     if (parameters is MembershipDashboardWizardParameters) {
       return ActionSpecificationWidget(
           app: app,
           enabled: true,
           actionSpecification: parameters.membershipDashboardSpecifications,
-          label: 'Generate Membership Dashboard Dialog'
-      );
+          label: 'Generate a default Membership Dashboard Dialog');
     } else {
-      return text(app, context, 'Unexpected class for parameters: ' + parameters.toString());
+      return text(app, context,
+          'Unexpected class for parameters: ' + parameters.toString());
     }
   }
+
+  @override
+  PublicMediumModel? getPublicMediumModel(String uniqueId, NewAppWizardParameters parameters, String pageType) => null;
 }
 
 class MembershipDashboardWizardParameters extends NewAppWizardParameters {
@@ -116,8 +138,8 @@ class MembershipDashboardWizardParameters extends NewAppWizardParameters {
       requiresAccessToLocalFileSystem: false,
       paymentType: JoinPaymentType.Manual,
       availableInLeftDrawer: false,
-      availableInRightDrawer: false,
-      availableInAppBar: true,
+      availableInRightDrawer: true,
+      availableInAppBar: false,
       availableInHomeMenu: false,
       available: false,
     );
