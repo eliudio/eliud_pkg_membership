@@ -24,6 +24,9 @@ class MembershipDashboardWizard extends NewAppWizardInfo {
         );
 
   @override
+  String getPackageName() => "eliud_pkg_membership";
+
+  @override
   NewAppWizardParameters newAppWizardParameters() {
     return MembershipDashboardWizardParameters();
   }
