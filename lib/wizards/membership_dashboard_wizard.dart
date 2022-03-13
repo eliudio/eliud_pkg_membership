@@ -119,7 +119,6 @@ class MembershipDashboardWizard extends NewAppWizardInfo {
     if (parameters is MembershipDashboardWizardParameters) {
       return ActionSpecificationWidget(
           app: app,
-          enabled: true,
           actionSpecification: parameters.membershipDashboardSpecifications,
           label: 'Generate a default Membership Dashboard Dialog');
     } else {
