@@ -116,35 +116,32 @@ class _SelectMembershipDashboardWidgetState extends State<SelectMembershipDashbo
   Widget build(BuildContext context) {
     return BlocBuilder<MembershipDashboardListBloc, MembershipDashboardListState>(
         builder: (context, state) {
-      if (state is MembershipDashboardListLoading) {
-        return progressIndicator(widget.app, context);
-      } else if (state is MembershipDashboardListLoaded) {
-        if (state.values == null) {
-          return text(widget.app, context, 'No items');
-        } else {
-          var children = <Widget>[];
-          children.add(Container(
-              height: widget.height - 45,
-              child: theList(
-                context,
-                state.values!,
-              )));
-          children.add(Column(children: [
-            divider(widget.app, context),
-            Center(
-                child: iconButton(widget.app, 
+      var children = <Widget>[];
+      if ((state is MembershipDashboardListLoaded) && (state.values != null)) {
+        children.add(Container(
+            height: widget.height - 45,
+            child: theList(
               context,
-              onPressed: () {
-                widget.editorConstructor.createNewComponent(widget.app, context, (_) {});
-              },
-              icon: Icon(Icons.add),
-            ))
-          ]));
-          return ListView(
-              physics: ScrollPhysics(), shrinkWrap: true, children: children);
-        }
+              state.values!,
+            )));
+      } else {
+        children.add(Container(
+            height: widget.height - 45,
+            ));
       }
-      return Text("nothing");
+      children.add(Column(children: [
+        divider(widget.app, context),
+        Center(
+            child: iconButton(widget.app, 
+          context,
+          onPressed: () {
+            widget.editorConstructor.createNewComponent(widget.app, context, (_) {});
+          },
+          icon: Icon(Icons.add),
+        ))
+      ]));
+      return ListView(
+          physics: ScrollPhysics(), shrinkWrap: true, children: children);
     });
   }
 }
