@@ -5,6 +5,7 @@ import 'package:eliud_core/model/storage_conditions_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_container.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
+import 'package:eliud_core/style/frontend/has_dialog_field.dart';
 import 'package:eliud_core/style/frontend/has_divider.dart';
 import 'package:eliud_core/style/frontend/has_list_tile.dart';
 import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
@@ -139,6 +140,21 @@ class _MembershipDashboardComponentEditorState
                             leading: Icon(Icons.vpn_key),
                             title: text(widget.app, context,
                                 membershipDashboardState.model.documentID!)),
+                        getListTile(context, widget.app,
+                            leading: Icon(Icons.description),
+                            title: dialogField(
+                              widget.app,
+                              context,
+                              initialValue: membershipDashboardState.model.description,
+                              valueChanged: (value) {
+                                membershipDashboardState.model.description = value;
+                              },
+                              maxLines: 1,
+                              decoration: const InputDecoration(
+                                hintText: 'Description',
+                                labelText: 'Description',
+                              ),
+                            )),
                         getListTile(context, widget.app,
                             leading: Icon(Icons.security),
                             title: ConditionsSimpleWidget(
