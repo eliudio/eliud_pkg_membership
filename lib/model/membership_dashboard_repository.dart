@@ -36,11 +36,12 @@ import 'package:eliud_pkg_membership/model/entity_export.dart';
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_core/tools/repository_base.dart';
 
 typedef MembershipDashboardModelTrigger(List<MembershipDashboardModel?> list);
 typedef MembershipDashboardChanged(MembershipDashboardModel? value);
 
-abstract class MembershipDashboardRepository {
+abstract class MembershipDashboardRepository extends RepositoryBase<MembershipDashboardModel> {
   Future<MembershipDashboardModel> add(MembershipDashboardModel value);
   Future<void> delete(MembershipDashboardModel value);
   Future<MembershipDashboardModel?> get(String? id, { Function(Exception)? onError });

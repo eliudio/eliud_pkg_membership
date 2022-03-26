@@ -1,5 +1,7 @@
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/core/editor/ext_editor_base_bloc/ext_editor_base_event.dart';
+import 'package:eliud_core/core/editor/ext_editor_base_bloc/ext_editor_base_state.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/storage_conditions_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
@@ -24,8 +26,6 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'membership_dashboard_bloc/membership_dashboard_bloc.dart';
-import 'membership_dashboard_bloc/membership_dashboard_state.dart';
-import 'membership_dashboard_bloc/membership_dashoard_event.dart';
 
 class MembershipDashboardComponentEditorConstructor
     extends ComponentEditorConstructor {
@@ -83,7 +83,7 @@ class MembershipDashboardComponentEditorConstructor
                 /*create,
             */
                 feedback,
-              )..add(MembershipDashboardInitialise(model)),
+              )..add(ExtEditorBaseInitialise<MembershipDashboardModel>(model)),
           child: MembershipDashboardComponentEditor(
             app: app,
           )),
@@ -111,9 +111,9 @@ class _MembershipDashboardComponentEditorState
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (aContext, accessState) {
       if (accessState is AccessDetermined) {
-        return BlocBuilder<MembershipDashboardBloc, MembershipDashboardState>(
+        return BlocBuilder<MembershipDashboardBloc, ExtEditorBaseState<MembershipDashboardModel>>(
             builder: (ppContext, membershipDashboardState) {
-          if (membershipDashboardState is MembershipDashboardInitialised) {
+          if (membershipDashboardState is ExtEditorBaseInitialised<MembershipDashboardModel, dynamic>) {
             return ListView(
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
@@ -123,7 +123,7 @@ class _MembershipDashboardComponentEditorState
                     title: 'MembershipDashboard',
                     okAction: () async {
                       await BlocProvider.of<MembershipDashboardBloc>(context)
-                          .save(MembershipDashboardApplyChanges(
+                          .save(ExtEditorBaseApplyChanges<MembershipDashboardModel>(
                               model: membershipDashboardState.model));
                       return true;
                     },
@@ -180,7 +180,7 @@ class _MembershipDashboardComponentEditorState
     });
   }
 
-  Widget _actions(MembershipDashboardInitialised state) {
+  Widget _actions(ExtEditorBaseInitialised<MembershipDashboardModel, dynamic> state) {
     List<MemberActionModel> items =
         state.model.memberActions != null ? state.model.memberActions! : [];
     return Container(
@@ -220,11 +220,11 @@ class _MembershipDashboardComponentEditorState
                                 (newItem) =>
                                     BlocProvider.of<MembershipDashboardBloc>(
                                             context)
-                                        .add(UpdateItemEvent(
+                                        .add(UpdateItemEvent<MembershipDashboardModel, MemberActionModel>(
                                             oldItem: value, newItem: newItem)));
                           } else if (selectedValue == 2) {
                             BlocProvider.of<MembershipDashboardBloc>(context)
-                                .add(DeleteItemEvent(itemModel: value));
+                                .add(DeleteItemEvent<MembershipDashboardModel, MemberActionModel>(itemModel: value));
                           }
                         }),
                   );
