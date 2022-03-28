@@ -33,6 +33,7 @@ class MemberActionModelWidget extends StatefulWidget {
   final AppModel app;
   final MemberActionModel memberActionModel;
   final MemberActionModelCallback memberActionModelCallback;
+  final int containerPrivilege;
 
   MemberActionModelWidget._({
     Key? key,
@@ -42,6 +43,7 @@ class MemberActionModelWidget extends StatefulWidget {
     required this.widgetHeight,
     required this.memberActionModel,
     required this.memberActionModelCallback,
+    required this.containerPrivilege,
   }) : super(key: key);
 
   @override
@@ -56,7 +58,8 @@ class MemberActionModelWidget extends StatefulWidget {
       double widgetWidth,
       double widgetHeight,
       MemberActionModel memberActionModel,
-      MemberActionModelCallback memberActionModelCallback) {
+      MemberActionModelCallback memberActionModelCallback,
+      int containerPrivilege) {
     var copyOf = memberActionModel.copyWith();
     return MemberActionModelWidget._(
       app: app,
@@ -65,6 +68,7 @@ class MemberActionModelWidget extends StatefulWidget {
       widgetHeight: widgetHeight,
       memberActionModel: copyOf,
       memberActionModelCallback: memberActionModelCallback,
+      containerPrivilege: containerPrivilege,
     );
   }
 }
@@ -110,7 +114,9 @@ class _MemberActionModelWidgetState extends State<MemberActionModelWidget> {
                   ),
                 )),
           ]),
-      SelectActionWidget(app: widget.app, action: widget.memberActionModel.action, actionSelected: (action) {
+      SelectActionWidget(app: widget.app, action: widget.memberActionModel.action,
+          containerPrivilege: widget.containerPrivilege,
+          actionSelected: (action) {
         setState(() {
           widget.memberActionModel.action = action;
         });

@@ -111,9 +111,11 @@ class _MembershipDashboardComponentEditorState
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (aContext, accessState) {
       if (accessState is AccessDetermined) {
-        return BlocBuilder<MembershipDashboardBloc, ExtEditorBaseState<MembershipDashboardModel>>(
+        return BlocBuilder<MembershipDashboardBloc,
+                ExtEditorBaseState<MembershipDashboardModel>>(
             builder: (ppContext, membershipDashboardState) {
-          if (membershipDashboardState is ExtEditorBaseInitialised<MembershipDashboardModel, dynamic>) {
+          if (membershipDashboardState
+              is ExtEditorBaseInitialised<MembershipDashboardModel, dynamic>) {
             return ListView(
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
@@ -123,7 +125,8 @@ class _MembershipDashboardComponentEditorState
                     title: 'MembershipDashboard',
                     okAction: () async {
                       await BlocProvider.of<MembershipDashboardBloc>(context)
-                          .save(ExtEditorBaseApplyChanges<MembershipDashboardModel>(
+                          .save(ExtEditorBaseApplyChanges<
+                                  MembershipDashboardModel>(
                               model: membershipDashboardState.model));
                       return true;
                     },
@@ -145,9 +148,11 @@ class _MembershipDashboardComponentEditorState
                             title: dialogField(
                               widget.app,
                               context,
-                              initialValue: membershipDashboardState.model.description,
+                              initialValue:
+                                  membershipDashboardState.model.description,
                               valueChanged: (value) {
-                                membershipDashboardState.model.description = value;
+                                membershipDashboardState.model.description =
+                                    value;
                               },
                               maxLines: 1,
                               decoration: const InputDecoration(
@@ -155,6 +160,12 @@ class _MembershipDashboardComponentEditorState
                                 labelText: 'Description',
                               ),
                             )),
+                      ]),
+                  topicContainer(widget.app, context,
+                      title: 'Condition',
+                      collapsible: true,
+                      collapsed: true,
+                      children: [
                         getListTile(context, widget.app,
                             leading: Icon(Icons.security),
                             title: ConditionsSimpleWidget(
@@ -180,7 +191,8 @@ class _MembershipDashboardComponentEditorState
     });
   }
 
-  Widget _actions(ExtEditorBaseInitialised<MembershipDashboardModel, dynamic> state) {
+  Widget _actions(
+      ExtEditorBaseInitialised<MembershipDashboardModel, dynamic> state) {
     List<MemberActionModel> items =
         state.model.memberActions != null ? state.model.memberActions! : [];
     return Container(
@@ -220,11 +232,21 @@ class _MembershipDashboardComponentEditorState
                                 (newItem) =>
                                     BlocProvider.of<MembershipDashboardBloc>(
                                             context)
-                                        .add(UpdateItemEvent<MembershipDashboardModel, MemberActionModel>(
-                                            oldItem: value, newItem: newItem)));
+                                        .add(UpdateItemEvent<
+                                                MembershipDashboardModel,
+                                                MemberActionModel>(
+                                            oldItem: value, newItem: newItem)),
+                                ((state.model.conditions == null) ||
+                                        (state.model.conditions!
+                                                .privilegeLevelRequired ==
+                                            null))
+                                    ? 0
+                                    : state.model.conditions!
+                                        .privilegeLevelRequired!.index);
                           } else if (selectedValue == 2) {
                             BlocProvider.of<MembershipDashboardBloc>(context)
-                                .add(DeleteItemEvent<MembershipDashboardModel, MemberActionModel>(itemModel: value));
+                                .add(DeleteItemEvent<MembershipDashboardModel,
+                                    MemberActionModel>(itemModel: value));
                           }
                         }),
                   );
@@ -251,7 +273,12 @@ class _MembershipDashboardComponentEditorState
                     action: null,
                   ),
                   (newItem) => BlocProvider.of<MembershipDashboardBloc>(context)
-                      .add(AddItemEvent(itemModel: newItem)));
+                      .add(AddItemEvent(itemModel: newItem)),
+                  ((state.model.conditions == null) ||
+                          (state.model.conditions!.privilegeLevelRequired ==
+                              null))
+                      ? 0
+                      : state.model.conditions!.privilegeLevelRequired!.index);
             },
           ),
           Spacer(),
@@ -260,8 +287,10 @@ class _MembershipDashboardComponentEditorState
     );
   }
 
-  void open(MemberActionModel value,
-      MemberActionModelCallback memberActionModelCallback) {
+  void open(
+      MemberActionModel value,
+      MemberActionModelCallback memberActionModelCallback,
+      int privilegeContainer) {
     openFlexibleDialog(
       widget.app,
       context,
@@ -275,7 +304,8 @@ class _MembershipDashboardComponentEditorState
           fullScreenWidth(context) * .8,
           fullScreenHeight(context) - 100,
           value,
-          memberActionModelCallback),
+          memberActionModelCallback,
+          privilegeContainer),
     );
   }
 }
