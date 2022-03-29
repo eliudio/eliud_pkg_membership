@@ -40,6 +40,7 @@ class MembershipDashboardBloc extends ExtEditorBaseBloc<MembershipDashboardModel
   @override
   MembershipDashboardModel newInstance(StorageConditionsModel conditions) {
     return MembershipDashboardModel(
+      appId: appId,
       documentID: newRandomKey(),
       conditions: conditions,
     );
