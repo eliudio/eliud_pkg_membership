@@ -116,6 +116,7 @@ class _MemberActionModelWidgetState extends State<MemberActionModelWidget> {
           ]),
       SelectActionWidget(app: widget.app, action: widget.memberActionModel.action,
           containerPrivilege: widget.containerPrivilege,
+          label: 'action',
           actionSelected: (action) {
         setState(() {
           widget.memberActionModel.action = action;
