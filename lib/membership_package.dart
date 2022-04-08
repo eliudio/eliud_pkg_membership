@@ -123,11 +123,11 @@ abstract class MembershipPackage extends Package {
   void init() {
     ComponentRegistry().init();
 
+    // register wizard for membership
+    NewAppWizardRegistry.registry().register(MembershipDashboardWizard());
+
     // Initialise repository singleton
     AbstractRepositorySingleton.singleton = RepositorySingleton();
-
-    // core wizards
-    NewAppWizardRegistry.registry().register(MembershipDashboardWizard());
 
     // Register mappers for extra tasks
     TaskModelRegistry.registry()!.addTask(
