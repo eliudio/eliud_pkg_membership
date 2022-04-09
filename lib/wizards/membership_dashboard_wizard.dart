@@ -56,7 +56,6 @@ class MembershipDashboardWizard extends NewAppWizardInfo {
     AppBarProvider appBarProvider,
     DrawerProvider leftDrawerProvider,
     DrawerProvider rightDrawerProvider,
-    PageProvider pageProvider,
   ) {
     if (parameters is MembershipDashboardWizardParameters) {
       var membershipDashboardSpecifications =
@@ -75,7 +74,6 @@ class MembershipDashboardWizard extends NewAppWizardInfo {
           appBarProvider(),
           leftDrawerProvider(),
           rightDrawerProvider(),
-          pageProvider,
             ).run(componentIdentifier: membershipDashboardComponentIdentifier));
         return tasks;
       }
