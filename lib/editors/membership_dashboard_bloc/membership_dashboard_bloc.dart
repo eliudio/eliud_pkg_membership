@@ -47,7 +47,7 @@ class MembershipDashboardBloc extends ExtEditorBaseBloc<MembershipDashboardModel
   }
 
   @override
-  MembershipDashboardModel setDefaultConditions(MembershipDashboardModel t, StorageConditionsModel conditions) {
+  MembershipDashboardModel setDefaultValues(MembershipDashboardModel t, StorageConditionsModel conditions) {
     return t.copyWith(
         conditions: t.conditions ??
             StorageConditionsModel(
