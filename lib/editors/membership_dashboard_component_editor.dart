@@ -18,7 +18,7 @@ import 'package:eliud_core/tools/screen_size.dart';
 import 'package:eliud_core/tools/widgets/condition_simple_widget.dart';
 import 'package:eliud_core/tools/widgets/header_widget.dart';
 import 'package:eliud_pkg_etc/model/member_action_model.dart';
-import 'package:eliud_pkg_membership/editors/widgets/item_widget.dart';
+import 'package:eliud_pkg_etc/editors/widgets/member_action_model_widget.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
 import 'package:flutter/material.dart';
