@@ -31,7 +31,7 @@ class MembershipDashboardPageBuilder extends SingleComponentPageBuilder {
     return MembershipDashboardModel(
       documentID: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier),
       appId: app.documentID!,
-      description: "Members",
+      description: 'Membership dashboard',
       memberActions: null,
       conditions: StorageConditionsModel(
           privilegeLevelRequired:

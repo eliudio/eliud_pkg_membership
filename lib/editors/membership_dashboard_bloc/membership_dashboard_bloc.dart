@@ -42,6 +42,7 @@ class MembershipDashboardBloc extends ExtEditorBaseBloc<MembershipDashboardModel
     return MembershipDashboardModel(
       appId: appId,
       documentID: newRandomKey(),
+      description: 'New membership dashboard',
       conditions: conditions,
     );
   }

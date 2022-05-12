@@ -45,6 +45,7 @@ class MembershipDashboardComponentEditorConstructor
         MembershipDashboardModel(
           appId: app.documentID,
           documentID: newRandomKey(),
+          description: 'New membership dashboard',
           conditions: StorageConditionsModel(
               privilegeLevelRequired:
                   PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
@@ -162,6 +163,13 @@ class _MembershipDashboardComponentEditorState
                             )),
                       ]),
                   topicContainer(widget.app, context,
+                      title: 'Member actions',
+                      collapsible: true,
+                      collapsed: true,
+                      children: [
+                        _actions(membershipDashboardState),
+                      ]),
+                  topicContainer(widget.app, context,
                       title: 'Condition',
                       collapsible: true,
                       collapsed: true,
@@ -172,13 +180,6 @@ class _MembershipDashboardComponentEditorState
                               app: widget.app,
                               value: membershipDashboardState.model.conditions!,
                             )),
-                      ]),
-                  topicContainer(widget.app, context,
-                      title: 'Member actions',
-                      collapsible: true,
-                      collapsed: true,
-                      children: [
-                        _actions(membershipDashboardState),
                       ]),
                 ]);
           } else {
