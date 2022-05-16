@@ -213,17 +213,19 @@ class _MembershipDashboardComponentEditorState
                     widget.app,
                     title: text(widget.app, context,
                         (value.text ?? '?') + ' ' + (value.description ?? '?')),
-                    trailing: PopupMenuButton<int>(
+                    trailing: popupMenuButton<int>(
+                        widget.app, context,
                         child: Icon(Icons.more_vert),
-                        elevation: 10,
                         itemBuilder: (context) => [
-                              PopupMenuItem(
+                              popupMenuItem(
+                                widget.app, context,
                                 value: 1,
-                                child: text(widget.app, context, 'Update'),
+                                label: 'Update',
                               ),
-                              PopupMenuItem(
+                              popupMenuItem(
+                                widget.app, context,
                                 value: 2,
-                                child: text(widget.app, context, 'Delete'),
+                                label: 'Delete',
                               ),
                             ],
                         onSelected: (selectedValue) {
