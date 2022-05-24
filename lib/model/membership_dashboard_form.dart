@@ -79,7 +79,7 @@ class MembershipDashboardForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var appId = app.documentID!;
+    var appId = app.documentID;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<MembershipDashboardFormBloc >(
             create: (context) => MembershipDashboardFormBloc(appId,
@@ -317,7 +317,7 @@ class _MyMembershipDashboardFormState extends State<MyMembershipDashboardForm> {
   }
 
   bool _readOnly(AccessState accessState, MembershipDashboardFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID!));
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID));
   }
   
 

@@ -76,7 +76,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   void _askBlock(MemberPublicInfoModel member) {
-    openAckNackDialog(widget.app, context, widget.app.documentID! + '/_block',
+    openAckNackDialog(widget.app, context, widget.app.documentID + '/_block',
         title: 'Block',
         message: 'Do you want to block this member from the app?',
         onSelection: (value) {
@@ -87,7 +87,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   void _askPromote(PrivilegeLevel privilegeLevel, bool blocked) {
-    openAckNackDialog(widget.app, context, widget.app.documentID! + '/_promote',
+    openAckNackDialog(widget.app, context, widget.app.documentID + '/_promote',
         title: 'Promote',
         message: 'Do you want to promote this member? Current level is ' +
             privilegeLevelToMemberRoleString(privilegeLevel, blocked),
@@ -99,7 +99,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   Future<void> _askDemote(PrivilegeLevel privilegeLevel, bool blocked) async {
-    openAckNackDialog(widget.app, context, widget.app.documentID! + '/_demote',
+    openAckNackDialog(widget.app, context, widget.app.documentID + '/_demote',
         title: 'Demote',
         message: 'Do you want to demote this member? Current level is ' +
             privilegeLevelToPrivilegeString(privilegeLevel, blocked),
@@ -112,7 +112,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
 
   void _askUnblock() {
     openAckNackDialog(widget.app,
-      context, widget.app.documentID! + '/_unblock',
+      context, widget.app.documentID + '/_unblock',
       title: 'Unblock',
       message: 'Do you want to unblock this member from the app?',
       onSelection: (value) {
@@ -124,7 +124,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
   }
 
   void _askSendMessage(MemberPublicInfoModel member) {
-    openEntryDialog(widget.app, context, widget.app.documentID! + '/_sendmsg',
+    openEntryDialog(widget.app, context, widget.app.documentID + '/_sendmsg',
         title: 'Send Message to Member',
         hintText: 'Message',
         ackButtonLabel: 'Send message',
@@ -158,7 +158,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
     if (message == null) return;
     if (message.length == 0) return;
     AbstractNotificationPlatform.platform!.sendMessage(
-        app, widget.app.ownerID!, member.documentID!, message, postSendAction: (value) {
+        app, widget.app.ownerID, member.documentID, message, postSendAction: (value) {
       Registry.registry()!.snackbar("Yay! Message sent!");
     });
   }
@@ -175,7 +175,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
             privilegeLevelToMemberRoleString(
                 state.accessModel == null ? PrivilegeLevel.NoPrivilege : state.accessModel!.privilegeLevel,
                 state.accessModel == null ? false : state.accessModel!.blocked), child: getFieldsWidget(
-            context, state.appId!, state.accessModel, state.member!));
+            context, state.appId, state.accessModel, state.member!));
       } else {
         return progressIndicator(widget.app, context);
       }

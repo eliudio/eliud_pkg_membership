@@ -118,9 +118,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => MembershipDashboardListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            membershipDashboardRepository: membershipDashboardRepository(appId: app.documentID!)!,
+            membershipDashboardRepository: membershipDashboardRepository(appId: app.documentID)!,
           )..add(LoadMembershipDashboardList()),
         )
       ],
@@ -158,9 +158,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => MembershipDashboardListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            membershipDashboardRepository: membershipDashboardRepository(appId: app.documentID!)!,
+            membershipDashboardRepository: membershipDashboardRepository(appId: app.documentID)!,
           )..add(LoadMembershipDashboardList()),
         )
       ],

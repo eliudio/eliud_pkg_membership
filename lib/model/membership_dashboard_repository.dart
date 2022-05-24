@@ -36,7 +36,7 @@ import 'package:eliud_pkg_membership/model/entity_export.dart';
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
-import 'package:eliud_core/tools/repository_base.dart';
+import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef MembershipDashboardModelTrigger(List<MembershipDashboardModel?> list);
 typedef MembershipDashboardChanged(MembershipDashboardModel? value);

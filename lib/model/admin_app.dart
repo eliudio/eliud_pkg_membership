@@ -115,7 +115,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
       name: "eliud_pkg_membership",
       menuItems: menuItems
     );
-    await menuDefRepository(appId: app.documentID!)!.add(menu);
+    await menuDefRepository(appId: app.documentID)!.add(menu);
     return menu;
   }
 }

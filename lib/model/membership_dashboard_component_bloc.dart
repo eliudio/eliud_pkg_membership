@@ -26,23 +26,22 @@ class MembershipDashboardComponentBloc extends Bloc<MembershipDashboardComponent
   final MembershipDashboardRepository? membershipDashboardRepository;
   StreamSubscription? _membershipDashboardSubscription;
 
-  Stream<MembershipDashboardComponentState> _mapLoadMembershipDashboardComponentUpdateToState(String documentId) async* {
+  void _mapLoadMembershipDashboardComponentUpdateToState(String documentId) {
     _membershipDashboardSubscription?.cancel();
     _membershipDashboardSubscription = membershipDashboardRepository!.listenTo(documentId, (value) {
-      if (value != null) add(MembershipDashboardComponentUpdated(value: value));
+      if (value != null) {
+        add(MembershipDashboardComponentUpdated(value: value));
+      }
     });
   }
 
-  MembershipDashboardComponentBloc({ this.membershipDashboardRepository }): super(MembershipDashboardComponentUninitialized());
-
-  @override
-  Stream<MembershipDashboardComponentState> mapEventToState(MembershipDashboardComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchMembershipDashboardComponent) {
-      yield* _mapLoadMembershipDashboardComponentUpdateToState(event.id!);
-    } else if (event is MembershipDashboardComponentUpdated) {
-      yield MembershipDashboardComponentLoaded(value: event.value);
-    }
+  MembershipDashboardComponentBloc({ this.membershipDashboardRepository }): super(MembershipDashboardComponentUninitialized()) {
+    on <FetchMembershipDashboardComponent> ((event, emit) {
+      _mapLoadMembershipDashboardComponentUpdateToState(event.id!);
+    });
+    on <MembershipDashboardComponentUpdated> ((event, emit) {
+      emit(MembershipDashboardComponentLoaded(value: event.value));
+    });
   }
 
   @override

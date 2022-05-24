@@ -63,7 +63,7 @@ class MembershipDashboardWizard extends NewAppWizardInfo {
       if (membershipDashboardSpecifications
           .shouldCreatePageDialogOrWorkflow()) {
         print("Membership Dashboard");
-        var memberId = member.documentID!;
+        var memberId = member.documentID;
         List<NewAppTask> tasks = [];
         tasks.add(() async => await MembershipDashboardPageBuilder(
           uniqueId,

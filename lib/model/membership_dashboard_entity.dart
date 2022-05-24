@@ -29,7 +29,7 @@ class MembershipDashboardEntity {
   final List<MemberActionEntity>? memberActions;
   final StorageConditionsEntity? conditions;
 
-  MembershipDashboardEntity({this.appId, this.description, this.memberActions, this.conditions, });
+  MembershipDashboardEntity({required this.appId, this.description, this.memberActions, this.conditions, });
 
 
   List<Object?> get props => [appId, description, memberActions, conditions, ];

@@ -42,11 +42,11 @@ class MembershipDashboardItem extends StatelessWidget {
     }
 
     return Dismissible(
-        key: Key('__Membership_item_${value!.documentID!}'),
+        key: Key('__Membership_item_${value!.documentID}'),
         child: GestureDetector(
             onTap: () {
               MemberPopupMenu.showPopupMenuWithAllActions(app,
-                  context, 'Member dashboard', () => openOptions(app, context, profilePhoto), dashboardModel.memberActions, value!.documentID!, );
+                  context, 'Member dashboard', () => openOptions(app, context, profilePhoto), dashboardModel.memberActions, value!.documentID, );
             },
             child: ListTile(
                 trailing:
@@ -57,16 +57,16 @@ class MembershipDashboardItem extends StatelessWidget {
   Future<void> openOptions(AppModel app, BuildContext context, Widget profilePhoto) async {
 /*
     var accessModel =
-        await accessRepository(appId: appId)!.get(value!.documentID!);
+        await accessRepository(appId: appId)!.get(value!.documentID);
 */
-    openWidgetDialog(app, context, app.documentID! + '/_membershipoptions', child: _widget(app));
+    openWidgetDialog(app, context, app.documentID + '/_membershipoptions', child: _widget(app));
   }
 
   Widget _widget(AppModel app) {
     return BlocProvider<MembershipBloc>(
         create: (context) => MembershipBloc()
           ..add(
-              FetchMembershipEvent(memberId: value!.documentID!, app: app)),
+              FetchMembershipEvent(memberId: value!.documentID, app: app)),
         child: MembershipDialog(app: app));
   }
 }

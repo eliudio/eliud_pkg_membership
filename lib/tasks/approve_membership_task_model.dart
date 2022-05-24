@@ -40,7 +40,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
     String? feedback;
     openWidgetDialog(app,
       context,
-      app.documentID! + '/membershipreq',
+      app.documentID + '/membershipreq',
       child: YesNoIgnoreDialogWithAssignmentResults.get(app, context,
           title: 'Membership request',
           message:
@@ -82,6 +82,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
       await accessRepository(appId: assignmentModel.appId)!.update(accessModel);
     } else {
       await accessRepository(appId: assignmentModel.appId)!.add(AccessModel(
+        appId: assignmentModel.appId,
         documentID: assignmentModel.reporterId,
         privilegeLevel: PrivilegeLevel.Level1Privilege,
         points: 0,

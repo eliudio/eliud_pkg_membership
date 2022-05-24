@@ -36,7 +36,7 @@ abstract class MembershipPackage extends Package {
       bool isOwner,
       bool? isBlocked,
       PrivilegeLevel? privilegeLevel) {
-    String appId = app.documentID!;
+    String appId = app.documentID;
     subscription[appId]?.cancel();
     if (member != null) {
       final c = Completer<List<PackageConditionDetails>>();
@@ -71,7 +71,7 @@ abstract class MembershipPackage extends Package {
               (list.first == null) ? false : list.first!.blocked ?? false,
             ));
           }
-      }, eliudQuery: getAccessQuery(appId, member.documentID!));
+      }, eliudQuery: getAccessQuery(appId, member.documentID));
       return c.future;
     } else {
       stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId] = false;
@@ -86,7 +86,7 @@ abstract class MembershipPackage extends Package {
 
   void noMembershipYet(
       AccessBloc accessBloc, AppModel app, bool valueHasNoMembershipYet) {
-    stateMEMBER_HAS_NO_MEMBERSHIP_YET[app.documentID!] =
+    stateMEMBER_HAS_NO_MEMBERSHIP_YET[app.documentID] =
         valueHasNoMembershipYet;
     accessBloc.add(UpdatePackageConditionEvent(
         app, this, MEMBER_HAS_NO_MEMBERSHIP_YET, valueHasNoMembershipYet));

@@ -30,7 +30,7 @@ class MembershipDashboardPageBuilder extends SingleComponentPageBuilder {
   static MembershipDashboardModel _dashboardModel(AppModel app, String uniqueId, String componentIdentifier) {
     return MembershipDashboardModel(
       documentID: constructDocumentId(uniqueId: uniqueId, documentId: componentIdentifier),
-      appId: app.documentID!,
+      appId: app.documentID,
       description: 'Membership dashboard',
       memberActions: null,
       conditions: StorageConditionsModel(
@@ -40,7 +40,7 @@ class MembershipDashboardPageBuilder extends SingleComponentPageBuilder {
   }
 
   static Future<MembershipDashboardModel> setupDashboard(AppModel app, String uniqueId, String componentIdentifier) async {
-    return await membershipDashboardRepository(appId: app.documentID!)!
+    return await membershipDashboardRepository(appId: app.documentID)!
         .add(_dashboardModel(app, uniqueId, componentIdentifier));
   }
 

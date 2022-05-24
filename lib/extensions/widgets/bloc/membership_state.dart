@@ -20,13 +20,13 @@ class UnitializedMembership extends MembershipState {
 
 class MembershipLoaded extends MembershipState {
   final AccessModel? accessModel;
-  final String? appId;
+  final String appId;
   final MemberPublicInfoModel? member;
 
   MembershipLoaded(this.accessModel, this.appId, this.member);
 
   @override
-  List<Object> get props => [ accessModel!, appId!, member!];
+  List<Object> get props => [ accessModel!, appId, member!];
 
   @override
   bool operator == (Object other) =>

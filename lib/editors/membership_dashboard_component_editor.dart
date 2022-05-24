@@ -57,11 +57,11 @@ class MembershipDashboardComponentEditorConstructor
   void updateComponentWithID(AppModel app, BuildContext context, String id,
       EditorFeedback feedback) async {
     var membershipDashboard =
-        await membershipDashboardRepository(appId: app.documentID!)!.get(id);
+        await membershipDashboardRepository(appId: app.documentID)!.get(id);
     if (membershipDashboard != null) {
       _openIt(app, context, false, membershipDashboard, feedback);
     } else {
-      openErrorDialog(app, context, app.documentID! + '/_error',
+      openErrorDialog(app, context, app.documentID + '/_error',
           title: 'Error',
           errorMessage: 'Cannot find membership dashboard with id $id');
     }
@@ -72,7 +72,7 @@ class MembershipDashboardComponentEditorConstructor
     openComplexDialog(
       app,
       context,
-      app.documentID! + '/membershipdashboard',
+      app.documentID + '/membershipdashboard',
       title: create
           ? 'Create Membership Dashboard'
           : 'Update Membership Dashboard',
@@ -80,7 +80,7 @@ class MembershipDashboardComponentEditorConstructor
       widthFraction: .9,
       child: BlocProvider<MembershipDashboardBloc>(
           create: (context) => MembershipDashboardBloc(
-                app.documentID!,
+                app.documentID,
                 /*create,
             */
                 feedback,
@@ -143,7 +143,7 @@ class _MembershipDashboardComponentEditorState
                         getListTile(context, widget.app,
                             leading: Icon(Icons.vpn_key),
                             title: text(widget.app, context,
-                                membershipDashboardState.model.documentID!)),
+                                membershipDashboardState.model.documentID)),
                         getListTile(context, widget.app,
                             leading: Icon(Icons.description),
                             title: dialogField(
@@ -297,7 +297,7 @@ class _MembershipDashboardComponentEditorState
     openFlexibleDialog(
       widget.app,
       context,
-      widget.app.documentID! + '/_memberaction',
+      widget.app.documentID + '/_memberaction',
       includeHeading: false,
       widthFraction: .8,
       child: MemberActionModelWidget.getIt(

@@ -9,83 +9,136 @@ import 'membership_event.dart';
 import 'membership_state.dart';
 
 class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
-  MembershipBloc(): super(UnitializedMembership());
-
   PrivilegeLevelBeforeBlocked PLToPLBL(PrivilegeLevel privilegeLevel) {
     switch (privilegeLevel) {
-      case PrivilegeLevel.NoPrivilege: return PrivilegeLevelBeforeBlocked.NoPrivilege;
-      case PrivilegeLevel.Level1Privilege: return PrivilegeLevelBeforeBlocked.Level1Privilege;
-      case PrivilegeLevel.Level2Privilege: return PrivilegeLevelBeforeBlocked.Level2Privilege;
-      case PrivilegeLevel.OwnerPrivilege: return PrivilegeLevelBeforeBlocked.OwnerPrivilege;
-      case PrivilegeLevel.Unknown: return PrivilegeLevelBeforeBlocked.NoPrivilege;
+      case PrivilegeLevel.NoPrivilege:
+        return PrivilegeLevelBeforeBlocked.NoPrivilege;
+      case PrivilegeLevel.Level1Privilege:
+        return PrivilegeLevelBeforeBlocked.Level1Privilege;
+      case PrivilegeLevel.Level2Privilege:
+        return PrivilegeLevelBeforeBlocked.Level2Privilege;
+      case PrivilegeLevel.OwnerPrivilege:
+        return PrivilegeLevelBeforeBlocked.OwnerPrivilege;
+      case PrivilegeLevel.Unknown:
+        return PrivilegeLevelBeforeBlocked.NoPrivilege;
     }
     return PrivilegeLevelBeforeBlocked.NoPrivilege;
   }
 
-  PrivilegeLevel PLBLToPL(PrivilegeLevelBeforeBlocked privilegeLevelBeforeBlocked) {
+  PrivilegeLevel PLBLToPL(
+      PrivilegeLevelBeforeBlocked privilegeLevelBeforeBlocked) {
     switch (privilegeLevelBeforeBlocked) {
-      case PrivilegeLevelBeforeBlocked.NoPrivilege: return PrivilegeLevel.NoPrivilege;
-      case PrivilegeLevelBeforeBlocked.Level1Privilege: return PrivilegeLevel.Level1Privilege;
-      case PrivilegeLevelBeforeBlocked.Level2Privilege: return PrivilegeLevel.Level2Privilege;
-      case PrivilegeLevelBeforeBlocked.OwnerPrivilege: return PrivilegeLevel.OwnerPrivilege;
-      case PrivilegeLevelBeforeBlocked.Unknown: return PrivilegeLevel.NoPrivilege;
+      case PrivilegeLevelBeforeBlocked.NoPrivilege:
+        return PrivilegeLevel.NoPrivilege;
+      case PrivilegeLevelBeforeBlocked.Level1Privilege:
+        return PrivilegeLevel.Level1Privilege;
+      case PrivilegeLevelBeforeBlocked.Level2Privilege:
+        return PrivilegeLevel.Level2Privilege;
+      case PrivilegeLevelBeforeBlocked.OwnerPrivilege:
+        return PrivilegeLevel.OwnerPrivilege;
+      case PrivilegeLevelBeforeBlocked.Unknown:
+        return PrivilegeLevel.NoPrivilege;
     }
     return PrivilegeLevel.NoPrivilege;
   }
 
   PrivilegeLevel intToPL(int level) {
     switch (level) {
-      case 0: return PrivilegeLevel.NoPrivilege;
-      case 1: return PrivilegeLevel.Level1Privilege;
-      case 2: return PrivilegeLevel.Level2Privilege;
-      case 3: return PrivilegeLevel.OwnerPrivilege;
+      case 0:
+        return PrivilegeLevel.NoPrivilege;
+      case 1:
+        return PrivilegeLevel.Level1Privilege;
+      case 2:
+        return PrivilegeLevel.Level2Privilege;
+      case 3:
+        return PrivilegeLevel.OwnerPrivilege;
     }
     return PrivilegeLevel.NoPrivilege;
   }
 
-  @override
-  Stream<MembershipState> mapEventToState(MembershipEvent event) async* {
-    if (event is FetchMembershipEvent) {
-      var accessModel = await accessRepository(appId: event.app.documentID!)!.get(event.memberId);
+  MembershipBloc() : super(UnitializedMembership()) {
+    on<FetchMembershipEvent>((event, emit) async {
+      var accessModel = await accessRepository(appId: event.app.documentID)!
+          .get(event.memberId);
       //??   AccessModel(documentID: event.memberId, appId: event.app.documentID, privilegeLevel: PrivilegeLevel.NoPrivilege, points: 0, blocked: false, ) ;
-      var member = await memberPublicInfoRepository(appId: event.app.documentID!)!.get(event.memberId);
-      yield MembershipLoaded(accessModel, event.app.documentID, member);
-    } else if (state is MembershipLoaded) {
+      var member =
+          await memberPublicInfoRepository(appId: event.app.documentID)!
+              .get(event.memberId);
+      emit(MembershipLoaded(accessModel, event.app.documentID, member));
+    });
+
+    if (state is MembershipLoaded) {
       MembershipLoaded theState = state as MembershipLoaded;
-      if (event is BlockMember) {
-        yield await _update(theState.appId, theState.accessModel, AccessModel(
-          documentID: theState.member!.documentID,
-          privilegeLevel: PrivilegeLevel.NoPrivilege,
-          privilegeLevelBeforeBlocked: theState.accessModel == null ? PrivilegeLevelBeforeBlocked.NoPrivilege : PLToPLBL(theState.accessModel!.privilegeLevel!),
-          blocked: true,
-        ), theState.member);
-      } else if (event is UnblockMember) {
-          yield await _update(theState.appId, theState.accessModel, AccessModel(
-            documentID: theState.member!.documentID!,
-            privilegeLevel: PLBLToPL(theState.accessModel!.privilegeLevelBeforeBlocked!),
-            privilegeLevelBeforeBlocked: null,
-            blocked: false,
-          ), theState.member);
-      } else if (event is PromoteMember) {
-        if ((theState.accessModel == null) || (theState.accessModel!.privilegeLevel!.index <= PrivilegeLevel.OwnerPrivilege.index)) {
-          yield await _update(theState.appId, theState.accessModel, AccessModel(
-            documentID: theState.member!.documentID,
-            privilegeLevel: theState.accessModel == null ? PrivilegeLevel.Level1Privilege : intToPL(theState.accessModel!.privilegeLevel!.index + 1),
-          ), theState.member);
+
+      on<BlockMember>((event, emit) async {
+        emit(await _update(
+            theState.appId,
+            theState.accessModel,
+            AccessModel(
+              appId: theState.appId,
+              documentID: theState.member!.documentID,
+              privilegeLevel: PrivilegeLevel.NoPrivilege,
+              privilegeLevelBeforeBlocked: theState.accessModel == null
+                  ? PrivilegeLevelBeforeBlocked.NoPrivilege
+                  : PLToPLBL(theState.accessModel!.privilegeLevel!),
+              blocked: true,
+            ),
+            theState.member));
+      });
+
+      on<UnblockMember>((event, emit) async {
+        emit(await _update(
+            theState.appId,
+            theState.accessModel,
+            AccessModel(
+              appId: theState.appId,
+              documentID: theState.member!.documentID,
+              privilegeLevel:
+                  PLBLToPL(theState.accessModel!.privilegeLevelBeforeBlocked!),
+              privilegeLevelBeforeBlocked: null,
+              blocked: false,
+            ),
+            theState.member));
+      });
+
+      on<PromoteMember>((event, emit) async {
+        if ((theState.accessModel == null) ||
+            (theState.accessModel!.privilegeLevel!.index <=
+                PrivilegeLevel.OwnerPrivilege.index)) {
+          emit(await _update(
+              theState.appId,
+              theState.accessModel,
+              AccessModel(
+                appId: theState.appId,
+                documentID: theState.member!.documentID,
+                privilegeLevel: theState.accessModel == null
+                    ? PrivilegeLevel.Level1Privilege
+                    : intToPL(theState.accessModel!.privilegeLevel!.index + 1),
+              ),
+              theState.member));
         }
-      } else if (event is DemoteMember) {
-        if (theState.accessModel!.privilegeLevel!.index > PrivilegeLevel.NoPrivilege.index) {
-          yield await _update(
-              theState.appId, theState.accessModel, AccessModel(
-            documentID: theState.member!.documentID,
-            privilegeLevel: intToPL(theState.accessModel!.privilegeLevel!.index - 1),
-          ), theState.member);
+      });
+
+      on<DemoteMember>((event, emit) async {
+        if (theState.accessModel!.privilegeLevel!.index >
+            PrivilegeLevel.NoPrivilege.index) {
+          emit(await _update(
+              theState.appId,
+              theState.accessModel,
+              AccessModel(
+                appId: theState.appId,
+                documentID: theState.member!.documentID,
+                privilegeLevel:
+                    intToPL(theState.accessModel!.privilegeLevel!.index - 1),
+              ),
+              theState.member));
         }
-      }
+      });
     }
   }
 
-  Future<MembershipLoaded> _update(String? appId, AccessModel? oldAccessModel, AccessModel? newAccessModel, MemberPublicInfoModel? member) async {
+  Future<MembershipLoaded> _update(String appId, AccessModel? oldAccessModel,
+      AccessModel? newAccessModel, MemberPublicInfoModel? member) async {
     if (oldAccessModel == null) {
       await accessRepository(appId: appId)!.add(newAccessModel!);
     } else {
@@ -93,8 +146,4 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
     }
     return MembershipLoaded(newAccessModel, appId, member);
   }
-
-
 }
-
-

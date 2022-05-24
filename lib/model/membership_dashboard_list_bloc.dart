@@ -38,9 +38,47 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
   MembershipDashboardListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MembershipDashboardRepository membershipDashboardRepository, this.membershipDashboardLimit = 5})
       : assert(membershipDashboardRepository != null),
         _membershipDashboardRepository = membershipDashboardRepository,
-        super(MembershipDashboardListLoading());
+        super(MembershipDashboardListLoading()) {
+    on <LoadMembershipDashboardList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadMembershipDashboardListToState();
+      } else {
+        _mapLoadMembershipDashboardListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadMembershipDashboardListWithDetailsToState();
+    });
+    
+    on <MembershipDashboardChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadMembershipDashboardListToState();
+      } else {
+        _mapLoadMembershipDashboardListWithDetailsToState();
+      }
+    });
+      
+    on <AddMembershipDashboardList> ((event, emit) async {
+      await _mapAddMembershipDashboardListToState(event);
+    });
+    
+    on <UpdateMembershipDashboardList> ((event, emit) async {
+      await _mapUpdateMembershipDashboardListToState(event);
+    });
+    
+    on <DeleteMembershipDashboardList> ((event, emit) async {
+      await _mapDeleteMembershipDashboardListToState(event);
+    });
+    
+    on <MembershipDashboardListUpdated> ((event, emit) {
+      emit(_mapMembershipDashboardListUpdatedToState(event));
+    });
+  }
 
-  Stream<MembershipDashboardListState> _mapLoadMembershipDashboardListToState() async* {
+  Future<void> _mapLoadMembershipDashboardListToState() async {
     int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values!.length : 0;
     _membershipDashboardsListSubscription?.cancel();
     _membershipDashboardsListSubscription = _membershipDashboardRepository.listen(
@@ -52,7 +90,7 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
     );
   }
 
-  Stream<MembershipDashboardListState> _mapLoadMembershipDashboardListWithDetailsToState() async* {
+  Future<void> _mapLoadMembershipDashboardListWithDetailsToState() async {
     int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values!.length : 0;
     _membershipDashboardsListSubscription?.cancel();
     _membershipDashboardsListSubscription = _membershipDashboardRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
     );
   }
 
-  Stream<MembershipDashboardListState> _mapAddMembershipDashboardListToState(AddMembershipDashboardList event) async* {
+  Future<void> _mapAddMembershipDashboardListToState(AddMembershipDashboardList event) async {
     var value = event.value;
-    if (value != null) 
-      _membershipDashboardRepository.add(value);
-  }
-
-  Stream<MembershipDashboardListState> _mapUpdateMembershipDashboardListToState(UpdateMembershipDashboardList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _membershipDashboardRepository.update(value);
-  }
-
-  Stream<MembershipDashboardListState> _mapDeleteMembershipDashboardListToState(DeleteMembershipDashboardList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _membershipDashboardRepository.delete(value);
-  }
-
-  Stream<MembershipDashboardListState> _mapMembershipDashboardListUpdatedToState(
-      MembershipDashboardListUpdated event) async* {
-    yield MembershipDashboardListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<MembershipDashboardListState> mapEventToState(MembershipDashboardListEvent event) async* {
-    if (event is LoadMembershipDashboardList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadMembershipDashboardListToState();
-      } else {
-        yield* _mapLoadMembershipDashboardListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadMembershipDashboardListWithDetailsToState();
-    } else if (event is MembershipDashboardChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadMembershipDashboardListToState();
-      } else {
-        yield* _mapLoadMembershipDashboardListWithDetailsToState();
-      }
-    } else if (event is AddMembershipDashboardList) {
-      yield* _mapAddMembershipDashboardListToState(event);
-    } else if (event is UpdateMembershipDashboardList) {
-      yield* _mapUpdateMembershipDashboardListToState(event);
-    } else if (event is DeleteMembershipDashboardList) {
-      yield* _mapDeleteMembershipDashboardListToState(event);
-    } else if (event is MembershipDashboardListUpdated) {
-      yield* _mapMembershipDashboardListUpdatedToState(event);
+    if (value != null) {
+      await _membershipDashboardRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdateMembershipDashboardListToState(UpdateMembershipDashboardList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _membershipDashboardRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeleteMembershipDashboardListToState(DeleteMembershipDashboardList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _membershipDashboardRepository.delete(value);
+    }
+  }
+
+  MembershipDashboardListLoaded _mapMembershipDashboardListUpdatedToState(
+      MembershipDashboardListUpdated event) => MembershipDashboardListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

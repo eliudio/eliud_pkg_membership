@@ -29,7 +29,7 @@ class MembershipDashboardComponentConstructorDefault
   }
 
   @override
-  Future<dynamic> getModel({required AppModel app, required String id}) async => await membershipDashboardRepository(appId: app.documentID!)!.get(id);
+  Future<dynamic> getModel({required AppModel app, required String id}) async => await membershipDashboardRepository(appId: app.documentID)!.get(id);
 }
 
 class MembershipDashboard extends AbstractMembershipDashboardComponent {
@@ -52,7 +52,7 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
           if (accessState is AccessDetermined) {
-            var appId = app.documentID!;
+            var appId = app.documentID;
             return topicContainer(app, context, children: [
               BlocProvider<MemberPublicInfoListBloc>(
                 create: (context) => MemberPublicInfoListBloc(
@@ -78,6 +78,6 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
   @override
   MembershipDashboardRepository getMembershipDashboardRepository(
       BuildContext context) {
-    return membershipDashboardRepository(appId: app.documentID!)!;
+    return membershipDashboardRepository(appId: app.documentID)!;
   }
 }

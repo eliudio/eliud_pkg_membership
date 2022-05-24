@@ -24,7 +24,7 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
       return Future.value(null);
 
     openAckNackDialog(app, context,
-        app.documentID! + '/membershipreq',
+        app.documentID + '/membershipreq',
         title: 'Join',
         message: 'Do you want to request membership?', onSelection: (value) {
       if (value == 0) {

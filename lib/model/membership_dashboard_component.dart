@@ -39,7 +39,7 @@ abstract class AbstractMembershipDashboardComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<MembershipDashboardComponentBloc> (
           create: (context) => MembershipDashboardComponentBloc(
-            membershipDashboardRepository: membershipDashboardRepository(appId: app.documentID!)!)
+            membershipDashboardRepository: membershipDashboardRepository(appId: app.documentID)!)
         ..add(FetchMembershipDashboardComponent(id: membershipDashboardId)),
       child: _membershipDashboardBlockBuilder(context),
     );
