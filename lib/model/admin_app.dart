@@ -67,6 +67,7 @@ class AdminApp extends AdminAppInstallerBase {
         appId: appId,
         documentID: "eliud_pkg_membership_membershipdashboards_page",
         title: "MembershipDashboards",
+        description: "MembershipDashboards",
         drawer: _drawer,
         endDrawer: _endDrawer,
         appBar: _appBar,

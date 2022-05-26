@@ -50,6 +50,7 @@ class MembershipDashboardPageBuilder extends SingleComponentPageBuilder {
     return await doIt(
         componentName: AbstractMembershipDashboardComponent.componentName,
         componentIdentifier: componentIdentifier,
-        title: "App members");
+        title: "App members",
+    description: 'App members"');
   }
 }
