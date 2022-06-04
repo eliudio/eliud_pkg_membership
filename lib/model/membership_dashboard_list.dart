@@ -156,7 +156,7 @@ class MembershipDashboardListWidgetState extends State<MembershipDashboardListWi
             onDismissed: (direction) {
               BlocProvider.of<MembershipDashboardListBloc>(context)
                   .add(DeleteMembershipDashboardList(value: value));
-              Scaffold.of(context).showSnackBar(DeleteSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(DeleteSnackBar(
                 message: "MembershipDashboard " + value.documentID,
                 onUndo: () => BlocProvider.of<MembershipDashboardListBloc>(context)
                     .add(AddMembershipDashboardList(value: value)),
@@ -168,7 +168,7 @@ class MembershipDashboardListWidgetState extends State<MembershipDashboardListWi
                               value: BlocProvider.of<MembershipDashboardListBloc>(context),
                               child: getForm(value, FormAction.UpdateAction))));
                       if (removedItem != null) {
-                        Scaffold.of(context).showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           DeleteSnackBar(
                         message: "MembershipDashboard " + value.documentID,
                             onUndo: () => BlocProvider.of<MembershipDashboardListBloc>(context)
