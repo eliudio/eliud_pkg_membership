@@ -27,12 +27,12 @@ class MembershipDashboardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget profilePhoto;
     if ((value == null) || (value!.photoURL == null)) {
+      profilePhoto = Icon(Icons.person_outline);
+    } else {
       profilePhoto = FadeInImage.memoryNetwork(
         placeholder: kTransparentImage,
         image: value!.photoURL!,
       );
-    } else {
-      profilePhoto = Icon(Icons.person_outline);
     }
     var title;
     if (value!.name != null) {
