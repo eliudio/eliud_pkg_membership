@@ -40,6 +40,14 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class MembershipDashboardFirestore implements MembershipDashboardRepository {
+  Future<MembershipDashboardEntity> addEntity(String documentID, MembershipDashboardEntity value) {
+    return MembershipDashboardCollection.doc(documentID).set(value.toDocument()).then((_) => value);
+  }
+
+  Future<MembershipDashboardEntity> updateEntity(String documentID, MembershipDashboardEntity value) {
+    return MembershipDashboardCollection.doc(documentID).update(value.toDocument()).then((_) => value);
+  }
+
   Future<MembershipDashboardModel> add(MembershipDashboardModel value) {
     return MembershipDashboardCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
@@ -58,6 +66,21 @@ class MembershipDashboardFirestore implements MembershipDashboardRepository {
 
   Future<MembershipDashboardModel?> _populateDocPlus(DocumentSnapshot value) async {
     return MembershipDashboardModel.fromEntityPlus(value.id, MembershipDashboardEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<MembershipDashboardEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = MembershipDashboardCollection.doc(id);
+      var doc = await collection.get();
+      return MembershipDashboardEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving MembershipDashboard with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<MembershipDashboardModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
