@@ -10,7 +10,9 @@ import 'package:eliud_pkg_etc/model/member_action_model.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
 
-class MembershipDashboardBloc extends ExtEditorBaseBloc<MembershipDashboardModel, MemberActionModel> {
+import '../../model/membership_dashboard_entity.dart';
+
+class MembershipDashboardBloc extends ExtEditorBaseBloc<MembershipDashboardModel, MemberActionModel, MembershipDashboardEntity> {
 
   MembershipDashboardBloc(String appId, EditorFeedback feedback)
       : super(appId, membershipDashboardRepository(appId: appId)!, feedback);

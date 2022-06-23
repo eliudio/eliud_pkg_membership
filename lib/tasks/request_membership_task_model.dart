@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/base/model_base.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
@@ -54,7 +55,7 @@ This is the wrong place to send this message
   }
 
   @override
-  TaskEntity toEntity({String? appId}) => RequestMembershipTaskEntity(
+  TaskEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) => RequestMembershipTaskEntity(
         description: description,
         executeInstantly: executeInstantly,
       );

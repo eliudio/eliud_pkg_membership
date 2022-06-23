@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/base/model_base.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/access_model.dart';
@@ -123,7 +124,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
   }
 
   @override
-  TaskEntity toEntity({String? appId}) => ApproveMembershipTaskEntity(
+  TaskEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) => ApproveMembershipTaskEntity(
         description: description,
         executeInstantly: executeInstantly,
       );
