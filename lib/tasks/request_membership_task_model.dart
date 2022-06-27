@@ -55,7 +55,7 @@ This is the wrong place to send this message
   }
 
   @override
-  TaskEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) => RequestMembershipTaskEntity(
+  TaskEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) => RequestMembershipTaskEntity(
         description: description,
         executeInstantly: executeInstantly,
       );

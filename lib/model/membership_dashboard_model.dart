@@ -45,6 +45,9 @@ import 'package:eliud_core/tools/random.dart';
 
 
 class MembershipDashboardModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_membership';
+  static const String id = 'MembershipDashboard';
+
   String documentID;
 
   // This is the identifier of the app to which this feed belongs
@@ -84,7 +87,7 @@ class MembershipDashboardModel implements ModelBase, WithAppId {
     return 'MembershipDashboardModel{documentID: $documentID, appId: $appId, description: $description, memberActions: MemberAction[] { $memberActionsCsv }, conditions: $conditions}';
   }
 
-  MembershipDashboardEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  MembershipDashboardEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return MembershipDashboardEntity(
