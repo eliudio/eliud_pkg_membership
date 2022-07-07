@@ -124,7 +124,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
   }
 
   @override
-  TaskEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) => ApproveMembershipTaskEntity(
+  TaskEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) => ApproveMembershipTaskEntity(
         description: description,
         executeInstantly: executeInstantly,
       );

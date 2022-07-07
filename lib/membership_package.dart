@@ -65,11 +65,20 @@ abstract class MembershipPackage extends Package {
                   valueHasNoMembershipYet;
               noMembershipYet(accessBloc, app, valueHasNoMembershipYet);
             }
-            accessBloc.add(PrivilegeChangedEvent(
-              app,
-              (list.first == null) ? PrivilegeLevel.NoPrivilege : list.first!.privilegeLevel ?? PrivilegeLevel.NoPrivilege,
-              (list.first == null) ? false : list.first!.blocked ?? false,
-            ));
+            var first = list.first;
+            if (first == null) {
+              accessBloc.add(PrivilegeChangedEvent(
+                app,
+                PrivilegeLevel.NoPrivilege, false,
+              ));
+
+            } else {
+              accessBloc.add(PrivilegeChangedEvent(
+                app,
+                first.privilegeLevel ?? PrivilegeLevel.NoPrivilege,
+                first.blocked ?? false,
+              ));
+            }
           }
       }, eliudQuery: getAccessQuery(appId, member.documentID));
       return c.future;

@@ -87,7 +87,7 @@ class MembershipDashboardModel implements ModelBase, WithAppId {
     return 'MembershipDashboardModel{documentID: $documentID, appId: $appId, description: $description, memberActions: MemberAction[] { $memberActionsCsv }, conditions: $conditions}';
   }
 
-  MembershipDashboardEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  MembershipDashboardEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return MembershipDashboardEntity(
