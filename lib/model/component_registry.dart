@@ -38,6 +38,7 @@ class ComponentRegistry {
     Registry.registry()!.addComponentSpec('eliud_pkg_membership', 'membership', [
       ComponentSpec('membershipDashboards', MembershipDashboardComponentConstructorDefault(), MembershipDashboardComponentSelector(), MembershipDashboardComponentEditorConstructor(), ({String? appId}) => membershipDashboardRepository(appId: appId)! ), 
     ]);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_membership', 'membershipDashboards', ({String? appId}) => membershipDashboardRepository(appId: appId)!);
 
   }
 }

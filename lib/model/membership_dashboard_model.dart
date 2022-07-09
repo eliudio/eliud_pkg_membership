@@ -46,7 +46,7 @@ import 'package:eliud_core/tools/random.dart';
 
 class MembershipDashboardModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_membership';
-  static const String id = 'MembershipDashboard';
+  static const String id = 'membershipDashboards';
 
   String documentID;
 
