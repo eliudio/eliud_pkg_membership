@@ -55,7 +55,7 @@ This is the wrong place to send this message
   }
 
   @override
-  TaskEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) => RequestMembershipTaskEntity(
+  TaskEntity toEntity({String? appId, }) => RequestMembershipTaskEntity(
         description: description,
         executeInstantly: executeInstantly,
       );
@@ -72,4 +72,9 @@ This is the wrong place to send this message
         description: snap['description'],
         executeInstantly: snap['executeInstantly'],
       );
+
+  @override
+  Future<List<ModelReference>> collectReferences({String? appId, }) async {
+    return [];
+  }
 }

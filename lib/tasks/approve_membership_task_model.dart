@@ -124,7 +124,7 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
   }
 
   @override
-  TaskEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) => ApproveMembershipTaskEntity(
+  TaskEntity toEntity({String? appId}) => ApproveMembershipTaskEntity(
         description: description,
         executeInstantly: executeInstantly,
       );
@@ -142,4 +142,9 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         description: snap['description'],
         executeInstantly: snap['executeInstantly'],
       );
+
+  @override
+  Future<List<ModelReference>> collectReferences({String? appId, }) async {
+    return [];
+  }
 }
