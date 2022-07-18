@@ -50,11 +50,7 @@ class MembershipDashboardFormBloc extends Bloc<MembershipDashboardFormEvent, Mem
   final FormAction? formAction;
   final String? appId;
 
-  MembershipDashboardFormBloc(this.appId, { this.formAction }): super(MembershipDashboardFormUninitialized());
-  @override
-  Stream<MembershipDashboardFormState> mapEventToState(MembershipDashboardFormEvent event) async* {
-    final currentState = state;
-    if (currentState is MembershipDashboardFormUninitialized) {
+  MembershipDashboardFormBloc(this.appId, { this.formAction }): super(MembershipDashboardFormUninitialized()) {
       on <InitialiseNewMembershipDashboardFormEvent> ((event, emit) {
         MembershipDashboardFormLoaded loaded = MembershipDashboardFormLoaded(value: MembershipDashboardModel(
                                                documentID: "",
@@ -67,17 +63,19 @@ class MembershipDashboardFormBloc extends Bloc<MembershipDashboardFormEvent, Mem
       });
 
 
-      if (event is InitialiseMembershipDashboardFormEvent) {
+      on <InitialiseMembershipDashboardFormEvent> ((event, emit) async {
         // Need to re-retrieve the document from the repository so that I get all associated types
         MembershipDashboardFormLoaded loaded = MembershipDashboardFormLoaded(value: await membershipDashboardRepository(appId: appId)!.get(event.value!.documentID));
         emit(loaded);
-      } else if (event is InitialiseMembershipDashboardFormNoLoadEvent) {
+      });
+      on <InitialiseMembershipDashboardFormNoLoadEvent> ((event, emit) async {
         MembershipDashboardFormLoaded loaded = MembershipDashboardFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is MembershipDashboardFormInitialized) {
+      });
       MembershipDashboardModel? newValue = null;
       on <ChangedMembershipDashboardDocumentID> ((event, emit) async {
+      if (state is MembershipDashboardFormInitialized) {
+        final currentState = state as MembershipDashboardFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
@@ -85,28 +83,40 @@ class MembershipDashboardFormBloc extends Bloc<MembershipDashboardFormEvent, Mem
           emit(SubmittableMembershipDashboardForm(value: newValue));
         }
 
+      }
       });
       on <ChangedMembershipDashboardAppId> ((event, emit) async {
+      if (state is MembershipDashboardFormInitialized) {
+        final currentState = state as MembershipDashboardFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittableMembershipDashboardForm(value: newValue));
 
+      }
       });
       on <ChangedMembershipDashboardDescription> ((event, emit) async {
+      if (state is MembershipDashboardFormInitialized) {
+        final currentState = state as MembershipDashboardFormInitialized;
         newValue = currentState.value!.copyWith(description: event.value);
         emit(SubmittableMembershipDashboardForm(value: newValue));
 
+      }
       });
       on <ChangedMembershipDashboardMemberActions> ((event, emit) async {
+      if (state is MembershipDashboardFormInitialized) {
+        final currentState = state as MembershipDashboardFormInitialized;
         newValue = currentState.value!.copyWith(memberActions: event.value);
         emit(SubmittableMembershipDashboardForm(value: newValue));
 
+      }
       });
       on <ChangedMembershipDashboardConditions> ((event, emit) async {
+      if (state is MembershipDashboardFormInitialized) {
+        final currentState = state as MembershipDashboardFormInitialized;
         newValue = currentState.value!.copyWith(conditions: event.value);
         emit(SubmittableMembershipDashboardForm(value: newValue));
 
+      }
       });
-    }
   }
 
 
