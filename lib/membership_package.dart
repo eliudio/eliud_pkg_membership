@@ -21,6 +21,10 @@ import 'package:eliud_pkg_workflow/tools/task/task_model_registry.dart';
 
 import 'model/repository_singleton.dart';
 
+import 'package:eliud_pkg_membership/membership_package_stub.dart'
+if (dart.library.io) 'membership_mobile_package.dart'
+if (dart.library.html) 'membership_web_package.dart';
+
 abstract class MembershipPackage extends Package {
   MembershipPackage() : super('eliud_pkg_membership');
 
@@ -160,4 +164,6 @@ abstract class MembershipPackage extends Package {
   @override
   List<MemberCollectionInfo> getMemberCollectionInfo() =>
       AbstractRepositorySingleton.collections;
+
+  static MembershipPackage instance() => getMembershipPackage();
 }

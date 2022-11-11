@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import 'membership_package.dart';
 
+MembershipPackage getMembershipPackage() => MembershipWebPackage();
+
 class MembershipWebPackage extends MembershipPackage {
 
   @override
