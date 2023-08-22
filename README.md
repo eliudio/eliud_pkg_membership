@@ -4,7 +4,7 @@ Eliud membership package
 
 ## Dependency diagram
 
-![Dependency diagram](https://github.com/eliudio/eliud_pkg_membership/blob/main/depends.jpg)
+![Dependency diagram](https://github.com/eliudio/eliud_pkg_membership/raw/main/depends.jpg)
 
 ## eliud.io
 
