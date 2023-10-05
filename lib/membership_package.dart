@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/access_event.dart';
 import 'package:eliud_core/core/wizards/registry/registry.dart';
+import 'package:eliud_core/core_package.dart';
+import 'package:eliud_core/eliud.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
 import 'package:eliud_core/model/access_model.dart';
@@ -10,6 +12,7 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_pkg_etc/etc_package.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/component_registry.dart';
 import 'package:eliud_pkg_membership/tasks/approve_membership_task_model.dart';
@@ -17,7 +20,9 @@ import 'package:eliud_pkg_membership/tasks/approve_membership_task_model_mapper.
 import 'package:eliud_pkg_membership/tasks/request_membership_task_model.dart';
 import 'package:eliud_pkg_membership/tasks/request_membership_task_model_mapper.dart';
 import 'package:eliud_pkg_membership/wizards/membership_dashboard_wizard.dart';
+import 'package:eliud_pkg_notifications/notifications_package.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_model_registry.dart';
+import 'package:eliud_pkg_workflow/workflow_package.dart';
 
 import 'model/repository_singleton.dart';
 
@@ -166,4 +171,14 @@ abstract class MembershipPackage extends Package {
       AbstractRepositorySingleton.collections;
 
   static MembershipPackage instance() => getMembershipPackage();
+
+  /*
+   * Register depending packages
+   */
+  void registerDependencies(Eliud eliud) {
+    eliud.registerPackage(CorePackage.instance());
+    eliud.registerPackage(WorkflowPackage.instance());
+    eliud.registerPackage(NotificationsPackage.instance());
+    eliud.registerPackage(EtcPackage.instance());
+  }
 }
