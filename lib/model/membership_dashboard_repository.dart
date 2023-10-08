@@ -40,6 +40,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef MembershipDashboardModelTrigger(List<MembershipDashboardModel?> list);
 typedef MembershipDashboardChanged(MembershipDashboardModel? value);
+typedef MembershipDashboardErrorHandler(o, e);
 
 abstract class MembershipDashboardRepository extends RepositoryBase<MembershipDashboardModel, MembershipDashboardEntity> {
   Future<MembershipDashboardEntity> addEntity(String documentID, MembershipDashboardEntity value);
@@ -56,7 +57,7 @@ abstract class MembershipDashboardRepository extends RepositoryBase<MembershipDa
 
   StreamSubscription<List<MembershipDashboardModel?>> listen(MembershipDashboardModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<MembershipDashboardModel?>> listenWithDetails(MembershipDashboardModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<MembershipDashboardModel?> listenTo(String documentId, MembershipDashboardChanged changed);
+  StreamSubscription<MembershipDashboardModel?> listenTo(String documentId, MembershipDashboardChanged changed, {MembershipDashboardErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);
