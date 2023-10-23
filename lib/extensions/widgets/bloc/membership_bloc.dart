@@ -67,10 +67,10 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
       emit(MembershipLoaded(accessModel, event.app.documentID, member));
     });
 
-    if (state is MembershipLoaded) {
-      MembershipLoaded theState = state as MembershipLoaded;
+    on<BlockMember>((event, emit) async {
+      if (state is MembershipLoaded) {
+        MembershipLoaded theState = state as MembershipLoaded;
 
-      on<BlockMember>((event, emit) async {
         emit(await _update(
             theState.appId,
             theState.accessModel,
@@ -84,9 +84,12 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
               blocked: true,
             ),
             theState.member));
-      });
+      }
+    });
 
-      on<UnblockMember>((event, emit) async {
+    on<UnblockMember>((event, emit) async {
+      if (state is MembershipLoaded) {
+        MembershipLoaded theState = state as MembershipLoaded;
         emit(await _update(
             theState.appId,
             theState.accessModel,
@@ -94,14 +97,18 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
               appId: theState.appId,
               documentID: theState.member!.documentID,
               privilegeLevel:
-                  PLBLToPL(theState.accessModel!.privilegeLevelBeforeBlocked!),
+              PLBLToPL(theState.accessModel!.privilegeLevelBeforeBlocked!),
               privilegeLevelBeforeBlocked: null,
               blocked: false,
             ),
             theState.member));
-      });
+      }
+    });
 
-      on<PromoteMember>((event, emit) async {
+    on<PromoteMember>((event, emit) async {
+      if (state is MembershipLoaded) {
+        MembershipLoaded theState = state as MembershipLoaded;
+
         if ((theState.accessModel == null) ||
             (theState.accessModel!.privilegeLevel!.index <=
                 PrivilegeLevel.OwnerPrivilege.index)) {
@@ -113,13 +120,18 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
                 documentID: theState.member!.documentID,
                 privilegeLevel: theState.accessModel == null
                     ? PrivilegeLevel.Level1Privilege
-                    : intToPL(theState.accessModel!.privilegeLevel!.index + 1),
+                    : intToPL(
+                    theState.accessModel!.privilegeLevel!.index + 1),
               ),
               theState.member));
         }
-      });
+      }
+    });
 
-      on<DemoteMember>((event, emit) async {
+    on<DemoteMember>((event, emit) async {
+      if (state is MembershipLoaded) {
+        MembershipLoaded theState = state as MembershipLoaded;
+
         if (theState.accessModel!.privilegeLevel!.index >
             PrivilegeLevel.NoPrivilege.index) {
           emit(await _update(
@@ -129,12 +141,12 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
                 appId: theState.appId,
                 documentID: theState.member!.documentID,
                 privilegeLevel:
-                    intToPL(theState.accessModel!.privilegeLevel!.index - 1),
+                intToPL(theState.accessModel!.privilegeLevel!.index - 1),
               ),
               theState.member));
         }
-      });
-    }
+      }
+    });
   }
 
   Future<MembershipLoaded> _update(String appId, AccessModel? oldAccessModel,
