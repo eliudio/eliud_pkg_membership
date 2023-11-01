@@ -15,16 +15,10 @@
 
 import 'dart:collection';
 import 'dart:convert';
-import 'package:eliud_core/tools/random.dart';
-import 'abstract_repository_singleton.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
 import 'package:eliud_core/model/entity_export.dart';
 import 'package:eliud_pkg_etc/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_membership/model/entity_export.dart';
 
-import 'package:eliud_core/tools/common_tools.dart';
 class MembershipDashboardEntity implements EntityBase {
   final String? appId;
   final String? description;
@@ -51,12 +45,15 @@ class MembershipDashboardEntity implements EntityBase {
 
     var memberActionsFromMap;
     memberActionsFromMap = map['memberActions'];
-    var memberActionsList;
-    if (memberActionsFromMap != null)
+    List<MemberActionEntity> memberActionsList;
+    if (memberActionsFromMap != null) {
       memberActionsList = (map['memberActions'] as List<dynamic>)
         .map((dynamic item) =>
         MemberActionEntity.fromMap(item as Map, newDocumentIds: newDocumentIds)!)
         .toList();
+    } else {
+      memberActionsList = [];
+    }
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];
     if (conditionsFromMap != null)

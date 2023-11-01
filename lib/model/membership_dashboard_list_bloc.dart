@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_membership/model/membership_dashboard_repository.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_list_event.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'membership_dashboard_model.dart';
+
+typedef List<MembershipDashboardModel?> FilterMembershipDashboardModels(List<MembershipDashboardModel?> values);
+
 
 
 class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, MembershipDashboardListState> {
+  final FilterMembershipDashboardModels? filter;
   final MembershipDashboardRepository _membershipDashboardRepository;
   StreamSubscription? _membershipDashboardsListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
   final bool? detailed;
   final int membershipDashboardLimit;
 
-  MembershipDashboardListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MembershipDashboardRepository membershipDashboardRepository, this.membershipDashboardLimit = 5})
-      : assert(membershipDashboardRepository != null),
-        _membershipDashboardRepository = membershipDashboardRepository,
+  MembershipDashboardListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MembershipDashboardRepository membershipDashboardRepository, this.membershipDashboardLimit = 5})
+      : _membershipDashboardRepository = membershipDashboardRepository,
         super(MembershipDashboardListLoading()) {
     on <LoadMembershipDashboardList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
     });
   }
 
+  List<MembershipDashboardModel?> _filter(List<MembershipDashboardModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadMembershipDashboardListToState() async {
     int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values!.length : 0;
     _membershipDashboardsListSubscription?.cancel();
     _membershipDashboardsListSubscription = _membershipDashboardRepository.listen(
-          (list) => add(MembershipDashboardListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(MembershipDashboardListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
     int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values!.length : 0;
     _membershipDashboardsListSubscription?.cancel();
     _membershipDashboardsListSubscription = _membershipDashboardRepository.listenWithDetails(
-            (list) => add(MembershipDashboardListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(MembershipDashboardListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

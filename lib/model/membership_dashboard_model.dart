@@ -14,33 +14,16 @@
 */
 
 import 'package:collection/collection.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_etc/model/repository_export.dart';
-import 'package:eliud_pkg_etc/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_membership/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_etc/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_membership/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import 'package:eliud_pkg_etc/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_membership/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_membership/model/membership_dashboard_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 
 
@@ -58,9 +41,7 @@ class MembershipDashboardModel implements ModelBase, WithAppId {
   List<MemberActionModel>? memberActions;
   StorageConditionsModel? conditions;
 
-  MembershipDashboardModel({required this.documentID, required this.appId, this.description, this.memberActions, this.conditions, })  {
-    assert(documentID != null);
-  }
+  MembershipDashboardModel({required this.documentID, required this.appId, this.description, this.memberActions, this.conditions, });
 
   MembershipDashboardModel copyWith({String? documentID, String? appId, String? description, List<MemberActionModel>? memberActions, StorageConditionsModel? conditions, }) {
     return MembershipDashboardModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, memberActions: memberActions ?? this.memberActions, conditions: conditions ?? this.conditions, );

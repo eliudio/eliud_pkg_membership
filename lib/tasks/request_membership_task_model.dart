@@ -1,5 +1,4 @@
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_pkg_membership/tasks/request_membership_task_entity.dart';

@@ -1,4 +1,3 @@
-import 'package:eliud_pkg_workflow/tools/task/task_entity.dart';
 
 import 'approve_membership_task_model.dart';
 import 'membership_task_entity.dart';

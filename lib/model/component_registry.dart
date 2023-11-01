@@ -22,7 +22,6 @@ import 'abstract_repository_singleton.dart';
 import '../extensions/membership_dashboard_component.dart';
 import '../editors/membership_dashboard_component_editor.dart';
 import 'membership_dashboard_component_selector.dart';
-import 'package:eliud_pkg_membership/model/internal_component.dart';
 
 
 
