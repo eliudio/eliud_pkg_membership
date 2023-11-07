@@ -30,21 +30,24 @@ class MembershipDashboardListLoaded extends MembershipDashboardListState {
   final List<MembershipDashboardModel?>? values;
   final bool? mightHaveMore;
 
-  const MembershipDashboardListLoaded({this.mightHaveMore, this.values = const []});
+  const MembershipDashboardListLoaded(
+      {this.mightHaveMore, this.values = const []});
 
   @override
-  List<Object?> get props => [ values, mightHaveMore ];
+  List<Object?> get props => [values, mightHaveMore];
 
   @override
   String toString() => 'MembershipDashboardListLoaded { values: $values }';
 
   @override
-  bool operator ==(Object other) => 
-          other is MembershipDashboardListLoaded &&
-              runtimeType == other.runtimeType &&
-              ListEquality().equals(values, other.values) &&
-              mightHaveMore == other.mightHaveMore;
+  bool operator ==(Object other) =>
+      other is MembershipDashboardListLoaded &&
+      runtimeType == other.runtimeType &&
+      ListEquality().equals(values, other.values) &&
+      mightHaveMore == other.mightHaveMore;
+
+  @override
+  int get hashCode => values.hashCode ^ mightHaveMore.hashCode;
 }
 
 class MembershipDashboardNotLoaded extends MembershipDashboardListState {}
-

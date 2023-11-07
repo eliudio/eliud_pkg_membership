@@ -19,7 +19,6 @@ import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_etc/model/model_export.dart';
 import 'package:eliud_pkg_membership/model/model_export.dart';
 
-
 @immutable
 abstract class MembershipDashboardFormEvent extends Equatable {
   const MembershipDashboardFormEvent();
@@ -28,35 +27,37 @@ abstract class MembershipDashboardFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewMembershipDashboardFormEvent extends MembershipDashboardFormEvent {
-}
+class InitialiseNewMembershipDashboardFormEvent
+    extends MembershipDashboardFormEvent {}
 
-
-class InitialiseMembershipDashboardFormEvent extends MembershipDashboardFormEvent {
+class InitialiseMembershipDashboardFormEvent
+    extends MembershipDashboardFormEvent {
   final MembershipDashboardModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseMembershipDashboardFormEvent({this.value});
 }
 
-class InitialiseMembershipDashboardFormNoLoadEvent extends MembershipDashboardFormEvent {
+class InitialiseMembershipDashboardFormNoLoadEvent
+    extends MembershipDashboardFormEvent {
   final MembershipDashboardModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   InitialiseMembershipDashboardFormNoLoadEvent({this.value});
 }
 
-class ChangedMembershipDashboardDocumentID extends MembershipDashboardFormEvent {
+class ChangedMembershipDashboardDocumentID
+    extends MembershipDashboardFormEvent {
   final String? value;
 
   ChangedMembershipDashboardDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMembershipDashboardDocumentID{ value: $value }';
@@ -68,45 +69,48 @@ class ChangedMembershipDashboardAppId extends MembershipDashboardFormEvent {
   ChangedMembershipDashboardAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMembershipDashboardAppId{ value: $value }';
 }
 
-class ChangedMembershipDashboardDescription extends MembershipDashboardFormEvent {
+class ChangedMembershipDashboardDescription
+    extends MembershipDashboardFormEvent {
   final String? value;
 
   ChangedMembershipDashboardDescription({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMembershipDashboardDescription{ value: $value }';
 }
 
-class ChangedMembershipDashboardMemberActions extends MembershipDashboardFormEvent {
+class ChangedMembershipDashboardMemberActions
+    extends MembershipDashboardFormEvent {
   final List<MemberActionModel>? value;
 
   ChangedMembershipDashboardMemberActions({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
-  String toString() => 'ChangedMembershipDashboardMemberActions{ value: $value }';
+  String toString() =>
+      'ChangedMembershipDashboardMemberActions{ value: $value }';
 }
 
-class ChangedMembershipDashboardConditions extends MembershipDashboardFormEvent {
+class ChangedMembershipDashboardConditions
+    extends MembershipDashboardFormEvent {
   final StorageConditionsModel? value;
 
   ChangedMembershipDashboardConditions({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMembershipDashboardConditions{ value: $value }';
 }
-

@@ -21,16 +21,16 @@ abstract class MembershipDashboardComponentEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class FetchMembershipDashboardComponent extends MembershipDashboardComponentEvent {
+class FetchMembershipDashboardComponent
+    extends MembershipDashboardComponentEvent {
   final String? id;
 
-  FetchMembershipDashboardComponent({ this.id });
+  FetchMembershipDashboardComponent({this.id});
 }
 
-class MembershipDashboardComponentUpdated extends MembershipDashboardComponentEvent {
+class MembershipDashboardComponentUpdated
+    extends MembershipDashboardComponentEvent {
   final MembershipDashboardModel value;
 
-  MembershipDashboardComponentUpdated({ required this.value });
+  MembershipDashboardComponentUpdated({required this.value});
 }
-
-

@@ -48,7 +48,7 @@ class MembershipDashboardComponentEditorConstructor
           description: 'New membership dashboard',
           conditions: StorageConditionsModel(
               privilegeLevelRequired:
-                  PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
+                  PrivilegeLevelRequiredSimple.noPrivilegeRequiredSimple),
         ),
         feedback);
   }
@@ -61,7 +61,7 @@ class MembershipDashboardComponentEditorConstructor
     if (membershipDashboard != null) {
       _openIt(app, context, false, membershipDashboard, feedback);
     } else {
-      openErrorDialog(app, context, app.documentID + '/_error',
+      openErrorDialog(app, context, '${app.documentID}/_error',
           title: 'Error',
           errorMessage: 'Cannot find membership dashboard with id $id');
     }
@@ -72,7 +72,7 @@ class MembershipDashboardComponentEditorConstructor
     openComplexDialog(
       app,
       context,
-      app.documentID + '/membershipdashboard',
+      '${app.documentID}/membershipdashboard',
       title: create
           ? 'Create Membership Dashboard'
           : 'Update Membership Dashboard',
@@ -96,9 +96,9 @@ class MembershipDashboardComponentEditor extends StatefulWidget {
   final AppModel app;
 
   const MembershipDashboardComponentEditor({
-    Key? key,
+    super.key,
     required this.app,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() =>
@@ -212,18 +212,19 @@ class _MembershipDashboardComponentEditorState
                     context,
                     widget.app,
                     title: text(widget.app, context,
-                        (value.text ?? '?') + ' ' + (value.description ?? '?')),
-                    trailing: popupMenuButton<int>(
-                        widget.app, context,
+                        '${value.text ?? '?'} ${value.description ?? '?'}'),
+                    trailing: popupMenuButton<int>(widget.app, context,
                         child: Icon(Icons.more_vert),
                         itemBuilder: (context) => [
                               popupMenuItem(
-                                widget.app, context,
+                                widget.app,
+                                context,
                                 value: 1,
                                 label: 'Update',
                               ),
                               popupMenuItem(
-                                widget.app, context,
+                                widget.app,
+                                context,
                                 value: 2,
                                 label: 'Delete',
                               ),
@@ -297,7 +298,7 @@ class _MembershipDashboardComponentEditorState
     openFlexibleDialog(
       widget.app,
       context,
-      widget.app.documentID + '/_memberaction',
+      '${widget.app.documentID}/_memberaction',
       includeHeading: false,
       widthFraction: .8,
       child: MemberActionModelWidget.getIt(

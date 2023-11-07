@@ -23,11 +23,11 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 
 import 'membership_dashboard_model.dart';
 
-typedef List<MembershipDashboardModel?> FilterMembershipDashboardModels(List<MembershipDashboardModel?> values);
+typedef FilterMembershipDashboardModels = List<MembershipDashboardModel?>
+    Function(List<MembershipDashboardModel?> values);
 
-
-
-class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, MembershipDashboardListState> {
+class MembershipDashboardListBloc
+    extends Bloc<MembershipDashboardListEvent, MembershipDashboardListState> {
   final FilterMembershipDashboardModels? filter;
   final MembershipDashboardRepository _membershipDashboardRepository;
   StreamSubscription? _membershipDashboardsListSubscription;
@@ -39,23 +39,32 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
   final bool? detailed;
   final int membershipDashboardLimit;
 
-  MembershipDashboardListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MembershipDashboardRepository membershipDashboardRepository, this.membershipDashboardLimit = 5})
+  MembershipDashboardListBloc(
+      {this.filter,
+      this.paged,
+      this.orderBy,
+      this.descending,
+      this.detailed,
+      this.eliudQuery,
+      required MembershipDashboardRepository membershipDashboardRepository,
+      this.membershipDashboardLimit = 5})
       : _membershipDashboardRepository = membershipDashboardRepository,
         super(MembershipDashboardListLoading()) {
-    on <LoadMembershipDashboardList> ((event, emit) {
+    on<LoadMembershipDashboardList>((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadMembershipDashboardListToState();
       } else {
         _mapLoadMembershipDashboardListWithDetailsToState();
       }
     });
-    
-    on <NewPage> ((event, emit) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+
+    on<NewPage>((event, emit) {
+      pages = pages +
+          1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadMembershipDashboardListWithDetailsToState();
     });
-    
-    on <MembershipDashboardChangeQuery> ((event, emit) {
+
+    on<MembershipDashboardChangeQuery>((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadMembershipDashboardListToState();
@@ -63,25 +72,26 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
         _mapLoadMembershipDashboardListWithDetailsToState();
       }
     });
-      
-    on <AddMembershipDashboardList> ((event, emit) async {
+
+    on<AddMembershipDashboardList>((event, emit) async {
       await _mapAddMembershipDashboardListToState(event);
     });
-    
-    on <UpdateMembershipDashboardList> ((event, emit) async {
+
+    on<UpdateMembershipDashboardList>((event, emit) async {
       await _mapUpdateMembershipDashboardListToState(event);
     });
-    
-    on <DeleteMembershipDashboardList> ((event, emit) async {
+
+    on<DeleteMembershipDashboardList>((event, emit) async {
       await _mapDeleteMembershipDashboardListToState(event);
     });
-    
-    on <MembershipDashboardListUpdated> ((event, emit) {
+
+    on<MembershipDashboardListUpdated>((event, emit) {
       emit(_mapMembershipDashboardListUpdatedToState(event));
     });
   }
 
-  List<MembershipDashboardModel?> _filter(List<MembershipDashboardModel?> original) {
+  List<MembershipDashboardModel?> _filter(
+      List<MembershipDashboardModel?> original) {
     if (filter != null) {
       return filter!(original);
     } else {
@@ -90,44 +100,57 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
   }
 
   Future<void> _mapLoadMembershipDashboardListToState() async {
-    int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values!.length : 0;
+    int amountNow = (state is MembershipDashboardListLoaded)
+        ? (state as MembershipDashboardListLoaded).values!.length
+        : 0;
     _membershipDashboardsListSubscription?.cancel();
-    _membershipDashboardsListSubscription = _membershipDashboardRepository.listen(
-          (list) => add(MembershipDashboardListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-      orderBy: orderBy,
-      descending: descending,
-      eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * membershipDashboardLimit : null
-    );
+    _membershipDashboardsListSubscription =
+        _membershipDashboardRepository.listen(
+            (list) => add(MembershipDashboardListUpdated(
+                value: _filter(list), mightHaveMore: amountNow != list.length)),
+            orderBy: orderBy,
+            descending: descending,
+            eliudQuery: eliudQuery,
+            limit: ((paged != null) && paged!)
+                ? pages * membershipDashboardLimit
+                : null);
   }
 
   Future<void> _mapLoadMembershipDashboardListWithDetailsToState() async {
-    int amountNow =  (state is MembershipDashboardListLoaded) ? (state as MembershipDashboardListLoaded).values!.length : 0;
+    int amountNow = (state is MembershipDashboardListLoaded)
+        ? (state as MembershipDashboardListLoaded).values!.length
+        : 0;
     _membershipDashboardsListSubscription?.cancel();
-    _membershipDashboardsListSubscription = _membershipDashboardRepository.listenWithDetails(
-            (list) => add(MembershipDashboardListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-        orderBy: orderBy,
-        descending: descending,
-        eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * membershipDashboardLimit : null
-    );
+    _membershipDashboardsListSubscription =
+        _membershipDashboardRepository.listenWithDetails(
+            (list) => add(MembershipDashboardListUpdated(
+                value: _filter(list), mightHaveMore: amountNow != list.length)),
+            orderBy: orderBy,
+            descending: descending,
+            eliudQuery: eliudQuery,
+            limit: ((paged != null) && paged!)
+                ? pages * membershipDashboardLimit
+                : null);
   }
 
-  Future<void> _mapAddMembershipDashboardListToState(AddMembershipDashboardList event) async {
+  Future<void> _mapAddMembershipDashboardListToState(
+      AddMembershipDashboardList event) async {
     var value = event.value;
     if (value != null) {
       await _membershipDashboardRepository.add(value);
     }
   }
 
-  Future<void> _mapUpdateMembershipDashboardListToState(UpdateMembershipDashboardList event) async {
+  Future<void> _mapUpdateMembershipDashboardListToState(
+      UpdateMembershipDashboardList event) async {
     var value = event.value;
     if (value != null) {
       await _membershipDashboardRepository.update(value);
     }
   }
 
-  Future<void> _mapDeleteMembershipDashboardListToState(DeleteMembershipDashboardList event) async {
+  Future<void> _mapDeleteMembershipDashboardListToState(
+      DeleteMembershipDashboardList event) async {
     var value = event.value;
     if (value != null) {
       await _membershipDashboardRepository.delete(value);
@@ -135,7 +158,9 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
   }
 
   MembershipDashboardListLoaded _mapMembershipDashboardListUpdatedToState(
-      MembershipDashboardListUpdated event) => MembershipDashboardListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
+          MembershipDashboardListUpdated event) =>
+      MembershipDashboardListLoaded(
+          values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -143,5 +168,3 @@ class MembershipDashboardListBloc extends Bloc<MembershipDashboardListEvent, Mem
     return super.close();
   }
 }
-
-

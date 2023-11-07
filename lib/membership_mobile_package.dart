@@ -5,16 +5,17 @@ import 'membership_package.dart';
 MembershipPackage getMembershipPackage() => MembershipMobilePackage();
 
 class MembershipMobilePackage extends MembershipPackage {
+  @override
+  List<Object?> get props => [stateMemberHasNoMembershipYet];
 
   @override
-  List<Object?> get props => [
-    stateMEMBER_HAS_NO_MEMBERSHIP_YET
-  ];
-
-  @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is MembershipMobilePackage &&
+      other is MembershipMobilePackage &&
           runtimeType == other.runtimeType &&
-          mapEquals(stateMEMBER_HAS_NO_MEMBERSHIP_YET, other.stateMEMBER_HAS_NO_MEMBERSHIP_YET);
+          mapEquals(stateMemberHasNoMembershipYet,
+              other.stateMemberHasNoMembershipYet);
+
+  @override
+  int get hashCode => stateMemberHasNoMembershipYet.hashCode;
 }

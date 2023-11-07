@@ -13,9 +13,11 @@ class UnitializedMembership extends MembershipState {
   List<Object> get props => [];
 
   @override
-  bool operator == (Object other) =>
-      identical(this, other) ||
-          other is MembershipLoaded;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is MembershipLoaded;
+
+  @override
+  int get hashCode => 0;
 }
 
 class MembershipLoaded extends MembershipState {
@@ -26,14 +28,17 @@ class MembershipLoaded extends MembershipState {
   MembershipLoaded(this.accessModel, this.appId, this.member);
 
   @override
-  List<Object> get props => [ accessModel!, appId, member!];
+  List<Object> get props => [accessModel!, appId, member!];
 
   @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is MembershipLoaded &&
-              runtimeType == other.runtimeType &&
-              accessModel == other.accessModel &&
-              appId == other.appId &&
-              member == other.member;
+      other is MembershipLoaded &&
+          runtimeType == other.runtimeType &&
+          accessModel == other.accessModel &&
+          appId == other.appId &&
+          member == other.member;
+
+  @override
+  int get hashCode => accessModel.hashCode ^ appId.hashCode ^ member.hashCode;
 }

@@ -20,37 +20,40 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
   static String definition = "Approve membership";
 
   ApproveMembershipTaskModel(
-      {required String identifier,
-      required String description,
-      required bool executeInstantly})
-      : super(
-            identifier: identifier,
-            description: description,
-            executeInstantly: executeInstantly);
+      {required super.identifier,
+      required super.description,
+      required super.executeInstantly});
 
   @override
-  Future<void> startTask(AppModel app,
-      BuildContext context, String? memberId, AssignmentModel? assignmentModel) {
+  Future<void> startTask(AppModel app, BuildContext context, String? memberId,
+      AssignmentModel? assignmentModel) {
     if (assignmentModel == null) return Future.value(null);
-    if (memberId == null) throw Exception("Can't approve membership when no member");
+    if (memberId == null) {
+      throw Exception("Can't approve membership when no member");
+    }
     String? feedback;
-    openWidgetDialog(app,
+    openWidgetDialog(
+      app,
       context,
-      app.documentID + '/membershipreq',
+      '${app.documentID}/membershipreq',
       child: YesNoIgnoreDialogWithAssignmentResults.get(app, context,
           title: 'Membership request',
           message:
               'Below the payment details. Please review and confirm or decline and provide feedback.',
           yesLabel: 'Confirm membership',
           noLabel: 'Decline membership',
-          resultsPrevious: assignmentModel.resultsPrevious, yesFunction: () async {
-        await _approveMembershipRequest(app, context, memberId, assignmentModel, feedback);
+          resultsPrevious: assignmentModel.resultsPrevious,
+          yesFunction: () async {
+        await _approveMembershipRequest(
+            app, context, memberId, assignmentModel, feedback);
       }, noFunction: () async {
-        await _disapproveMembershipRequest(app, context, memberId, assignmentModel, feedback);
+        await _disapproveMembershipRequest(
+            app, context, memberId, assignmentModel, feedback);
       }, extraFields: [
         getListTile(context, app,
             leading: Icon(Icons.payment),
-            title: dialogField(app,
+            title: dialogField(
+              app,
               context,
               valueChanged: (value) => feedback = value,
               decoration: const InputDecoration(
@@ -63,29 +66,26 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
     return Future.value(null);
   }
 
-  Future<void> _approveMembershipRequest(AppModel app, BuildContext context, String memberId,
-      AssignmentModel assignmentModel, String? comment) async {
+  Future<void> _approveMembershipRequest(AppModel app, BuildContext context,
+      String memberId, AssignmentModel assignmentModel, String? comment) async {
     _sendMessage(app, memberId, assignmentModel,
         "Your membership request has been approved", comment);
-    if (assignmentModel.reporterId == null) {
-      print("assignmentModel.reporterId is null");
-      return Future.value(null);
-    }
     var accessModel = await accessRepository(appId: assignmentModel.appId)!
         .get(assignmentModel.reporterId);
     if (accessModel != null) {
-      accessModel.privilegeLevel = PrivilegeLevel.Level1Privilege;
+      accessModel.privilegeLevel = PrivilegeLevel.level1Privilege;
       await accessRepository(appId: assignmentModel.appId)!.update(accessModel);
     } else {
       await accessRepository(appId: assignmentModel.appId)!.add(AccessModel(
         appId: assignmentModel.appId,
         documentID: assignmentModel.reporterId,
-        privilegeLevel: PrivilegeLevel.Level1Privilege,
+        privilegeLevel: PrivilegeLevel.level1Privilege,
         points: 0,
         blocked: false,
       ));
     }
-    await finishTask(app,
+    await finishTask(
+        app,
         context,
         assignmentModel,
         ExecutionResults(
@@ -94,11 +94,12 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         null);
   }
 
-  Future<void> _disapproveMembershipRequest(AppModel app, BuildContext context, String memberId,
-      AssignmentModel assignmentModel, String? comment) async {
+  Future<void> _disapproveMembershipRequest(AppModel app, BuildContext context,
+      String memberId, AssignmentModel assignmentModel, String? comment) async {
     _sendMessage(app, memberId, assignmentModel,
         "Your membership request has been disapproved", comment);
-    await finishTask(app,
+    await finishTask(
+        app,
         context,
         assignmentModel,
         ExecutionResults(
@@ -108,12 +109,11 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
         null);
   }
 
-  void _sendMessage(AppModel app, String memberId, AssignmentModel assignmentModel,
-      String message, String? comment) {
-    if (!((comment == null) || (comment.length == 0))) {
-      message = message + " with these comments: " + comment;
+  void _sendMessage(AppModel app, String memberId,
+      AssignmentModel assignmentModel, String message, String? comment) {
+    if (!((comment == null) || (comment.isEmpty))) {
+      message = "$message with these comments: $comment";
     }
-    if (assignmentModel == null) return;
     AbstractNotificationPlatform.platform!
         .sendMessage(app, memberId, assignmentModel.assigneeId!, message);
   }
@@ -139,7 +139,9 @@ class ApproveMembershipTaskModel extends MembershipTaskModel {
       );
 
   @override
-  Future<List<ModelReference>> collectReferences({String? appId, }) async {
+  Future<List<ModelReference>> collectReferences({
+    String? appId,
+  }) async {
     return [];
   }
 }

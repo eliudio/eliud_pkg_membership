@@ -4,7 +4,6 @@ import 'package:eliud_pkg_workflow/tools/task/task_entity.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_model.dart';
 import 'package:eliud_pkg_workflow/tools/task/task_model_mapper.dart';
 
-
 class RequestMembershipTaskModelMapper implements TaskModelMapper {
   @override
   TaskModel fromEntity(TaskEntity entity) =>

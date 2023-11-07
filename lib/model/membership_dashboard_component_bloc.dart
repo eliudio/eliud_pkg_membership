@@ -20,24 +20,27 @@ import 'package:eliud_pkg_membership/model/membership_dashboard_component_event.
 import 'package:eliud_pkg_membership/model/membership_dashboard_component_state.dart';
 import 'package:eliud_pkg_membership/model/membership_dashboard_repository.dart';
 
-class MembershipDashboardComponentBloc extends Bloc<MembershipDashboardComponentEvent, MembershipDashboardComponentState> {
+class MembershipDashboardComponentBloc extends Bloc<
+    MembershipDashboardComponentEvent, MembershipDashboardComponentState> {
   final MembershipDashboardRepository? membershipDashboardRepository;
   StreamSubscription? _membershipDashboardSubscription;
 
   void _mapLoadMembershipDashboardComponentUpdateToState(String documentId) {
     _membershipDashboardSubscription?.cancel();
-    _membershipDashboardSubscription = membershipDashboardRepository!.listenTo(documentId, (value) {
+    _membershipDashboardSubscription =
+        membershipDashboardRepository!.listenTo(documentId, (value) {
       if (value != null) {
         add(MembershipDashboardComponentUpdated(value: value));
       }
     });
   }
 
-  MembershipDashboardComponentBloc({ this.membershipDashboardRepository }): super(MembershipDashboardComponentUninitialized()) {
-    on <FetchMembershipDashboardComponent> ((event, emit) {
+  MembershipDashboardComponentBloc({this.membershipDashboardRepository})
+      : super(MembershipDashboardComponentUninitialized()) {
+    on<FetchMembershipDashboardComponent>((event, emit) {
       _mapLoadMembershipDashboardComponentUpdateToState(event.id!);
     });
-    on <MembershipDashboardComponentUpdated> ((event, emit) {
+    on<MembershipDashboardComponentUpdated>((event, emit) {
       emit(MembershipDashboardComponentLoaded(value: event.value));
     });
   }
@@ -47,6 +50,4 @@ class MembershipDashboardComponentBloc extends Bloc<MembershipDashboardComponent
     _membershipDashboardSubscription?.cancel();
     return super.close();
   }
-
 }
-

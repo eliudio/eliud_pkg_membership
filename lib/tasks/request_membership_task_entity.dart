@@ -4,11 +4,8 @@ import 'membership_task_entity.dart';
 
 class RequestMembershipTaskEntity extends MembershipEntity {
   RequestMembershipTaskEntity(
-      {required String description, required bool executeInstantly})
-      : super(
-            identifier: RequestMembershipTaskModel.label,
-            description: description,
-            executeInstantly: executeInstantly);
+      {required super.description, required super.executeInstantly})
+      : super(identifier: RequestMembershipTaskModel.label);
 
   @override
   Map<String, Object> toDocument() {

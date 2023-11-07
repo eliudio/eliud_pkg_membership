@@ -8,13 +8,14 @@ import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
 
 import '../../model/membership_dashboard_entity.dart';
 
-class MembershipDashboardBloc extends ExtEditorBaseBloc<MembershipDashboardModel, MemberActionModel, MembershipDashboardEntity> {
-
+class MembershipDashboardBloc extends ExtEditorBaseBloc<
+    MembershipDashboardModel, MemberActionModel, MembershipDashboardEntity> {
   MembershipDashboardBloc(String appId, EditorFeedback feedback)
       : super(appId, membershipDashboardRepository(appId: appId)!, feedback);
 
   @override
-  MembershipDashboardModel addItem(MembershipDashboardModel model, MemberActionModel newItem) {
+  MembershipDashboardModel addItem(
+      MembershipDashboardModel model, MemberActionModel newItem) {
     List<MemberActionModel> newItems = model.memberActions == null
         ? []
         : model.memberActions!.map((e) => e).toList();
@@ -24,7 +25,8 @@ class MembershipDashboardBloc extends ExtEditorBaseBloc<MembershipDashboardModel
   }
 
   @override
-  MembershipDashboardModel deleteItem(MembershipDashboardModel model, MemberActionModel deleteItem) {
+  MembershipDashboardModel deleteItem(
+      MembershipDashboardModel model, MemberActionModel deleteItem) {
     var newItems = <MemberActionModel>[];
     for (var item in model.memberActions!) {
       if (item != deleteItem) {
@@ -46,15 +48,16 @@ class MembershipDashboardBloc extends ExtEditorBaseBloc<MembershipDashboardModel
   }
 
   @override
-  MembershipDashboardModel setDefaultValues(MembershipDashboardModel t, StorageConditionsModel conditions) {
+  MembershipDashboardModel setDefaultValues(
+      MembershipDashboardModel t, StorageConditionsModel conditions) {
     return t.copyWith(conditions: t.conditions ?? conditions);
   }
 
   @override
-  MembershipDashboardModel updateItem(MembershipDashboardModel model, MemberActionModel oldItem, MemberActionModel newItem) {
-    List<MemberActionModel> currentItems = model.memberActions == null
-        ? []
-        : model.memberActions!;
+  MembershipDashboardModel updateItem(MembershipDashboardModel model,
+      MemberActionModel oldItem, MemberActionModel newItem) {
+    List<MemberActionModel> currentItems =
+        model.memberActions == null ? [] : model.memberActions!;
     var index = currentItems.indexOf(oldItem);
     if (index != -1) {
       var newItems = currentItems.map((e) => e).toList();
@@ -62,7 +65,7 @@ class MembershipDashboardBloc extends ExtEditorBaseBloc<MembershipDashboardModel
       var newModel = model.copyWith(memberActions: newItems);
       return newModel;
     } else {
-      throw Exception("Could not find " + oldItem.toString());
+      throw Exception("Could not find $oldItem");
     }
   }
 
@@ -70,5 +73,4 @@ class MembershipDashboardBloc extends ExtEditorBaseBloc<MembershipDashboardModel
   List<MemberActionModel> copyOf(List<MemberActionModel> ts) {
     return ts.map((e) => e).toList();
   }
-
 }

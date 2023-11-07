@@ -17,8 +17,10 @@ class MembershipDashboardItem extends StatelessWidget {
   final MemberPublicInfoModel? value;
 
   MembershipDashboardItem(
-      {Key? key, required this.app, required this.value, required this.dashboardModel})
-      : super(key: key);
+      {super.key,
+      required this.app,
+      required this.value,
+      required this.dashboardModel});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class MembershipDashboardItem extends StatelessWidget {
         image: value!.photoURL!,
       );
     }
-    var title;
+    Text title;
     if (value!.name != null) {
       title = Text(value!.name!);
     } else {
@@ -42,8 +44,14 @@ class MembershipDashboardItem extends StatelessWidget {
         key: Key('__Membership_item_${value!.documentID}'),
         child: GestureDetector(
             onTap: () {
-              MemberPopupMenu.showPopupMenuWithAllActions(app,
-                  context, 'Member dashboard', () => openOptions(app, context, profilePhoto), dashboardModel.memberActions, value!.documentID, );
+              MemberPopupMenu.showPopupMenuWithAllActions(
+                app,
+                context,
+                'Member dashboard',
+                () => openOptions(app, context, profilePhoto),
+                dashboardModel.memberActions,
+                value!.documentID,
+              );
             },
             child: ListTile(
                 trailing:
@@ -51,19 +59,20 @@ class MembershipDashboardItem extends StatelessWidget {
                 title: title)));
   }
 
-  Future<void> openOptions(AppModel app, BuildContext context, Widget profilePhoto) async {
+  Future<void> openOptions(
+      AppModel app, BuildContext context, Widget profilePhoto) async {
 /*
     var accessModel =
         await accessRepository(appId: appId)!.get(value!.documentID);
 */
-    openWidgetDialog(app, context, app.documentID + '/_membershipoptions', child: _widget(app));
+    openWidgetDialog(app, context, '${app.documentID}/_membershipoptions',
+        child: _widget(app));
   }
 
   Widget _widget(AppModel app) {
     return BlocProvider<MembershipBloc>(
         create: (context) => MembershipBloc()
-          ..add(
-              FetchMembershipEvent(memberId: value!.documentID, app: app)),
+          ..add(FetchMembershipEvent(memberId: value!.documentID, app: app)),
         child: MembershipDialog(app: app));
   }
 }

@@ -27,15 +27,15 @@ import 'package:eliud_pkg_workflow/workflow_package.dart';
 import 'model/repository_singleton.dart';
 
 import 'package:eliud_pkg_membership/membership_package_stub.dart'
-if (dart.library.io) 'membership_mobile_package.dart'
-if (dart.library.html) 'membership_web_package.dart';
+    if (dart.library.io) 'membership_mobile_package.dart'
+    if (dart.library.html) 'membership_web_package.dart';
 
 abstract class MembershipPackage extends Package {
   MembershipPackage() : super('eliud_pkg_membership');
 
-  static final String MEMBER_HAS_NO_MEMBERSHIP_YET = 'MemberHasNoMembershipYet';
-  Map<String, bool?> stateMEMBER_HAS_NO_MEMBERSHIP_YET = {};
-  Map<String, StreamSubscription<List<AccessModel?>>> subscription = {};
+  static final String memberHasNoMembershipYet = 'MemberHasNoMembershipYet';
+  final Map<String, bool?> stateMemberHasNoMembershipYet = {};
+  final Map<String, StreamSubscription<List<AccessModel?>>> subscription = {};
 
   @override
   Future<List<PackageConditionDetails>>? getAndSubscribe(
@@ -51,52 +51,50 @@ abstract class MembershipPackage extends Package {
       final c = Completer<List<PackageConditionDetails>>();
       subscription[appId] =
           corerepo.accessRepository(appId: appId)!.listen((list) {
-          var valueHasNoMembershipYet = list.isEmpty ||
-              (list.first == null) ||
-              ((list.first!.blocked == null) || (!list.first!.blocked!)) &&
-                  ((list.first!.privilegeLevel == null) ||
-                      (list.first!.privilegeLevel == PrivilegeLevel.NoPrivilege));
+        var valueHasNoMembershipYet = list.isEmpty ||
+            (list.first == null) ||
+            ((list.first!.blocked == null) || (!list.first!.blocked!)) &&
+                ((list.first!.privilegeLevel == null) ||
+                    (list.first!.privilegeLevel == PrivilegeLevel.noPrivilege));
 
-          if (!c.isCompleted) {
-            // the first time we get this trigger, it's upon entry of the getAndSubscribe. Now we simply return the value
-            stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId] = valueHasNoMembershipYet;
-            c.complete([
-              PackageConditionDetails(
-                  packageName: packageName,
-                  conditionName: MEMBER_HAS_NO_MEMBERSHIP_YET,
-                  value: valueHasNoMembershipYet)
-            ]);
-          } else {
-            // subsequent calls we get this trigger, it's when the date has changed. Now add the event to the bloc
-            if (valueHasNoMembershipYet !=
-                stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId]) {
-              stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId] =
-                  valueHasNoMembershipYet;
-              noMembershipYet(accessBloc, app, valueHasNoMembershipYet);
-            }
-            var first = list.first;
-            if (first == null) {
-              accessBloc.add(PrivilegeChangedEvent(
-                app,
-                PrivilegeLevel.NoPrivilege, false,
-              ));
-
-            } else {
-              accessBloc.add(PrivilegeChangedEvent(
-                app,
-                first.privilegeLevel ?? PrivilegeLevel.NoPrivilege,
-                first.blocked ?? false,
-              ));
-            }
+        if (!c.isCompleted) {
+          // the first time we get this trigger, it's upon entry of the getAndSubscribe. Now we simply return the value
+          stateMemberHasNoMembershipYet[appId] = valueHasNoMembershipYet;
+          c.complete([
+            PackageConditionDetails(
+                packageName: packageName,
+                conditionName: memberHasNoMembershipYet,
+                value: valueHasNoMembershipYet)
+          ]);
+        } else {
+          // subsequent calls we get this trigger, it's when the date has changed. Now add the event to the bloc
+          if (valueHasNoMembershipYet != stateMemberHasNoMembershipYet[appId]) {
+            stateMemberHasNoMembershipYet[appId] = valueHasNoMembershipYet;
+            noMembershipYet(accessBloc, app, valueHasNoMembershipYet);
           }
+          var first = list.first;
+          if (first == null) {
+            accessBloc.add(PrivilegeChangedEvent(
+              app,
+              PrivilegeLevel.noPrivilege,
+              false,
+            ));
+          } else {
+            accessBloc.add(PrivilegeChangedEvent(
+              app,
+              first.privilegeLevel ?? PrivilegeLevel.noPrivilege,
+              first.blocked ?? false,
+            ));
+          }
+        }
       }, eliudQuery: getAccessQuery(appId, member.documentID));
       return c.future;
     } else {
-      stateMEMBER_HAS_NO_MEMBERSHIP_YET[appId] = false;
+      stateMemberHasNoMembershipYet[appId] = false;
       return Future.value([
         PackageConditionDetails(
             packageName: packageName,
-            conditionName: MEMBER_HAS_NO_MEMBERSHIP_YET,
+            conditionName: memberHasNoMembershipYet,
             value: false)
       ]);
     }
@@ -104,10 +102,9 @@ abstract class MembershipPackage extends Package {
 
   void noMembershipYet(
       AccessBloc accessBloc, AppModel app, bool valueHasNoMembershipYet) {
-    stateMEMBER_HAS_NO_MEMBERSHIP_YET[app.documentID] =
-        valueHasNoMembershipYet;
+    stateMemberHasNoMembershipYet[app.documentID] = valueHasNoMembershipYet;
     accessBloc.add(UpdatePackageConditionEvent(
-        app, this, MEMBER_HAS_NO_MEMBERSHIP_YET, valueHasNoMembershipYet));
+        app, this, memberHasNoMembershipYet, valueHasNoMembershipYet));
   }
 
   static EliudQuery getAccessQuery(String? appId, String? memberId) {
@@ -116,7 +113,6 @@ abstract class MembershipPackage extends Package {
     ]);
   }
 
-  @override
   Future<bool?> isConditionOk(
       AccessBloc accessBloc,
       String pluginCondition,
@@ -126,15 +122,15 @@ abstract class MembershipPackage extends Package {
       bool? isBlocked,
       PrivilegeLevel? privilegeLevel) async {
     if (member == null) return false;
-    if (pluginCondition == MEMBER_HAS_NO_MEMBERSHIP_YET) {
-      return (privilegeLevel == PrivilegeLevel.NoPrivilege);
+    if (pluginCondition == memberHasNoMembershipYet) {
+      return (privilegeLevel == PrivilegeLevel.noPrivilege);
     }
     return null;
   }
 
   @override
   List<String> retrieveAllPackageConditions() {
-    return [MEMBER_HAS_NO_MEMBERSHIP_YET];
+    return [memberHasNoMembershipYet];
   }
 
   @override
@@ -175,6 +171,7 @@ abstract class MembershipPackage extends Package {
   /*
    * Register depending packages
    */
+  @override
   void registerDependencies(Eliud eliud) {
     eliud.registerPackage(CorePackage.instance());
     eliud.registerPackage(WorkflowPackage.instance());

@@ -24,18 +24,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MembershipDashboardComponentConstructorDefault
     implements ComponentConstructor {
   @override
-  Widget createNew({Key? key, required AppModel app, required String id, Map<String, dynamic>? parameters}) {
+  Widget createNew(
+      {Key? key,
+      required AppModel app,
+      required String id,
+      Map<String, dynamic>? parameters}) {
     return MembershipDashboard(key: key, app: app, id: id);
   }
 
   @override
-  Future<dynamic> getModel({required AppModel app, required String id}) async => await membershipDashboardRepository(appId: app.documentID)!.get(id);
+  Future<dynamic> getModel({required AppModel app, required String id}) async =>
+      await membershipDashboardRepository(appId: app.documentID)!.get(id);
 }
 
 class MembershipDashboard extends AbstractMembershipDashboardComponent {
-  MembershipDashboard({Key? key, required AppModel app, required String id}) : super(key: key, app: app, membershipDashboardId: id);
+  MembershipDashboard({super.key, required super.app, required String id})
+      : super(membershipDashboardId: id);
 
-  @override
   Widget alertWidget({title = String, content = String}) {
     return AlertWidget(app: app, title: title, content: content);
   }
@@ -47,35 +52,39 @@ class MembershipDashboard extends AbstractMembershipDashboardComponent {
   }
 
   @override
-  Widget yourWidget(
-      BuildContext context, MembershipDashboardModel? dashboardModel) {
+  Widget yourWidget(BuildContext context, MembershipDashboardModel? value) {
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (context, accessState) {
-          if (accessState is AccessDetermined) {
-            var appId = app.documentID;
-            return topicContainer(app, context, children: [
-              BlocProvider<MemberPublicInfoListBloc>(
-                create: (context) => MemberPublicInfoListBloc(
-                  eliudQuery: getSubscribedMembers(appId),
-                  memberPublicInfoRepository:
+      if (accessState is AccessDetermined) {
+        var appId = app.documentID;
+        return topicContainer(app, context, children: [
+          BlocProvider<MemberPublicInfoListBloc>(
+            create: (context) => MemberPublicInfoListBloc(
+              eliudQuery: getSubscribedMembers(appId),
+              memberPublicInfoRepository:
                   memberPublicInfoRepository(appId: appId)!,
-                )..add(LoadMemberPublicInfoList()),
-                child: simpleTopicContainer(app, context, children: [MemberPublicInfoListWidget(app: app,
-                    readOnly: true,
-                    widgetProvider: (value) => widgetProvider(app, value, dashboardModel!),
-                    listBackground: BackgroundModel())]),
-              )]);
-          } else {
-            return progressIndicator(app, context);
-          }
-        });
+            )..add(LoadMemberPublicInfoList()),
+            child: simpleTopicContainer(app, context, children: [
+              MemberPublicInfoListWidget(
+                  app: app,
+                  readOnly: true,
+                  widgetProvider: (v) => widgetProvider(app, v, value!),
+                  listBackground: BackgroundModel())
+            ]),
+          )
+        ]);
+      } else {
+        return progressIndicator(app, context);
+      }
+    });
   }
 
-  Widget widgetProvider(AppModel app, MemberPublicInfoModel? value, MembershipDashboardModel dashboardModel) {
-    return MembershipDashboardItem(app: app, value: value, dashboardModel: dashboardModel);
+  Widget widgetProvider(AppModel app, MemberPublicInfoModel? value,
+      MembershipDashboardModel dashboardModel) {
+    return MembershipDashboardItem(
+        app: app, value: value, dashboardModel: dashboardModel);
   }
 
-  @override
   MembershipDashboardRepository getMembershipDashboardRepository(
       BuildContext context) {
     return membershipDashboardRepository(appId: app.documentID)!;

@@ -1,4 +1,4 @@
-import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
+import 'package:eliud_core/core/wizards/tools/document_identifier.dart';
 import 'package:eliud_core/core/wizards/registry/action_specification.dart';
 import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/core/wizards/widgets/action_specification_widget.dart';
@@ -40,7 +40,8 @@ class MembershipDashboardWizard extends NewAppWizardInfo {
                 codePoint: Icons.people.codePoint,
                 fontFamily: Icons.notifications.fontFamily),
             action: GotoPage(app,
-                pageID: constructDocumentId(uniqueId: uniqueId, documentId: membershipPageId)))
+                pageID: constructDocumentId(
+                    uniqueId: uniqueId, documentId: membershipPageId)))
       ];
 
   @override
@@ -63,20 +64,19 @@ class MembershipDashboardWizard extends NewAppWizardInfo {
         var memberId = member.documentID;
         List<NewAppTask> tasks = [];
         tasks.add(() async => await MembershipDashboardPageBuilder(
-          uniqueId,
-          membershipPageId,
-          app,
-          memberId,
-          homeMenuProvider(),
-          appBarProvider(),
-          leftDrawerProvider(),
-          rightDrawerProvider(),
+              uniqueId,
+              membershipPageId,
+              app,
+              memberId,
+              homeMenuProvider(),
+              appBarProvider(),
+              leftDrawerProvider(),
+              rightDrawerProvider(),
             ).run(componentIdentifier: membershipDashboardComponentIdentifier));
         return tasks;
       }
     } else {
-      throw Exception(
-          'Unexpected class for parameters: ' + parameters.toString());
+      throw Exception('Unexpected class for parameters: $parameters');
     }
     return null;
   }
@@ -92,8 +92,7 @@ class MembershipDashboardWizard extends NewAppWizardInfo {
         );
       }
     } else {
-      throw Exception(
-          'Unexpected class for parameters: ' + parameters.toString());
+      throw Exception('Unexpected class for parameters: $parameters');
     }
     return null;
   }
@@ -126,13 +125,14 @@ class MembershipDashboardWizard extends NewAppWizardInfo {
           actionSpecification: parameters.membershipDashboardSpecifications,
           label: 'Generate a default Membership Dashboard Dialog');
     } else {
-      return text(app, context,
-          'Unexpected class for parameters: ' + parameters.toString());
+      return text(app, context, 'Unexpected class for parameters: $parameters');
     }
   }
 
   @override
-  PublicMediumModel? getPublicMediumModel(String uniqueId, NewAppWizardParameters parameters, String pageType) => null;
+  PublicMediumModel? getPublicMediumModel(String uniqueId,
+          NewAppWizardParameters parameters, String mediumType) =>
+      null;
 }
 
 class MembershipDashboardWizardParameters extends NewAppWizardParameters {

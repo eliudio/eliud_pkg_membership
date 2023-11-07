@@ -14,21 +14,24 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
   static String label = 'MEMBERSHIP_TASK_REQUEST_MEMBERSHIP';
   static String definition = "Request membership";
 
-  RequestMembershipTaskModel({required String identifier, required String description, required bool executeInstantly})
-      : super(identifier: identifier, description: description, executeInstantly: executeInstantly);
+  RequestMembershipTaskModel(
+      {required super.identifier,
+      required super.description,
+      required super.executeInstantly});
 
   @override
-  Future<void> startTask(AppModel app,
-      BuildContext context, String? memberId, AssignmentModel? assignmentModel) {
-    if ((context == null) || (assignmentModel == null))
+  Future<void> startTask(AppModel app, BuildContext context, String? memberId,
+      AssignmentModel? assignmentModel) {
+    if (assignmentModel == null) {
       return Future.value(null);
+    }
 
-    openAckNackDialog(app, context,
-        app.documentID + '/membershipreq',
+    openAckNackDialog(app, context, '${app.documentID}/membershipreq',
         title: 'Join',
         message: 'Do you want to request membership?', onSelection: (value) {
       if (value == 0) {
-        confirmMembershipRequest(app,
+        confirmMembershipRequest(
+          app,
           context,
           assignmentModel,
         );
@@ -37,14 +40,15 @@ class RequestMembershipTaskModel extends MembershipTaskModel {
     return Future.value(null);
   }
 
-  void confirmMembershipRequest(AppModel app,
-      BuildContext context, AssignmentModel assignmentModel) {
+  void confirmMembershipRequest(
+      AppModel app, BuildContext context, AssignmentModel assignmentModel) {
 /*
 This is the wrong place to send this message
     AbstractNotificationPlatform.platform
         .sendMessage(context, assignmentModel.assigneeId, "You have requested membership for app " + assignmentModel.appId);
 */
-    finishTask(app,
+    finishTask(
+        app,
         context,
         assignmentModel,
         ExecutionResults(
@@ -54,7 +58,10 @@ This is the wrong place to send this message
   }
 
   @override
-  TaskEntity toEntity({String? appId, }) => RequestMembershipTaskEntity(
+  TaskEntity toEntity({
+    String? appId,
+  }) =>
+      RequestMembershipTaskEntity(
         description: description,
         executeInstantly: executeInstantly,
       );
@@ -73,7 +80,9 @@ This is the wrong place to send this message
       );
 
   @override
-  Future<List<ModelReference>> collectReferences({String? appId, }) async {
+  Future<List<ModelReference>> collectReferences({
+    String? appId,
+  }) async {
     return [];
   }
 }

@@ -16,11 +16,11 @@
 import '../model/membership_dashboard_repository.dart';
 import 'package:eliud_core/package/package.dart';
 
-MembershipDashboardRepository? membershipDashboardRepository({ String? appId }) => AbstractRepositorySingleton.singleton.membershipDashboardRepository(appId);
+MembershipDashboardRepository? membershipDashboardRepository({String? appId}) =>
+    AbstractRepositorySingleton.singleton.membershipDashboardRepository(appId);
 
 abstract class AbstractRepositorySingleton {
-  static List<MemberCollectionInfo> collections = [
-  ];
+  static List<MemberCollectionInfo> collections = [];
   static late AbstractRepositorySingleton singleton;
 
   MembershipDashboardRepository? membershipDashboardRepository(String? appId);

@@ -9,51 +9,49 @@ import 'membership_event.dart';
 import 'membership_state.dart';
 
 class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
-  PrivilegeLevelBeforeBlocked PLToPLBL(PrivilegeLevel privilegeLevel) {
+  PrivilegeLevelBeforeBlocked plToPlbb(PrivilegeLevel privilegeLevel) {
     switch (privilegeLevel) {
-      case PrivilegeLevel.NoPrivilege:
-        return PrivilegeLevelBeforeBlocked.NoPrivilege;
-      case PrivilegeLevel.Level1Privilege:
-        return PrivilegeLevelBeforeBlocked.Level1Privilege;
-      case PrivilegeLevel.Level2Privilege:
-        return PrivilegeLevelBeforeBlocked.Level2Privilege;
-      case PrivilegeLevel.OwnerPrivilege:
-        return PrivilegeLevelBeforeBlocked.OwnerPrivilege;
-      case PrivilegeLevel.Unknown:
-        return PrivilegeLevelBeforeBlocked.NoPrivilege;
+      case PrivilegeLevel.noPrivilege:
+        return PrivilegeLevelBeforeBlocked.noPrivilege;
+      case PrivilegeLevel.level1Privilege:
+        return PrivilegeLevelBeforeBlocked.level1Privilege;
+      case PrivilegeLevel.level2Privilege:
+        return PrivilegeLevelBeforeBlocked.level2Privilege;
+      case PrivilegeLevel.ownerPrivilege:
+        return PrivilegeLevelBeforeBlocked.ownerPrivilege;
+      case PrivilegeLevel.unknown:
+        return PrivilegeLevelBeforeBlocked.noPrivilege;
     }
-    return PrivilegeLevelBeforeBlocked.NoPrivilege;
   }
 
-  PrivilegeLevel PLBLToPL(
+  PrivilegeLevel plbbToPl(
       PrivilegeLevelBeforeBlocked privilegeLevelBeforeBlocked) {
     switch (privilegeLevelBeforeBlocked) {
-      case PrivilegeLevelBeforeBlocked.NoPrivilege:
-        return PrivilegeLevel.NoPrivilege;
-      case PrivilegeLevelBeforeBlocked.Level1Privilege:
-        return PrivilegeLevel.Level1Privilege;
-      case PrivilegeLevelBeforeBlocked.Level2Privilege:
-        return PrivilegeLevel.Level2Privilege;
-      case PrivilegeLevelBeforeBlocked.OwnerPrivilege:
-        return PrivilegeLevel.OwnerPrivilege;
-      case PrivilegeLevelBeforeBlocked.Unknown:
-        return PrivilegeLevel.NoPrivilege;
+      case PrivilegeLevelBeforeBlocked.noPrivilege:
+        return PrivilegeLevel.noPrivilege;
+      case PrivilegeLevelBeforeBlocked.level1Privilege:
+        return PrivilegeLevel.level1Privilege;
+      case PrivilegeLevelBeforeBlocked.level2Privilege:
+        return PrivilegeLevel.level2Privilege;
+      case PrivilegeLevelBeforeBlocked.ownerPrivilege:
+        return PrivilegeLevel.ownerPrivilege;
+      case PrivilegeLevelBeforeBlocked.unknown:
+        return PrivilegeLevel.noPrivilege;
     }
-    return PrivilegeLevel.NoPrivilege;
   }
 
   PrivilegeLevel intToPL(int level) {
     switch (level) {
       case 0:
-        return PrivilegeLevel.NoPrivilege;
+        return PrivilegeLevel.noPrivilege;
       case 1:
-        return PrivilegeLevel.Level1Privilege;
+        return PrivilegeLevel.level1Privilege;
       case 2:
-        return PrivilegeLevel.Level2Privilege;
+        return PrivilegeLevel.level2Privilege;
       case 3:
-        return PrivilegeLevel.OwnerPrivilege;
+        return PrivilegeLevel.ownerPrivilege;
     }
-    return PrivilegeLevel.NoPrivilege;
+    return PrivilegeLevel.noPrivilege;
   }
 
   MembershipBloc() : super(UnitializedMembership()) {
@@ -77,10 +75,10 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
             AccessModel(
               appId: theState.appId,
               documentID: theState.member!.documentID,
-              privilegeLevel: PrivilegeLevel.NoPrivilege,
+              privilegeLevel: PrivilegeLevel.noPrivilege,
               privilegeLevelBeforeBlocked: theState.accessModel == null
-                  ? PrivilegeLevelBeforeBlocked.NoPrivilege
-                  : PLToPLBL(theState.accessModel!.privilegeLevel!),
+                  ? PrivilegeLevelBeforeBlocked.noPrivilege
+                  : plToPlbb(theState.accessModel!.privilegeLevel!),
               blocked: true,
             ),
             theState.member));
@@ -97,7 +95,7 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
               appId: theState.appId,
               documentID: theState.member!.documentID,
               privilegeLevel:
-              PLBLToPL(theState.accessModel!.privilegeLevelBeforeBlocked!),
+                  plbbToPl(theState.accessModel!.privilegeLevelBeforeBlocked!),
               privilegeLevelBeforeBlocked: null,
               blocked: false,
             ),
@@ -111,7 +109,7 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
 
         if ((theState.accessModel == null) ||
             (theState.accessModel!.privilegeLevel!.index <=
-                PrivilegeLevel.OwnerPrivilege.index)) {
+                PrivilegeLevel.ownerPrivilege.index)) {
           emit(await _update(
               theState.appId,
               theState.accessModel,
@@ -119,9 +117,8 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
                 appId: theState.appId,
                 documentID: theState.member!.documentID,
                 privilegeLevel: theState.accessModel == null
-                    ? PrivilegeLevel.Level1Privilege
-                    : intToPL(
-                    theState.accessModel!.privilegeLevel!.index + 1),
+                    ? PrivilegeLevel.level1Privilege
+                    : intToPL(theState.accessModel!.privilegeLevel!.index + 1),
               ),
               theState.member));
         }
@@ -133,7 +130,7 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
         MembershipLoaded theState = state as MembershipLoaded;
 
         if (theState.accessModel!.privilegeLevel!.index >
-            PrivilegeLevel.NoPrivilege.index) {
+            PrivilegeLevel.noPrivilege.index) {
           emit(await _update(
               theState.appId,
               theState.accessModel,
@@ -141,7 +138,7 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
                 appId: theState.appId,
                 documentID: theState.member!.documentID,
                 privilegeLevel:
-                intToPL(theState.accessModel!.privilegeLevel!.index - 1),
+                    intToPL(theState.accessModel!.privilegeLevel!.index - 1),
               ),
               theState.member));
         }
