@@ -35,6 +35,9 @@ class MembershipDashboardComponentBloc extends Bloc<
     });
   }
 
+  /*
+   * Construct MembershipDashboardComponentBloc
+   */
   MembershipDashboardComponentBloc({this.membershipDashboardRepository})
       : super(MembershipDashboardComponentUninitialized()) {
     on<FetchMembershipDashboardComponent>((event, emit) {
@@ -45,6 +48,9 @@ class MembershipDashboardComponentBloc extends Bloc<
     });
   }
 
+  /*
+   * Close the MembershipDashboardComponentBloc
+   */
   @override
   Future<void> close() {
     _membershipDashboardSubscription?.cancel();

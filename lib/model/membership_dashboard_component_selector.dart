@@ -31,7 +31,13 @@ import 'membership_dashboard_list_event.dart';
 import 'membership_dashboard_list_state.dart';
 import 'membership_dashboard_model.dart';
 
+/* 
+ * MembershipDashboardComponentSelector is a component selector for MembershipDashboard, allowing to select a MembershipDashboard component
+ */
 class MembershipDashboardComponentSelector extends ComponentSelector {
+  /* 
+   * createSelectWidget creates the widget
+   */
   @override
   Widget createSelectWidget(BuildContext context, AppModel app,
       int privilegeLevel, double height, SelectComponent selected, editor) {
@@ -42,7 +48,7 @@ class MembershipDashboardComponentSelector extends ComponentSelector {
         membershipDashboardRepository:
             membershipDashboardRepository(appId: appId)!,
       )..add(LoadMembershipDashboardList()),
-      child: SelectMembershipDashboardWidget(
+      child: _SelectMembershipDashboardWidget(
           app: app,
           height: height,
           containerPrivilege: privilegeLevel,
@@ -52,29 +58,31 @@ class MembershipDashboardComponentSelector extends ComponentSelector {
   }
 }
 
-class SelectMembershipDashboardWidget extends StatefulWidget {
+/* 
+ * _SelectMembershipDashboardWidget 
+ */
+class _SelectMembershipDashboardWidget extends StatefulWidget {
   final AppModel app;
   final double height;
   final SelectComponent selected;
   final int containerPrivilege;
   final ComponentEditorConstructor editorConstructor;
 
-  const SelectMembershipDashboardWidget(
-      {super.key,
-      required this.app,
+  const _SelectMembershipDashboardWidget(
+      {required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
       required this.editorConstructor});
 
   @override
-  State<SelectMembershipDashboardWidget> createState() {
+  State<_SelectMembershipDashboardWidget> createState() {
     return _SelectMembershipDashboardWidgetState();
   }
 }
 
 class _SelectMembershipDashboardWidgetState
-    extends State<SelectMembershipDashboardWidget>
+    extends State<_SelectMembershipDashboardWidget>
     with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];

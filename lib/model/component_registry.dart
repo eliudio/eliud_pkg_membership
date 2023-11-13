@@ -22,7 +22,13 @@ import '../extensions/membership_dashboard_component.dart';
 import '../editors/membership_dashboard_component_editor.dart';
 import 'membership_dashboard_component_selector.dart';
 
+/* 
+ * Component registry contains a list of components
+ */
 class ComponentRegistry {
+  /* 
+   * Initialise the component registry
+   */
   void init() {
     Registry.registry()!.addInternalComponents('eliud_pkg_membership', [
       "membershipDashboards",
