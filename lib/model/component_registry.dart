@@ -15,7 +15,7 @@
 
 import '../model/internal_component.dart';
 import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core/tools/component/component_spec.dart';
+import 'package:eliud_core_model/tools/component/component_spec.dart';
 import 'abstract_repository_singleton.dart';
 
 import '../extensions/membership_dashboard_component.dart';
@@ -30,19 +30,19 @@ class ComponentRegistry {
    * Initialise the component registry
    */
   void init() {
-    Registry.registry()!.addInternalComponents('eliud_pkg_membership', [
+    Apis.apis().addInternalComponents('eliud_pkg_membership', [
       "membershipDashboards",
     ]);
 
-    Registry.registry()!.register(
+    Apis.apis().register(
         componentName: "eliud_pkg_membership_internalWidgets",
         componentConstructor: ListComponentFactory());
-    Registry.registry()!.addDropDownSupporter(
+    Apis.apis().addDropDownSupporter(
         "membershipDashboards", DropdownButtonComponentFactory());
-    Registry.registry()!.register(
+    Apis.apis().register(
         componentName: "membershipDashboards",
         componentConstructor: MembershipDashboardComponentConstructorDefault());
-    Registry.registry()!
+    Apis.apis()
         .addComponentSpec('eliud_pkg_membership', 'membership', [
       ComponentSpec(
           'membershipDashboards',
@@ -51,7 +51,7 @@ class ComponentRegistry {
           MembershipDashboardComponentEditorConstructor(),
           ({String? appId}) => membershipDashboardRepository(appId: appId)!),
     ]);
-    Registry.registry()!.registerRetrieveRepository(
+    Apis.apis().registerRetrieveRepository(
         'eliud_pkg_membership',
         'membershipDashboards',
         ({String? appId}) => membershipDashboardRepository(appId: appId)!);

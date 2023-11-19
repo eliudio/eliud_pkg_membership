@@ -8,10 +8,10 @@ import 'package:eliud_core/eliud.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
 import 'package:eliud_core/model/access_model.dart';
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core_model/tools/query/query_tools.dart';
 import 'package:eliud_pkg_etc/etc_package.dart';
 import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_membership/model/component_registry.dart';
@@ -144,7 +144,7 @@ abstract class MembershipPackage extends Package {
     AbstractRepositorySingleton.singleton = RepositorySingleton();
 
     // Register mappers for extra tasks
-    TaskModelRegistry.registry()!.addTask(
+    TaskModelApis.apis().addTask(
         identifier: RequestMembershipTaskModel.label,
         definition: RequestMembershipTaskModel.definition,
         mapper: RequestMembershipTaskModelMapper(),
@@ -152,7 +152,7 @@ abstract class MembershipPackage extends Package {
             identifier: RequestMembershipTaskModel.label,
             description: 'Request membership',
             executeInstantly: true));
-    TaskModelRegistry.registry()!.addTask(
+    TaskModelApis.apis().addTask(
         identifier: ApproveMembershipTaskModel.label,
         definition: ApproveMembershipTaskModel.definition,
         mapper: ApproveMembershipTaskModelMapper(),

@@ -2,14 +2,14 @@ import 'package:eliud_core/core/wizards/tools/document_identifier.dart';
 import 'package:eliud_core/core/wizards/registry/action_specification.dart';
 import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/core/wizards/widgets/action_specification_widget.dart';
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import 'package:eliud_core/model/icon_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/menu_item_model.dart';
 import 'package:eliud_core/model/public_medium_model.dart';
-import 'package:eliud_core/style/frontend/has_text.dart';
+import 'package:eliud_core_model/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
-import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_core_model/tools/etc/random.dart';
 import 'package:eliud_pkg_membership/wizards/builders/membership_dashboard_page_builder.dart';
 import 'package:flutter/material.dart';
 

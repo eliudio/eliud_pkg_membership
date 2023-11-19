@@ -13,7 +13,7 @@
 
 */
 
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import '../tools/bespoke_models.dart';
@@ -21,7 +21,7 @@ import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/tools/screen_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core_model/style/style_registry.dart';
 
 import 'package:eliud_core/tools/enums.dart';
 
