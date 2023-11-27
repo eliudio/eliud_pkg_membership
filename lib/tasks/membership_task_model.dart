@@ -1,4 +1,4 @@
-import 'package:eliud_pkg_workflow/tools/task/task_model.dart';
+import 'package:eliud_pkg_workflow_model/tools/task/task_model.dart';
 
 abstract class MembershipTaskModel extends TaskModel {
   MembershipTaskModel({

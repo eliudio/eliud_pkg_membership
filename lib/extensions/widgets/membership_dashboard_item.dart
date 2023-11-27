@@ -1,8 +1,8 @@
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core/model/member_public_info_model.dart';
-import 'package:eliud_core_model/style/frontend/has_dialog.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_dialog.dart';
+import 'package:eliud_core_main/model/member_public_info_model.dart';
 import 'package:eliud_pkg_etc/tools/member_popup_menu.dart';
-import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
+import 'package:eliud_pkg_membership_model/model/membership_dashboard_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';

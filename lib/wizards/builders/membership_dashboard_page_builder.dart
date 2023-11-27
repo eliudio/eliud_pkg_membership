@@ -1,9 +1,11 @@
-import 'package:eliud_core/core/wizards/tools/document_identifier.dart';
-import 'package:eliud_core/model/model_export.dart';
-import 'package:eliud_pkg_membership/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_membership/model/membership_dashboard_component.dart';
-import 'package:eliud_pkg_membership/model/membership_dashboard_model.dart';
-import 'package:eliud_core/core/wizards/builders/single_component_page_builder.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/model/page_model.dart';
+import 'package:eliud_core_main/model/storage_conditions_model.dart';
+import 'package:eliud_core_main/wizards/tools/document_identifier.dart';
+import 'package:eliud_pkg_membership_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_membership_model/model/membership_dashboard_component.dart';
+import 'package:eliud_pkg_membership_model/model/membership_dashboard_model.dart';
+import 'package:eliud_core_main/wizards/builders/single_component_page_builder.dart';
 
 class MembershipDashboardPageBuilder extends SingleComponentPageBuilder {
   MembershipDashboardPageBuilder(

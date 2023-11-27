@@ -1,12 +1,12 @@
-import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core/model/access_model.dart';
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core/model/member_public_info_model.dart';
-import 'package:eliud_core_model/style/frontend/has_button.dart';
-import 'package:eliud_core_model/style/frontend/has_container.dart';
-import 'package:eliud_core_model/style/frontend/has_dialog.dart';
-import 'package:eliud_core_model/style/frontend/has_dialog_widget.dart';
-import 'package:eliud_core_model/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core_main/apis/apis.dart';
+import 'package:eliud_core_main/model/member_public_info_model.dart';
+import 'package:eliud_core_model/model/access_model.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_button.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_container.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_dialog.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_dialog_widget.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/tools/tool_set.dart';
 import 'package:eliud_pkg_notifications/platform/platform.dart';
 import 'package:flutter/cupertino.dart';
@@ -164,7 +164,7 @@ class _MembershipDialogState extends State<MembershipDialog> {
     AbstractNotificationPlatform.platform!
         .sendMessage(app, widget.app.ownerID, member.documentID, message,
             postSendAction: (value) {
-      Apis.apis().snackbar("Yay! Message sent!");
+      Apis.apis().getRegistryApi().snackbar("Yay! Message sent!");
     });
   }
 
