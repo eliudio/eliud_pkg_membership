@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eliud_core/access/access_bloc.dart';
 import 'package:eliud_core/access/access_event.dart';
+import 'package:eliud_core_main/apis/apis.dart';
 import 'package:eliud_core_helpers/query/query_tools.dart';
 import 'package:eliud_core_main/apis/wizard_api/new_app_wizard_info.dart';
 import 'package:eliud_core/core_package.dart';
@@ -144,7 +145,7 @@ abstract class MembershipPackage extends Package {
     );
 
     // register wizard for membership
-    NewAppWizardRegistry.registry().register(MembershipDashboardWizard());
+    Apis.apis().getWizardApi().register(MembershipDashboardWizard());
 
     // Initialise repository singleton
     AbstractRepositorySingleton.singleton = RepositorySingleton();
